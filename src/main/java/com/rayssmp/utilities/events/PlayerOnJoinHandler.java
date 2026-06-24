@@ -50,5 +50,4 @@ public class PlayerOnJoinHandler implements Listener {
 
         //TODO: joinspawn.txt (Join logic)
     }
-
 }
