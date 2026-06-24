@@ -25,8 +25,17 @@ public class PlayerOnJoinHandler implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if (!player.hasPlayedBefore()){
-            //TODO: firstspawnjoin.txt
+        if (!player.hasPlayedBefore() && firstJoin.enabled()){
+            World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(firstJoin.world()), "Failed to find first time join world!");
+
+            if (firstJoin.useWorldDefault()){
+                Location defaultSpawnLocation = spawnWorld.getSpawnLocation();
+                player.teleport(defaultSpawnLocation);
+                return;
+            }
+
+            Location customSpawnLocation = new Location(spawnWorld, firstJoin.x(), firstJoin.y(), firstJoin.z(), firstJoin.yaw(), firstJoin.pitch());
+            player.teleport(customSpawnLocation);
             return;
         }
 
