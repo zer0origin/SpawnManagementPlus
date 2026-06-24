@@ -5,6 +5,7 @@ import com.rayssmp.utilities.events.PlayerOnJoinHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.logging.Level;
 
 public final class Main extends JavaPlugin {
@@ -28,7 +29,13 @@ public final class Main extends JavaPlugin {
     public void onDisable() {
         this.getLogger().log(Level.INFO, "Shutting Down...");
         this.getLogger().log(Level.INFO, "Updating config...");
-        config.update();
+
+        try {
+            config.update();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         this.getLogger().log(Level.INFO, "Shut Down!");
     }
 }
