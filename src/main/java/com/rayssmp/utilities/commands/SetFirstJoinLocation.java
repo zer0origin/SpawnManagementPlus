@@ -31,7 +31,7 @@ public class SetFirstJoinLocation implements CommandExecutor {
 
         Location locationToSet = player.getLocation();
         Config.FirstJoin original = config.firstJoinSettings();
-        config.setFirstJoinSettings(new Config.FirstJoin(original.enabled(), player.getWorld().getKey().value(),
+        config.setFirstJoinSettings(new Config.FirstJoin(original.enabled(), original.onlyOnFirstTime(), player.getWorld().getKey().value(),
                 original.soundEnabled(), original.soundType(), original.soundVolume(), original.soundPitch(),
                 original.useWorldDefault(), locationToSet.x(), locationToSet.y(), locationToSet.z(), player.getYaw(),
                 player.getPitch(), original.messageEnabled(), original.messageContents(),
