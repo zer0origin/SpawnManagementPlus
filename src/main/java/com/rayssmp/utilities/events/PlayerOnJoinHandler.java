@@ -37,6 +37,12 @@ public class PlayerOnJoinHandler implements Listener {
                 player.playSound(player.getLocation(), firstJoinSettings.soundType().toLowerCase(), firstJoinSettings.soundVolume(), firstJoinSettings.pitch());
             }
 
+            if (firstJoinSettings.messageEnabled()){
+                for (String s : firstJoinSettings.messageContents()){
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', s));
+                }
+            }
+
             if (firstJoinSettings.useWorldDefault()) {
                 Location defaultSpawnLocation = spawnWorld.getSpawnLocation();
                 player.teleport(defaultSpawnLocation);
