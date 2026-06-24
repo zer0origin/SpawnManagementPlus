@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Config {
     private final File configFileLocation = new File("plugins/SpawnManagementPlus", "config.yml");
     private final FileConfiguration cfg = new YamlConfiguration();
-    private FirstJoin firstJoin = new FirstJoin(false, "", false, "Sound.GLASS", 0, 0, false, 0, 0, 0, 0f, 0f, false, null);
+    private FirstJoin firstJoinSettings = new FirstJoin(false, "", false, "Sound.GLASS", 0, 0, false, 0, 0, 0, 0f, 0f, false, null, "", "", "");
 
     public void createOrLoad() {
         if (!configFileLocation.exists()) {
@@ -40,20 +40,54 @@ public class Config {
                 String soundType = cfg.getString("joins.first_join.action.sound.type", "Sound.GLASS");
                 float soundVolume = (float) cfg.getDouble("joins.first_join.action.sound.volume", 0);
                 float soundPitch = (float) cfg.getDouble("joins.first_join.action.sound.pitch", 0);
+                String firstJoinLocationCommandError = cfg.getString("joins.commands.setfirstjoinlocation.insufficient_permission_error_message", "&csetfirstjoinlocation");
+                String savedDataMessage = cfg.getString("joins.commands.setfirstjoinlocation.saved_data_message", "&cLocation was saved successfully");
+                String savedDataFailedMessage = cfg.getString("joins.commands.setfirstjoinlocation.saved_data_failed_message", "&cLocation save failed!");
 
-                firstJoin = new FirstJoin(enabled, world, soundEnabled, soundType, soundVolume, soundPitch, useWorldDefault, locationX, locationY, locationZ, locationYaw, locationPitch, messageEnabled, messageContents);
+                setFirstJoinSettings(new FirstJoin(enabled, world, soundEnabled, soundType, soundVolume,
+                        soundPitch, useWorldDefault, locationX, locationY, locationZ, locationYaw, locationPitch,
+                        messageEnabled, messageContents, firstJoinLocationCommandError, savedDataMessage, savedDataFailedMessage));
             } catch (IOException | InvalidConfigurationException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
+    public void update() throws IOException {
+        FirstJoin dataToWrite = this.firstJoinSettings;
+
+        cfg.set("joins.first_join.enabled", dataToWrite.enabled);
+        cfg.get("joins.first_join.action.world", dataToWrite.world);
+        cfg.get("joins.first_join.action.location.use_world_default", dataToWrite.useWorldDefault);
+        cfg.get("joins.first_join.action.location.x", dataToWrite.x);
+        cfg.get("joins.first_join.action.location.y", dataToWrite.y);
+        cfg.get("joins.first_join.action.location.z", dataToWrite.z);
+        cfg.get("joins.first_join.action.location.yaw", dataToWrite.yaw);
+        cfg.get("joins.first_join.action.location.pitch", dataToWrite.pitch);
+        cfg.get("joins.first_join.action.message.enabled", dataToWrite.messageEnabled);
+        cfg.get("joins.first_join.action.message.content", dataToWrite.messageContents);
+        cfg.get("joins.first_join.action.sound.enabled", dataToWrite.soundEnabled);
+        cfg.get("joins.first_join.action.sound.type", dataToWrite.soundType);
+        cfg.get("joins.first_join.action.sound.volume", dataToWrite.soundVolume);
+        cfg.get("joins.first_join.action.sound.pitch", dataToWrite.pitch);
+        cfg.get("joins.commands.setfirstjoinlocation.insufficient_permission_error_message", dataToWrite.firstJoinLocationCommandError);
+        cfg.get("joins.commands.setfirstjoinlocation.saved_data_message", dataToWrite.savedDataMessage);
+        cfg.get("joins.commands.setfirstjoinlocation.saved_data_failed_message", dataToWrite.savedDataFailedMessage);
+
+        cfg.save(configFileLocation);
+    }
+
     public FirstJoin firstJoinSettings() {
-        return firstJoin;
+        return firstJoinSettings;
+    }
+
+    public void setFirstJoinSettings(FirstJoin firstJoinSettings) {
+        this.firstJoinSettings = firstJoinSettings;
     }
 
     public record FirstJoin(boolean enabled, String world, boolean soundEnabled, String soundType, float soundVolume,
                             float soundPitch, boolean useWorldDefault, double x, double y,
-                            double z, float yaw, float pitch, boolean messageEnabled, List<String> messageContents) {
+                            double z, float yaw, float pitch, boolean messageEnabled, List<String> messageContents,
+                            String firstJoinLocationCommandError, String savedDataMessage, String savedDataFailedMessage) {
     }
 }
