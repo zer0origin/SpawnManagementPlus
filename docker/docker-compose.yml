@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  minecraft-server:
+    image: minecraft_paper:26.1
+    ports:
+      - "25565:25565" # Game port
+      - "5005:5005"   # Debug port
+    volumes:
+      # Change 'your-plugin-name-1.0.jar' to match the actual output file in your target/ folder
+      - ../target/spawnmanagementplus-0.0.1-SNAPSHOT.jar:/minecraft/plugins/spawnmanagementplus-0.0.1-SNAPSHOT.jar
+      # Persists world maps and configurations when rebuilding the server image
+      - ../minecraft_data:/minecraft
