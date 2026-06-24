@@ -12,6 +12,7 @@ public class Config {
     private final File configFileLocation = new File("plugins/SpawnManagementPlus", "config.yml");
     private final FileConfiguration cfg = new YamlConfiguration();
     private FirstJoin firstJoinSettings = new FirstJoin(false, "", false, "Sound.GLASS", 0, 0, false, 0, 0, 0, 0f, 0f, false, null, "", "", "");
+    private boolean settingsHaveBeenUpdated = false;
 
     public void createOrLoad() {
         if (!configFileLocation.exists()) {
@@ -44,9 +45,9 @@ public class Config {
                 String savedDataMessage = cfg.getString("joins.commands.setfirstjoinlocation.saved_data_message", "&cLocation was saved successfully");
                 String savedDataFailedMessage = cfg.getString("joins.commands.setfirstjoinlocation.saved_data_failed_message", "&cLocation save failed!");
 
-                setFirstJoinSettings(new FirstJoin(enabled, world, soundEnabled, soundType, soundVolume,
+                firstJoinSettings = new FirstJoin(enabled, world, soundEnabled, soundType, soundVolume,
                         soundPitch, useWorldDefault, locationX, locationY, locationZ, locationYaw, locationPitch,
-                        messageEnabled, messageContents, firstJoinLocationCommandError, savedDataMessage, savedDataFailedMessage));
+                        messageEnabled, messageContents, firstJoinLocationCommandError, savedDataMessage, savedDataFailedMessage);
             } catch (IOException | InvalidConfigurationException e) {
                 throw new RuntimeException(e);
             }
@@ -54,6 +55,10 @@ public class Config {
     }
 
     public void update() throws IOException {
+        if (!settingsHaveBeenUpdated){
+            return;
+        }
+
         FirstJoin dataToWrite = this.firstJoinSettings;
 
         cfg.set("joins.first_join.enabled", dataToWrite.enabled);
@@ -75,6 +80,7 @@ public class Config {
         cfg.get("joins.commands.setfirstjoinlocation.saved_data_failed_message", dataToWrite.savedDataFailedMessage);
 
         cfg.save(configFileLocation);
+        settingsHaveBeenUpdated = false;
     }
 
     public FirstJoin firstJoinSettings() {
@@ -83,6 +89,7 @@ public class Config {
 
     public void setFirstJoinSettings(FirstJoin firstJoinSettings) {
         this.firstJoinSettings = firstJoinSettings;
+        settingsHaveBeenUpdated = true;
     }
 
     public record FirstJoin(boolean enabled, String world, boolean soundEnabled, String soundType, float soundVolume,

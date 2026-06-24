@@ -5,6 +5,8 @@ import com.rayssmp.utilities.events.PlayerOnJoinHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Level;
+
 public final class Main extends JavaPlugin {
     private final Config config = new Config();
 
@@ -15,13 +17,18 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        this.getLogger().log(Level.INFO, "Starting...");
         // Plugin startup logic
         Bukkit.getPluginManager().registerEvents(new PlayerOnJoinHandler(config.firstJoinSettings()), this);
         this.getCommand("setfirstjoinlocation").setExecutor(new SetFirstJoinLocation(config));
+        this.getLogger().log(Level.INFO, "Enabled!");
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        this.getLogger().log(Level.INFO, "Shutting Down...");
+        this.getLogger().log(Level.INFO, "Updating config...");
+        config.update();
+        this.getLogger().log(Level.INFO, "Shut Down!");
     }
 }
