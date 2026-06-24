@@ -1,0 +1,6 @@
+name: SpawnManagementPlus
+version: '${version}'
+
+main: com.rayssmp.utilities.Main
+api-version: '26.1.2'
+load: POSTWORLD
