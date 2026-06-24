@@ -30,4 +30,5 @@ This section contains settings about behavior of plugin when players change worl
 - **action**: Define the sound, orientation (yaw, pitch), and messages.
 
 ## Requirements
+Minecraft Version: '26.1.2'\
 For multi-world locations, you need a world loader plugin.
