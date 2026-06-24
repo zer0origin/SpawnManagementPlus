@@ -1,5 +1,6 @@
 package com.rayssmp.utilities.events;
 
+import com.rayssmp.utilities.Config;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +15,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
  *  firstspawnjoin.txt (New player logic)
  */
 public class PlayerOnJoinHandler implements Listener {
+    private final Config.FirstJoin firstJoin;
+
+    public PlayerOnJoinHandler(Config.FirstJoin firstJoin) {
+        this.firstJoin = firstJoin;
+    }
+
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
