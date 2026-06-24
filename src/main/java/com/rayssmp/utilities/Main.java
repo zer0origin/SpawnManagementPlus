@@ -19,8 +19,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getLogger().log(Level.INFO, "Starting...");
-        // Plugin startup logic
-        Bukkit.getPluginManager().registerEvents(new PlayerOnJoinHandler(config.firstJoinSettings()), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerOnJoinHandler(config.firstJoinSettings(), config.worldJoinSettings()), this);
         this.getCommand("setfirstjoinlocation").setExecutor(new SetFirstJoinLocation(config));
         this.getLogger().log(Level.INFO, "Enabled!");
     }
