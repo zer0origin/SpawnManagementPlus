@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.Objects;
@@ -22,9 +23,11 @@ import java.util.Objects;
  */
 public class PlayerOnJoinHandler implements Listener {
     private final Config.FirstJoin firstJoinSettings;
+    private final Config.WorldJoin worldJoin;
 
-    public PlayerOnJoinHandler(Config.FirstJoin firstJoinSettings) {
+    public PlayerOnJoinHandler(Config.FirstJoin firstJoinSettings, Config.WorldJoin worldJoin) {
         this.firstJoinSettings = firstJoinSettings;
+        this.worldJoin = worldJoin;
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -38,8 +41,8 @@ public class PlayerOnJoinHandler implements Listener {
                 player.playSound(player.getLocation(), firstJoinSettings.soundType().toLowerCase(), firstJoinSettings.soundVolume(), firstJoinSettings.pitch());
             }
 
-            if (firstJoinSettings.messageEnabled()){
-                for (String s : firstJoinSettings.messageContents()){
+            if (firstJoinSettings.messageEnabled()) {
+                for (String s : firstJoinSettings.messageContents()) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', s));
                 }
             }
@@ -52,9 +55,36 @@ public class PlayerOnJoinHandler implements Listener {
 
             Location customSpawnLocation = new Location(spawnWorld, firstJoinSettings.x(), firstJoinSettings.y(), firstJoinSettings.z(), firstJoinSettings.yaw(), firstJoinSettings.pitch());
             player.teleport(customSpawnLocation);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+        Player player = event.getPlayer();
+
+        if (!worldJoin.enabled()) {
             return;
         }
 
-        //TODO: joinspawn.txt (Join logic)
+        boolean isWorldExcluded = worldJoin.exclude().stream().anyMatch(s -> s.toLowerCase().equals(player.getWorld().getKey().value()));
+        if (isWorldExcluded){
+            return;
+        }
+
+        if (worldJoin.soundEnabled()){
+            player.playSound(player.getLocation(), worldJoin.soundType().toLowerCase(), worldJoin.soundVolume(), worldJoin.pitch());
+        }
+
+        if (worldJoin.messageEnabled()) {
+            for (String s : worldJoin.messageContents()) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', s));
+            }
+        }
+
+        Location spawnLocation = player.getWorld().getSpawnLocation();
+        spawnLocation.setYaw(worldJoin.yaw());
+        spawnLocation.setPitch(worldJoin.pitch());
+
+        player.teleport(spawnLocation);
     }
 }
