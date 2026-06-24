@@ -1,0 +1,18 @@
+joins:
+  # Perform this action when a player is joining for the first time.
+  first_join:
+    enabled: false
+    action:
+        world: spawn
+        location:
+          use_world_default: true
+          x: 0
+          y: 0
+          z: 0
+        message:
+          enabled: false
+          content:
+            - ""
+            - "&d&lWelcome to Survival %player%!"
+            - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
+            - ""
