@@ -5,6 +5,7 @@ import com.rayssmp.utilities.events.PlayerOnJoinHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
@@ -13,6 +14,18 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        File dataFolder = this.getDataFolder();
+
+        if (!dataFolder.exists()) {
+            this.getLogger().info("Creating plugin folder...");
+
+            if (!dataFolder.mkdirs()) {
+                this.getLogger().severe("Failed to create plugin folder!");
+            }
+
+            this.getLogger().info("Plugin folder successfully created.");
+        }
+
         config.createOrLoad();
     }
 

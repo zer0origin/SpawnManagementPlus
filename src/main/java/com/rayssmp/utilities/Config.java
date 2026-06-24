@@ -18,7 +18,7 @@ public class Config {
     public void createOrLoad() {
         if (!configFileLocation.exists()) {
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            try (InputStream is = Objects.requireNonNull(classloader.getResourceAsStream("config.yml"), "Unable to write config file!");
+            try (InputStream is = Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("config.yml"), "Unable to write config file!");
                  OutputStream output = new FileOutputStream(configFileLocation)) {
 
                 long transferred = is.transferTo(output);
