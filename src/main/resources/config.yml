@@ -4,11 +4,18 @@ joins:
     enabled: false
     action:
         world: spawn
+        sound:
+          enabled: false
+          type: Sound.GLASS #A list of sounds can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+          volume: 1
+          pitch: 1
         location:
           use_world_default: true
           x: 0
           y: 0
           z: 0
+          yaw: 0
+          pitch: 0
         message:
           enabled: false
           content:
