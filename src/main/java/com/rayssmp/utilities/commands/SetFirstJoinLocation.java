@@ -24,13 +24,12 @@ public class SetFirstJoinLocation implements CommandExecutor {
             return true;
         }
 
-        if (!(sender.hasPermission("SpawnManagementPlus.setfirstjoinlocation"))) {
+        if (!(sender.hasPermission("SpawnManagementPlus.setfirstjoinlocation") && !sender.isOp())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.firstJoinSettings().firstJoinLocationCommandError()));
             return true;
         }
 
         Location locationToSet = player.getLocation();
-
         Config.FirstJoin original = config.firstJoinSettings();
         config.setFirstJoinSettings(new Config.FirstJoin(original.enabled(), player.getWorld().getKey().value(),
                 original.soundEnabled(), original.soundType(), original.soundVolume(), original.soundPitch(),
