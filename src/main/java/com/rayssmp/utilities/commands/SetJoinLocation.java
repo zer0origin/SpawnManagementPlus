@@ -36,7 +36,7 @@ public class SetJoinLocation implements CommandExecutor {
                 original.soundEnabled(), original.soundType(), original.soundVolume(), original.soundPitch(),
                 original.useWorldDefault(), locationToSet.x(), locationToSet.y(), locationToSet.z(), player.getYaw(),
                 player.getPitch(), original.messageEnabled(), original.messageFirstTimeOnly(), original.messageContents(),
-                original.firstJoinLocationCommandError(), original.savedDataMessage(), original.savedDataFailedMessage()));
+                original.firstJoinLocationCommandError(), original.savedDataMessage(), original.savedDataFailedMessage(), original.exclude()));
 
         try {
             config.update();

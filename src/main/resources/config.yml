@@ -3,10 +3,13 @@ SpawnManagementPlus:
   on_server_join:
     enabled: false
     only_on_first_time: false
+    exclude: # Are there any worlds that should not do this?
+      - "world_nether"
+      - "world_end"
     action:
       sound:
         enabled: false
-        type: entity.experience_orb.pickup # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
+        type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
         volume: 1
         pitch: 1
       location: # Can be set by doing /joinlocation
@@ -20,7 +23,7 @@ SpawnManagementPlus:
       message:
         enabled: false
         only_on_first_time: false
-        content:
+        content: # Supports Placeholder API
           - ""
           - "&d&lWelcome to Survival %player_name%!"
           - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
@@ -40,7 +43,7 @@ SpawnManagementPlus:
     action:
       sound:
         enabled: false
-        type: Sound.GLASS #A list of sounds can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+        type: minecraft:block.note_block.pling #A list of sounds can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
         volume: 1
         pitch: 1
       location:
@@ -48,8 +51,8 @@ SpawnManagementPlus:
         pitch: 0
       message:
         enabled: false
-        content:
+        content: # Supports Placeholder API
           - ""
-          - "&d&lWelcome to Survival %player%!"
+          - "&d&lWelcome to Survival %player_name%!"
           - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
           - ""

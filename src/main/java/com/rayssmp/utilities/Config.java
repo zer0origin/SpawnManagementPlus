@@ -72,10 +72,12 @@ public class Config {
         String firstJoinLocationCommandError = cfg.getString("SpawnManagementPlus.on_server_join.commands.joinlocation.insufficient_permission_error_message", "&cjoinlocation failed");
         String savedDataMessage = cfg.getString("SpawnManagementPlus.on_server_join.commands.joinlocation.saved_data_message", "&cLocation was saved successfully");
         String savedDataFailedMessage = cfg.getString("SpawnManagementPlus.on_server_join.commands.joinlocation.saved_data_failed_message", "&cLocation save failed!");
+        List<String> exclude = cfg.getStringList("SpawnManagementPlus.on_server_join.exclude");
+
 
         return new ServerJoin(enabled, onlyOnFirstTime, world, soundEnabled, soundType, soundVolume,
                 soundPitch, useWorldDefault, locationX, locationY, locationZ, locationYaw, locationPitch,
-                messageEnabled, messageFirstTimeOnly, messageContents, firstJoinLocationCommandError, savedDataMessage, savedDataFailedMessage);
+                messageEnabled, messageFirstTimeOnly, messageContents, firstJoinLocationCommandError, savedDataMessage, savedDataFailedMessage, exclude);
     }
 
     private WorldJoin loadWorldJoinValues(FileConfiguration cfg) {
@@ -114,6 +116,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.commands.joinlocation.insufficient_permission_error_message", serverJoin.firstJoinLocationCommandError);
         cfg.set("SpawnManagementPlus.commands.joinlocation.saved_data_message", serverJoin.savedDataMessage);
         cfg.set("SpawnManagementPlus.commands.joinlocation.saved_data_failed_message", serverJoin.savedDataFailedMessage);
+        cfg.set("SpawnManagementPlus.on_server_join.exclude", serverJoin.exclude);
     }
 
     private void setWorldJoinValues(FileConfiguration cfg, WorldJoin worldJoin) {
@@ -152,9 +155,9 @@ public class Config {
                              float soundPitch, boolean useWorldDefault, double x, double y,
                              double z, float yaw, float pitch, boolean messageEnabled, boolean messageFirstTimeOnly, List<String> messageContents,
                              String firstJoinLocationCommandError, String savedDataMessage,
-                             String savedDataFailedMessage) {
+                             String savedDataFailedMessage, List<String> exclude) {
         public ServerJoin() {
-            this(false, false, "", false, "", 0, 0, false, 0, 0, 0, 0, 0, false, false, null, "", "", "");
+            this(false, false, "", false, "", 0, 0, false, 0, 0, 0, 0, 0, false, false, null, "", "", "", null);
         }
     }
 

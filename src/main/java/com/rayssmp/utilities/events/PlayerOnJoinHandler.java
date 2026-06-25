@@ -36,11 +36,16 @@ public class PlayerOnJoinHandler implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        var firstJoinSettings = config.serverJoinSettings();
+        var serverJoinSettings = config.serverJoinSettings();
 
-        if (firstJoinSettings.enabled()) {
+        boolean isWorldExcluded = serverJoinSettings.exclude().stream().anyMatch(s -> s.toLowerCase().equals(player.getWorld().getKey().value()));
+        if (isWorldExcluded) {
+            return;
+        }
+
+        if (serverJoinSettings.enabled()) {
             event.joinMessage(null);
-            if (firstJoinSettings.onlyOnFirstTime()) {
+            if (serverJoinSettings.onlyOnFirstTime()) {
                 if (!player.hasPlayedBefore()) {
                     handleOnServerJoin(player);
                     return;
