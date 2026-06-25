@@ -145,6 +145,7 @@ public class Config {
         var cooldownTimerSeconds = cfg.getInt("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", -1);
         var cooldownTimerCancelOnMove = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.cancel_on_move", false);
         var coolDownTimerCancelOnMoveMessage = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.messages");
+
         return new CommandSettings(enabled, savedDataMessage, savedDataFailedMessage, world, x, y, z, yaw, pitch,
                 spawnPermissionError, firstJoinLocationCommandError, setSpawnPermissionError, setSpawnSaved,
                 setSpawnFailed, cooldownTimerSeconds, coolDownTimerCancelOnMoveMessage, cooldownTimerCancelOnMove);
@@ -214,11 +215,15 @@ public class Config {
         }
     }
 
-    public record CommandSettings(boolean enabled, String setJoinLocationSaved, String setJoinLocationSavedFailed, String world,
-                                  double x, double y, double z, float yaw, float pitch, String spawnPermissionError, String setJoinLocationPermissionError,
-                                  String setSpawnPermissionError, String setSpawnSaved, String setSpawnFailed, int cooldownTimerSeconds, List<String> coolDownTimerCancelOnMoveMessage, boolean cooldownTimerCancelOnMove) {
+    public record CommandSettings(boolean enabled, String setJoinLocationSaved, String setJoinLocationSavedFailed,
+                                  String world,
+                                  double x, double y, double z, float yaw, float pitch, String spawnPermissionError,
+                                  String setJoinLocationPermissionError,
+                                  String setSpawnPermissionError, String setSpawnSaved, String setSpawnFailed,
+                                  int cooldownTimerSeconds, List<String> coolDownTimerCancelOnMoveMessage,
+                                  boolean cooldownTimerCancelOnMove) {
         public CommandSettings() {
-            this(false, "", "", "", 0, 0, 0, 0, 0, "", "", "", "", "", 0, "", false);
+            this(false, "", "", "", 0, 0, 0, 0, 0, "", "", "", "", "", 0, null, false);
         }
     }
 }

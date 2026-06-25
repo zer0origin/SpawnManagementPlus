@@ -36,7 +36,7 @@ public class SetSpawn implements CommandExecutor {
                 commandSettings.setJoinLocationSavedFailed(), location.getWorld().getName(), location.x(), location.y(),
                 location.z(), location.getYaw(), location.getPitch(), commandSettings.spawnPermissionError(),
                 commandSettings.setJoinLocationPermissionError(), commandSettings.setSpawnPermissionError(),
-                commandSettings.setSpawnSaved(), commandSettings.setSpawnFailed(), commandSettings.cooldownTimerSeconds()));
+                commandSettings.setSpawnSaved(), commandSettings.setSpawnFailed(), commandSettings.cooldownTimerSeconds(), commandSettings.coolDownTimerCancelOnMoveMessage(), commandSettings.cooldownTimerCancelOnMove()));
 
         try {
             config.update();
