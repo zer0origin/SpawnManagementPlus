@@ -1,6 +1,7 @@
 package com.rayssmp.utilities.events;
 
 import com.rayssmp.utilities.Config;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,6 +13,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -34,14 +36,17 @@ public class PlayerOnJoinHandler implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        var firstJoinSettings = config.firstJoinSettings();
+        var firstJoinSettings = config.serverJoinSettings();
 
         if (firstJoinSettings.enabled()) {
+            event.joinMessage(null);
             if (firstJoinSettings.onlyOnFirstTime()) {
                 if (!player.hasPlayedBefore()) {
                     handleOnServerJoin(player);
                     return;
                 }
+
+                return;
             }
 
             handleOnServerJoin(player);
@@ -49,59 +54,69 @@ public class PlayerOnJoinHandler implements Listener {
     }
 
     private void handleOnServerJoin(Player player) {
-        var firstJoinSettings = config.firstJoinSettings();
-        World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(firstJoinSettings.world()), "Failed to find first time join world!");
+        var serverJoinSettings = config.serverJoinSettings();
+        World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(serverJoinSettings.world()), "Failed to find first time join world!");
 
-        if (firstJoinSettings.soundEnabled()) {
-            player.playSound(player.getLocation(), firstJoinSettings.soundType(), firstJoinSettings.soundVolume(), firstJoinSettings.soundPitch());
+        if (serverJoinSettings.messageEnabled()) {
+            parseAndSendMessageContents(player, serverJoinSettings.messageContents());
         }
 
-        if (firstJoinSettings.messageEnabled()) {
-            for (String s : firstJoinSettings.messageContents()) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', s));
-            }
-        }
-
-        if (firstJoinSettings.useWorldDefault()) {
+        if (serverJoinSettings.useWorldDefault()) {
             Location defaultSpawnLocation = spawnWorld.getSpawnLocation();
             player.teleport(defaultSpawnLocation);
             return;
         }
 
-        Location customSpawnLocation = new Location(spawnWorld, firstJoinSettings.x(), firstJoinSettings.y(), firstJoinSettings.z(), firstJoinSettings.yaw(), firstJoinSettings.pitch());
+        Location customSpawnLocation = new Location(spawnWorld, serverJoinSettings.x(), serverJoinSettings.y(), serverJoinSettings.z(), serverJoinSettings.yaw(), serverJoinSettings.pitch());
         Bukkit.getScheduler().runTask(this.main, () -> {
             player.teleport(customSpawnLocation);
+
+            if (serverJoinSettings.soundEnabled()) {
+                player.playSound(player.getLocation(), serverJoinSettings.soundType(), serverJoinSettings.soundVolume(), serverJoinSettings.soundPitch());
+            }
         });
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-        var worldJoin = config.worldJoinSettings();
+        var worldJoinSettings = config.worldJoinSettings();
         Player player = event.getPlayer();
 
-        if (!worldJoin.enabled()) {
+        if (!worldJoinSettings.enabled()) {
             return;
         }
 
-        boolean isWorldExcluded = worldJoin.exclude().stream().anyMatch(s -> s.toLowerCase().equals(player.getWorld().getKey().value()));
+        boolean isWorldExcluded = worldJoinSettings.exclude().stream().anyMatch(s -> s.toLowerCase().equals(player.getWorld().getKey().value()));
         if (isWorldExcluded) {
             return;
         }
 
-        if (worldJoin.soundEnabled()) {
-            player.playSound(player.getLocation(), worldJoin.soundType().toLowerCase(), worldJoin.soundVolume(), worldJoin.pitch());
-        }
-
-        if (worldJoin.messageEnabled()) {
-            for (String s : worldJoin.messageContents()) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', s));
-            }
+        if (worldJoinSettings.messageEnabled()) {
+            parseAndSendMessageContents(player, worldJoinSettings.messageContents());
         }
 
         Location spawnLocation = player.getWorld().getSpawnLocation();
-        spawnLocation.setYaw(worldJoin.yaw());
-        spawnLocation.setPitch(worldJoin.pitch());
+        spawnLocation.setYaw(worldJoinSettings.yaw());
+        spawnLocation.setPitch(worldJoinSettings.pitch());
 
-        player.teleport(spawnLocation);
+        Bukkit.getScheduler().runTask(this.main, () -> {
+            player.teleport(spawnLocation);
+
+            if (worldJoinSettings.soundEnabled()) {
+                player.playSound(player.getLocation(), worldJoinSettings.soundType(), worldJoinSettings.soundVolume(), worldJoinSettings.soundPitch());
+            }
+        });
+    }
+
+    private void parseAndSendMessageContents(Player player, List<String> strings) {
+        strings.stream().map(s -> {
+            try {
+                return PlaceholderAPI.setPlaceholders(player, s);
+            } catch (Throwable e) {
+                return s;
+            }
+        }).forEach(s -> {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', s));
+        });
     }
 }

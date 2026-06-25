@@ -4,28 +4,29 @@ SpawnManagementPlus:
     enabled: false
     only_on_first_time: false
     action:
-        sound:
-          enabled: false
-          type: entity.experience_orb.pickup # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
-          volume: 1
-          pitch: 1
-        location: # Can be set by doing /setfirstjoinlocation
-          use_world_default: true
-          world: world # if using multiple worlds, YOU MUST have a world loader.
-          x: 0
-          y: 0
-          z: 0
-          yaw: 0
-          pitch: 0
-        message:
-          enabled: false
-          content:
-            - ""
-            - "&d&lWelcome to Survival %player%!"
-            - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
-            - ""
+      sound:
+        enabled: false
+        type: entity.experience_orb.pickup # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
+        volume: 1
+        pitch: 1
+      location: # Can be set by doing /joinlocation
+        use_world_default: true
+        world: world # if using multiple worlds, YOU MUST have a world loader.
+        x: 0
+        y: 0
+        z: 0
+        yaw: 0
+        pitch: 0
+      message:
+        enabled: false
+        only_on_first_time: false
+        content:
+          - ""
+          - "&d&lWelcome to Survival %player_name%!"
+          - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
+          - ""
     commands:
-      setfirstjoinlocation:
+      joinlocation:
         insufficient_permission_error_message: "&cYou don't have permission to run this command."
         saved_data_message: "&cLocation was saved successfully"
         saved_data_failed_message: "&cLocation save failed!"

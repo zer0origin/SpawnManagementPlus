@@ -4,11 +4,12 @@ version: '${version}'
 main: com.rayssmp.utilities.Main
 api-version: '26.1.2'
 load: POSTWORLD
+softdepend: [PlaceholderAPI]
 commands:
   joinlocation:
     description: Set the SpawnManagementPlus.first_join.action.location in the configuration file and updates in-memory information.
     usage: /joinlocation
-    permission: SpawnManagementPlus.setfirstjoinlocation
+    permission: SpawnManagementPlus.joinlocation
   reloadspawnmanagementplus:
     description: Reload config.
     usage: /reloadspawnmanagementplus
