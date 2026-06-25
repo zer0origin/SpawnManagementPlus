@@ -142,10 +142,12 @@ public class Config {
         var setSpawnPermissionError = cfg.getString("SpawnManagementPlus.commands.setSpawn.insufficient_permission_error_message", "&cYou don't have permission to run this command.");
         var setSpawnSaved = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_message", "Location was saved successfully");
         var setSpawnFailed = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_failed_message", "&cLocation save failed!");
-
+        var cooldownTimerSeconds = cfg.getInt("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", -1);
+        var cooldownTimerCancelOnMove = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.cancel_on_move", false);
+        var coolDownTimerCancelOnMoveMessage = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.messages");
         return new CommandSettings(enabled, savedDataMessage, savedDataFailedMessage, world, x, y, z, yaw, pitch,
                 spawnPermissionError, firstJoinLocationCommandError, setSpawnPermissionError, setSpawnSaved,
-                setSpawnFailed);
+                setSpawnFailed, cooldownTimerSeconds, coolDownTimerCancelOnMoveMessage, cooldownTimerCancelOnMove);
     }
 
     private void setCommandSettings(FileConfiguration cfg, CommandSettings commandSettings) {
@@ -163,6 +165,9 @@ public class Config {
         cfg.set("SpawnManagementPlus.commands.spawn.location.yaw", commandSettings.yaw);
         cfg.set("SpawnManagementPlus.commands.spawn.location.pitch", commandSettings.pitch);
         cfg.set("SpawnManagementPlus.commands.spawn.enabled", commandSettings.enabled);
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", commandSettings.cooldownTimerSeconds);
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.cancel_on_move", commandSettings.cooldownTimerCancelOnMove);
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.messages", commandSettings.coolDownTimerCancelOnMoveMessage);
     }
 
     public ServerJoin getServerJoinSettings() {
@@ -211,9 +216,9 @@ public class Config {
 
     public record CommandSettings(boolean enabled, String setJoinLocationSaved, String setJoinLocationSavedFailed, String world,
                                   double x, double y, double z, float yaw, float pitch, String spawnPermissionError, String setJoinLocationPermissionError,
-                                  String setSpawnPermissionError, String setSpawnSaved, String setSpawnFailed) {
+                                  String setSpawnPermissionError, String setSpawnSaved, String setSpawnFailed, int cooldownTimerSeconds, List<String> coolDownTimerCancelOnMoveMessage, boolean cooldownTimerCancelOnMove) {
         public CommandSettings() {
-            this(false, "", "", "", 0, 0, 0, 0, 0, "", "", "", "", "");
+            this(false, "", "", "", 0, 0, 0, 0, 0, "", "", "", "", "", 0, "", false);
         }
     }
 }

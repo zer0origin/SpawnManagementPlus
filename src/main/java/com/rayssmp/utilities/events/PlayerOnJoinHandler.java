@@ -1,6 +1,7 @@
 package com.rayssmp.utilities.events;
 
 import com.rayssmp.utilities.Config;
+import com.rayssmp.utilities.util.MinecraftUtils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -97,7 +98,7 @@ public class PlayerOnJoinHandler implements Listener {
         }
 
         if (worldJoinSettings.messageEnabled()) {
-            parseAndSendMessageContents(player, worldJoinSettings.messageContents());
+            MinecraftUtils.parseAndSendMessageContents(player, worldJoinSettings.messageContents());
         }
 
         Location spawnLocation = player.getWorld().getSpawnLocation();
@@ -110,18 +111,6 @@ public class PlayerOnJoinHandler implements Listener {
             if (worldJoinSettings.soundEnabled()) {
                 player.playSound(player.getLocation(), worldJoinSettings.soundType(), worldJoinSettings.soundVolume(), worldJoinSettings.soundPitch());
             }
-        });
-    }
-
-    private void parseAndSendMessageContents(Player player, List<String> strings) {
-        strings.stream().map(s -> {
-            try {
-                return PlaceholderAPI.setPlaceholders(player, s);
-            } catch (Throwable e) {
-                return s;
-            }
-        }).forEach(s -> {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', s));
         });
     }
 }

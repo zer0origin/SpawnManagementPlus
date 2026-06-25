@@ -1,6 +1,8 @@
 package com.rayssmp.utilities.commands;
 
 import com.rayssmp.utilities.Config;
+import com.rayssmp.utilities.util.MinecraftUtils;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -9,14 +11,21 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
-public class Spawn implements CommandExecutor {
+public class Spawn implements CommandExecutor, Listener {
     private final Config config;
     private final JavaPlugin main;
+    private final Map<UUID, BukkitTask> intervalTask = new HashMap<>();
 
     public Spawn(JavaPlugin main, Config config) {
         this.config = config;
@@ -44,10 +53,27 @@ public class Spawn implements CommandExecutor {
         Location location = new Location(spawnWorld, commandSettings.x(), commandSettings.y(), commandSettings.z(),
                 commandSettings.yaw(), commandSettings.pitch());
 
-        Bukkit.getScheduler().runTask(this.main, () -> {
+        if (config.getCommandSettings().cooldownTimerSeconds() < 0) {
+            Bukkit.getScheduler().runTask(this.main, () -> {
+                player.teleport(location);
+            });
+        }
+
+        var task = Bukkit.getScheduler().runTaskTimer(this.main, () -> {
             player.teleport(location);
-        });
+        }, 0, config.getCommandSettings().cooldownTimerSeconds() * 20L);
+        intervalTask.put(player.getUniqueId(), task);
 
         return true;
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (!intervalTask.containsKey(event.getPlayer().getUniqueId()) || !config.getCommandSettings().cooldownTimerCancelOnMove()){
+            return;
+        }
+
+        MinecraftUtils.parseAndSendMessageContents(event.getPlayer(), config.getCommandSettings().coolDownTimerCancelOnMoveMessage());
+        intervalTask.get(event.getPlayer().getUniqueId()).cancel();
     }
 }
