@@ -1,5 +1,6 @@
 package com.rayssmp.utilities;
 
+import com.rayssmp.utilities.commands.Reload;
 import com.rayssmp.utilities.commands.SetFirstJoinLocation;
 import com.rayssmp.utilities.events.PlayerOnJoinHandler;
 import org.bukkit.Bukkit;
@@ -26,14 +27,20 @@ public final class Main extends JavaPlugin {
             this.getLogger().info("Plugin folder successfully created.");
         }
 
-        config.createOrLoad();
+        try {
+            config.load();
+        } catch (IOException e) {
+            this.getLogger().severe("Failed to create config file!");
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void onEnable() {
         this.getLogger().log(Level.INFO, "Starting...");
-        Bukkit.getPluginManager().registerEvents(new PlayerOnJoinHandler(config.firstJoinSettings(), config.worldJoinSettings()), this);
-        this.getCommand("setfirstjoinlocation").setExecutor(new SetFirstJoinLocation(config));
+        Bukkit.getPluginManager().registerEvents(new PlayerOnJoinHandler(this, config), this);
+        this.getCommand("joinlocation").setExecutor(new SetFirstJoinLocation(config));
+        this.getCommand("reloadspawnmanagementplus").setExecutor(new Reload(config));
         this.getLogger().log(Level.INFO, "Enabled!");
     }
 

@@ -11,3 +11,5 @@ services:
       - ../target/spawnmanagementplus-0.0.1-SNAPSHOT.jar:/minecraft/plugins/spawnmanagementplus-0.0.1-SNAPSHOT.jar
       # Persists world maps and configurations when rebuilding the server image
       - ../minecraft_data:/minecraft
+    tty: true
+    stdin_open: true

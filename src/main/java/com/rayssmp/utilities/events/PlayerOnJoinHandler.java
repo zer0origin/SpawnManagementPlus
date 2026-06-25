@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 
@@ -22,44 +23,60 @@ import java.util.Objects;
  * firstspawnjoin.txt (New player logic)
  */
 public class PlayerOnJoinHandler implements Listener {
-    private final Config.FirstJoin firstJoinSettings;
-    private final Config.WorldJoin worldJoin;
+    private final Config config;
+    private final JavaPlugin main;
 
-    public PlayerOnJoinHandler(Config.FirstJoin firstJoinSettings, Config.WorldJoin worldJoin) {
-        this.firstJoinSettings = firstJoinSettings;
-        this.worldJoin = worldJoin;
+    public PlayerOnJoinHandler(JavaPlugin main, Config config) {
+        this.main = main;
+        this.config = config;
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        var firstJoinSettings = config.firstJoinSettings();
 
-        if (!player.hasPlayedBefore() && firstJoinSettings.enabled()) {
-            World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(firstJoinSettings.world()), "Failed to find first time join world!");
-
-            if (firstJoinSettings.soundEnabled()) {
-                player.playSound(player.getLocation(), firstJoinSettings.soundType().toLowerCase(), firstJoinSettings.soundVolume(), firstJoinSettings.pitch());
-            }
-
-            if (firstJoinSettings.messageEnabled()) {
-                for (String s : firstJoinSettings.messageContents()) {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', s));
+        if (firstJoinSettings.enabled()) {
+            if (firstJoinSettings.onlyOnFirstTime()) {
+                if (!player.hasPlayedBefore()) {
+                    handleOnServerJoin(player);
+                    return;
                 }
             }
 
-            if (firstJoinSettings.useWorldDefault()) {
-                Location defaultSpawnLocation = spawnWorld.getSpawnLocation();
-                player.teleport(defaultSpawnLocation);
-                return;
-            }
-
-            Location customSpawnLocation = new Location(spawnWorld, firstJoinSettings.x(), firstJoinSettings.y(), firstJoinSettings.z(), firstJoinSettings.yaw(), firstJoinSettings.pitch());
-            player.teleport(customSpawnLocation);
+            handleOnServerJoin(player);
         }
+    }
+
+    private void handleOnServerJoin(Player player) {
+        var firstJoinSettings = config.firstJoinSettings();
+        World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(firstJoinSettings.world()), "Failed to find first time join world!");
+
+        if (firstJoinSettings.soundEnabled()) {
+            player.playSound(player.getLocation(), firstJoinSettings.soundType(), firstJoinSettings.soundVolume(), firstJoinSettings.soundPitch());
+        }
+
+        if (firstJoinSettings.messageEnabled()) {
+            for (String s : firstJoinSettings.messageContents()) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', s));
+            }
+        }
+
+        if (firstJoinSettings.useWorldDefault()) {
+            Location defaultSpawnLocation = spawnWorld.getSpawnLocation();
+            player.teleport(defaultSpawnLocation);
+            return;
+        }
+
+        Location customSpawnLocation = new Location(spawnWorld, firstJoinSettings.x(), firstJoinSettings.y(), firstJoinSettings.z(), firstJoinSettings.yaw(), firstJoinSettings.pitch());
+        Bukkit.getScheduler().runTask(this.main, () -> {
+            player.teleport(customSpawnLocation);
+        });
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+        var worldJoin = config.worldJoinSettings();
         Player player = event.getPlayer();
 
         if (!worldJoin.enabled()) {
@@ -67,11 +84,11 @@ public class PlayerOnJoinHandler implements Listener {
         }
 
         boolean isWorldExcluded = worldJoin.exclude().stream().anyMatch(s -> s.toLowerCase().equals(player.getWorld().getKey().value()));
-        if (isWorldExcluded){
+        if (isWorldExcluded) {
             return;
         }
 
-        if (worldJoin.soundEnabled()){
+        if (worldJoin.soundEnabled()) {
             player.playSound(player.getLocation(), worldJoin.soundType().toLowerCase(), worldJoin.soundVolume(), worldJoin.pitch());
         }
 

@@ -5,7 +5,12 @@ main: com.rayssmp.utilities.Main
 api-version: '26.1.2'
 load: POSTWORLD
 commands:
-  setfirstjoinlocation:
-    description: Set the joins.first_join.action.location in the configuration file and updates in-memory information.
-    usage: /setfirstjoinlocation
+  joinlocation:
+    description: Set the SpawnManagementPlus.first_join.action.location in the configuration file and updates in-memory information.
+    usage: /joinlocation
     permission: SpawnManagementPlus.setfirstjoinlocation
+  reloadspawnmanagementplus:
+    description: Reload config.
+    usage: /reloadspawnmanagementplus
+    permission: SpawnManagementPlus.reloadspawnmanagementplus
+    aliases: [reloadsmp]
