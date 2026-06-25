@@ -64,7 +64,7 @@ public class PlayerOnJoinHandler implements Listener {
         World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(serverJoinSettings.world()), "Failed to find world!");
 
         if (serverJoinSettings.messageEnabled()) {
-            parseAndSendMessageContents(player, serverJoinSettings.messageContents());
+            MinecraftUtils.parseAndSendMessageContents(player, serverJoinSettings.messageContents());
         }
 
         if (serverJoinSettings.useWorldDefault()) {
