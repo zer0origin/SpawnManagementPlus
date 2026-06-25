@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Spawn implements CommandExecutor, Listener {
     private final Config config;
@@ -59,9 +60,15 @@ public class Spawn implements CommandExecutor, Listener {
             });
         }
 
+        AtomicInteger second = new AtomicInteger(0);
         var task = Bukkit.getScheduler().runTaskTimer(this.main, () -> {
+            if (second.incrementAndGet() < config.getCommandSettings().cooldownTimerSeconds()){
+                //TODO: Send in between message. OPTIONAL SETTING REQUIRED, OPTIONAL PLACEHOLDER REQUIRED, VIA BOTH PLACEHOLDER API AND NON-PLACEHOLDER API.
+                return;
+            }
+
             player.teleport(location);
-        }, 0, config.getCommandSettings().cooldownTimerSeconds() * 20L);
+        }, 0,20);
         intervalTask.put(player.getUniqueId(), task);
 
         return true;
