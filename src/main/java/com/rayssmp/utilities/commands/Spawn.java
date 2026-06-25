@@ -97,7 +97,7 @@ public class Spawn implements CommandExecutor, Listener {
         var to = event.getTo();
         if (from.getBlockX() != to.getBlockX() || from.getBlockY() != to.getBlockY() || from.getBlockZ() != to.getBlockZ()) {
             MinecraftUtils.parseAndSendMessageContents(event.getPlayer(), config.getCommandSettings().coolDownTimerCancelOnMoveMessage());
-            intervalTask.get(event.getPlayer().getUniqueId()).cancel();
+            intervalTask.remove(event.getPlayer().getUniqueId()).cancel();
         }
     }
 }
