@@ -36,7 +36,7 @@ public class PlayerOnJoinHandler implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        var serverJoinSettings = config.serverJoinSettings();
+        var serverJoinSettings = config.getServerJoinSettings();
 
         boolean isWorldExcluded = serverJoinSettings.exclude().stream().anyMatch(s -> s.toLowerCase().equals(player.getWorld().getKey().value()));
         if (isWorldExcluded) {
@@ -59,8 +59,8 @@ public class PlayerOnJoinHandler implements Listener {
     }
 
     private void handleOnServerJoin(Player player) {
-        var serverJoinSettings = config.serverJoinSettings();
-        World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(serverJoinSettings.world()), "Failed to find first time join world!");
+        var serverJoinSettings = config.getServerJoinSettings();
+        World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(serverJoinSettings.world()), "Failed to find world!");
 
         if (serverJoinSettings.messageEnabled()) {
             parseAndSendMessageContents(player, serverJoinSettings.messageContents());
@@ -84,7 +84,7 @@ public class PlayerOnJoinHandler implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-        var worldJoinSettings = config.worldJoinSettings();
+        var worldJoinSettings = config.getWorldJoinSettings();
         Player player = event.getPlayer();
 
         if (!worldJoinSettings.enabled()) {

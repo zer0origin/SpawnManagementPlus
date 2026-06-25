@@ -25,24 +25,23 @@ public class SetJoinLocation implements CommandExecutor {
             return true;
         }
 
-        if (!(sender.hasPermission("SpawnManagementPlus.joinlocation") || !sender.isOp())) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.serverJoinSettings().firstJoinLocationCommandError()));
+        if (!(sender.hasPermission("SpawnManagementPlus.setjoinlocation") || !sender.isOp())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().firstJoinLocationCommandError()));
             return true;
         }
 
         Location locationToSet = player.getLocation();
-        Config.ServerJoin original = config.serverJoinSettings();
+        Config.ServerJoin original = config.getServerJoinSettings();
         config.setServerJoinSettings(new Config.ServerJoin(original.enabled(), original.onlyOnFirstTime(), player.getWorld().getName(),
                 original.soundEnabled(), original.soundType(), original.soundVolume(), original.soundPitch(),
                 original.useWorldDefault(), locationToSet.x(), locationToSet.y(), locationToSet.z(), player.getYaw(),
-                player.getPitch(), original.messageEnabled(), original.messageFirstTimeOnly(), original.messageContents(),
-                original.firstJoinLocationCommandError(), original.savedDataMessage(), original.savedDataFailedMessage(), original.exclude()));
+                player.getPitch(), original.messageEnabled(), original.messageFirstTimeOnly(), original.messageContents(), original.exclude()));
 
         try {
             config.update();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.serverJoinSettings().savedDataMessage()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().savedDataMessage()));
         } catch (IOException e) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.serverJoinSettings().savedDataFailedMessage()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().savedDataFailedMessage()));
             throw new RuntimeException(e);
         }
 

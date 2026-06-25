@@ -13,13 +13,13 @@ public class Config {
     private FileConfiguration cfg = new YamlConfiguration();
     private ServerJoin serverJoinSettings = new ServerJoin();
     private WorldJoin worldJoinSettings = new WorldJoin();
+    private CommandSettings commandSettings = new CommandSettings();
     private boolean settingsHaveBeenUpdated = false;
 
     public void load() throws IOException {
         if (!configFileLocation.exists()) {
             configFileLocation.createNewFile();
-            try (InputStream is = Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("config.yml"), "Unable to write config file!");
-                 OutputStream output = new FileOutputStream(configFileLocation)) {
+            try (InputStream is = Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("config.yml"), "Unable to write config file!"); OutputStream output = new FileOutputStream(configFileLocation)) {
 
                 long transferred = is.transferTo(output);
                 if (transferred <= 0) {
@@ -35,6 +35,7 @@ public class Config {
             cfg.load(configFileLocation);
             serverJoinSettings = loadServerJoinValues(cfg);
             worldJoinSettings = loadWorldJoinValues(cfg);
+            commandSettings = loadCommandSettingValues(cfg);
         } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
@@ -53,47 +54,25 @@ public class Config {
     }
 
     private ServerJoin loadServerJoinValues(FileConfiguration cfg) {
-        boolean enabled = cfg.getBoolean("SpawnManagementPlus.on_server_join.enabled", false);
-        boolean onlyOnFirstTime = cfg.getBoolean("SpawnManagementPlus.on_server_join.only_on_first_time", false);
-        String world = cfg.getString("SpawnManagementPlus.on_server_join.action.location.world", "");
-        boolean useWorldDefault = cfg.getBoolean("SpawnManagementPlus.on_server_join.action.location.use_world_default", false);
-        double locationX = cfg.getDouble("SpawnManagementPlus.on_server_join.action.location.x", 0);
-        double locationY = cfg.getDouble("SpawnManagementPlus.on_server_join.action.location.y", 0);
-        double locationZ = cfg.getDouble("SpawnManagementPlus.on_server_join.action.location.z", 0);
-        float locationYaw = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.location.yaw", 0);
-        float locationPitch = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.location.pitch", 0);
-        boolean messageEnabled = cfg.getBoolean("SpawnManagementPlus.on_server_join.action.message.enabled", false);
-        boolean messageFirstTimeOnly = cfg.getBoolean("SpawnManagementPlus.on_server_join.action.message.only_on_first_time");
-        List<String> messageContents = cfg.getStringList("SpawnManagementPlus.on_server_join.action.message.content");
-        boolean soundEnabled = cfg.getBoolean("SpawnManagementPlus.on_server_join.action.sound.enabled", false);
-        String soundType = cfg.getString("SpawnManagementPlus.on_server_join.action.sound.type", "Sound.GLASS");
-        float soundVolume = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.sound.volume", 0);
-        float soundPitch = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.sound.pitch", 0);
-        String firstJoinLocationCommandError = cfg.getString("SpawnManagementPlus.on_server_join.commands.joinlocation.insufficient_permission_error_message", "&cjoinlocation failed");
-        String savedDataMessage = cfg.getString("SpawnManagementPlus.on_server_join.commands.joinlocation.saved_data_message", "&cLocation was saved successfully");
-        String savedDataFailedMessage = cfg.getString("SpawnManagementPlus.on_server_join.commands.joinlocation.saved_data_failed_message", "&cLocation save failed!");
-        List<String> exclude = cfg.getStringList("SpawnManagementPlus.on_server_join.exclude");
+        var enabled = cfg.getBoolean("SpawnManagementPlus.on_server_join.enabled", false);
+        var onlyOnFirstTime = cfg.getBoolean("SpawnManagementPlus.on_server_join.only_on_first_time", false);
+        var world = cfg.getString("SpawnManagementPlus.on_server_join.action.location.world", "");
+        var useWorldDefault = cfg.getBoolean("SpawnManagementPlus.on_server_join.action.location.use_world_default", false);
+        var locationX = cfg.getDouble("SpawnManagementPlus.on_server_join.action.location.x", 0);
+        var locationY = cfg.getDouble("SpawnManagementPlus.on_server_join.action.location.y", 0);
+        var locationZ = cfg.getDouble("SpawnManagementPlus.on_server_join.action.location.z", 0);
+        var locationYaw = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.location.yaw", 0);
+        var locationPitch = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.location.pitch", 0);
+        var messageEnabled = cfg.getBoolean("SpawnManagementPlus.on_server_join.action.message.enabled", false);
+        var messageFirstTimeOnly = cfg.getBoolean("SpawnManagementPlus.on_server_join.action.message.only_on_first_time");
+        var messageContents = cfg.getStringList("SpawnManagementPlus.on_server_join.action.message.content");
+        var soundEnabled = cfg.getBoolean("SpawnManagementPlus.on_server_join.action.sound.enabled", false);
+        var soundType = cfg.getString("SpawnManagementPlus.on_server_join.action.sound.type", "Sound.GLASS");
+        var soundVolume = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.sound.volume", 0);
+        var soundPitch = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.sound.pitch", 0);
+        var exclude = cfg.getStringList("SpawnManagementPlus.on_server_join.exclude");
 
-
-        return new ServerJoin(enabled, onlyOnFirstTime, world, soundEnabled, soundType, soundVolume,
-                soundPitch, useWorldDefault, locationX, locationY, locationZ, locationYaw, locationPitch,
-                messageEnabled, messageFirstTimeOnly, messageContents, firstJoinLocationCommandError, savedDataMessage, savedDataFailedMessage, exclude);
-    }
-
-    private WorldJoin loadWorldJoinValues(FileConfiguration cfg) {
-        boolean enabled = cfg.getBoolean("SpawnManagementPlus.on_world_join.enabled", false);
-        List<String> exclude = cfg.getStringList("SpawnManagementPlus.on_world_join.exclude");
-        boolean soundEnabled = cfg.getBoolean("SpawnManagementPlus.on_world_join.action.sound.enabled", false);
-        String soundType = cfg.getString("SpawnManagementPlus.on_world_join.action.sound.type", "Sound.GLASS");
-        float soundVolume = (float) cfg.getDouble("SpawnManagementPlus.on_world_join.action.sound.volume", 0);
-        float soundPitch = (float) cfg.getDouble("SpawnManagementPlus.on_world_join.action.sound.pitch", 0);
-        float locationYaw = (float) cfg.getDouble("SpawnManagementPlus.on_world_join.action.location.yaw", 0);
-        float locationPitch = (float) cfg.getDouble("SpawnManagementPlus.on_world_join.action.location.pitch", 0);
-        boolean messageEnabled = cfg.getBoolean("SpawnManagementPlus.on_world_join.action.message.enabled", false);
-        List<String> messageContents = cfg.getStringList("SpawnManagementPlus.on_world_join.action.message.content");
-
-        return new WorldJoin(enabled, exclude, soundEnabled, soundType, soundVolume, soundPitch, locationYaw,
-                locationPitch, messageEnabled, messageContents);
+        return new ServerJoin(enabled, onlyOnFirstTime, world, soundEnabled, soundType, soundVolume, soundPitch, useWorldDefault, locationX, locationY, locationZ, locationYaw, locationPitch, messageEnabled, messageFirstTimeOnly, messageContents, exclude);
     }
 
     private void setServerJoinValues(FileConfiguration cfg, ServerJoin serverJoin) {
@@ -113,10 +92,22 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_server_join.action.sound.type", serverJoin.soundType);
         cfg.set("SpawnManagementPlus.on_server_join.action.sound.volume", serverJoin.soundVolume);
         cfg.set("SpawnManagementPlus.on_server_join.action.sound.pitch", serverJoin.soundPitch);
-        cfg.set("SpawnManagementPlus.commands.joinlocation.insufficient_permission_error_message", serverJoin.firstJoinLocationCommandError);
-        cfg.set("SpawnManagementPlus.commands.joinlocation.saved_data_message", serverJoin.savedDataMessage);
-        cfg.set("SpawnManagementPlus.commands.joinlocation.saved_data_failed_message", serverJoin.savedDataFailedMessage);
         cfg.set("SpawnManagementPlus.on_server_join.exclude", serverJoin.exclude);
+    }
+
+    private WorldJoin loadWorldJoinValues(FileConfiguration cfg) {
+        boolean enabled = cfg.getBoolean("SpawnManagementPlus.on_world_join.enabled", false);
+        List<String> exclude = cfg.getStringList("SpawnManagementPlus.on_world_join.exclude");
+        boolean soundEnabled = cfg.getBoolean("SpawnManagementPlus.on_world_join.action.sound.enabled", false);
+        String soundType = cfg.getString("SpawnManagementPlus.on_world_join.action.sound.type", "Sound.GLASS");
+        float soundVolume = (float) cfg.getDouble("SpawnManagementPlus.on_world_join.action.sound.volume", 0);
+        float soundPitch = (float) cfg.getDouble("SpawnManagementPlus.on_world_join.action.sound.pitch", 0);
+        float locationYaw = (float) cfg.getDouble("SpawnManagementPlus.on_world_join.action.location.yaw", 0);
+        float locationPitch = (float) cfg.getDouble("SpawnManagementPlus.on_world_join.action.location.pitch", 0);
+        boolean messageEnabled = cfg.getBoolean("SpawnManagementPlus.on_world_join.action.message.enabled", false);
+        List<String> messageContents = cfg.getStringList("SpawnManagementPlus.on_world_join.action.message.content");
+
+        return new WorldJoin(enabled, exclude, soundEnabled, soundType, soundVolume, soundPitch, locationYaw, locationPitch, messageEnabled, messageContents);
     }
 
     private void setWorldJoinValues(FileConfiguration cfg, WorldJoin worldJoin) {
@@ -132,7 +123,35 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_world_join.action.message.content", worldJoin.messageContents);
     }
 
-    public ServerJoin serverJoinSettings() {
+    private CommandSettings loadCommandSettingValues(FileConfiguration cfg) {
+        var firstJoinLocationCommandError = cfg.getString("SpawnManagementPlus.on_server_join.commands.setjoinlocation.insufficient_permission_error_message", "&cjoinlocation failed");
+        var savedDataMessage = cfg.getString("SpawnManagementPlus.on_server_join.commands.setjoinlocation.saved_data_message", "&cLocation was saved successfully");
+        var savedDataFailedMessage = cfg.getString("SpawnManagementPlus.on_server_join.commands.setjoinlocation.saved_data_failed_message", "&cLocation save failed!");
+        var world = cfg.getString("SpawnManagementPlus.commands.spawn.location.world", "world");
+        var x = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.x", 0);
+        var y = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.y", 0);
+        var z = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.z", 0);
+        var yaw = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.yaw", 0);
+        var pitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.pitch", 0);
+        var enabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.enabled", false);
+
+        return new CommandSettings(enabled, firstJoinLocationCommandError, savedDataMessage, savedDataFailedMessage, world, x, y, z, yaw, pitch);
+    }
+
+    private void setCommandSettings(FileConfiguration cfg, CommandSettings commandSettings) {
+        cfg.set("SpawnManagementPlus.commands.setjoinlocation.insufficient_permission_error_message", commandSettings.firstJoinLocationCommandError);
+        cfg.set("SpawnManagementPlus.commands.setjoinlocation.saved_data_message", commandSettings.savedDataMessage);
+        cfg.set("SpawnManagementPlus.commands.setjoinlocation.saved_data_failed_message", commandSettings.savedDataFailedMessage);
+        cfg.set("SpawnManagementPlus.commands.spawn.location.world", commandSettings.world);
+        cfg.set("SpawnManagementPlus.commands.spawn.location.x", commandSettings.x);
+        cfg.set("SpawnManagementPlus.commands.spawn.location.y", commandSettings.y);
+        cfg.set("SpawnManagementPlus.commands.spawn.location.z", commandSettings.z);
+        cfg.set("SpawnManagementPlus.commands.spawn.location.yaw", commandSettings.yaw);
+        cfg.set("SpawnManagementPlus.commands.spawn.location.pitch", commandSettings.pitch);
+        cfg.set("SpawnManagementPlus.commands.spawn.enabled", commandSettings.enabled);
+    }
+
+    public ServerJoin getServerJoinSettings() {
         return serverJoinSettings;
     }
 
@@ -141,7 +160,7 @@ public class Config {
         settingsHaveBeenUpdated = true;
     }
 
-    public WorldJoin worldJoinSettings() {
+    public WorldJoin getWorldJoinSettings() {
         return worldJoinSettings;
     }
 
@@ -150,14 +169,21 @@ public class Config {
         settingsHaveBeenUpdated = true;
     }
 
+    public CommandSettings getCommandSettings() {
+        return commandSettings;
+    }
+
+    public void setCommandSettings(CommandSettings commandSettings) {
+        this.commandSettings = commandSettings;
+        settingsHaveBeenUpdated = true;
+    }
+
     public record ServerJoin(boolean enabled, boolean onlyOnFirstTime, String world, boolean soundEnabled,
-                             String soundType, float soundVolume,
-                             float soundPitch, boolean useWorldDefault, double x, double y,
-                             double z, float yaw, float pitch, boolean messageEnabled, boolean messageFirstTimeOnly, List<String> messageContents,
-                             String firstJoinLocationCommandError, String savedDataMessage,
-                             String savedDataFailedMessage, List<String> exclude) {
+                             String soundType, float soundVolume, float soundPitch, boolean useWorldDefault, double x,
+                             double y, double z, float yaw, float pitch, boolean messageEnabled,
+                             boolean messageFirstTimeOnly, List<String> messageContents, List<String> exclude) {
         public ServerJoin() {
-            this(false, false, "", false, "", 0, 0, false, 0, 0, 0, 0, 0, false, false, null, "", "", "", null);
+            this(false, false, "", false, "", 0, 0, false, 0, 0, 0, 0, 0, false, false, null, null);
         }
     }
 
@@ -166,6 +192,14 @@ public class Config {
                             List<String> messageContents) {
         public WorldJoin() {
             this(false, null, false, "", 0, 0, 0, 0, false, null);
+        }
+    }
+
+    public record CommandSettings(boolean enabled, String firstJoinLocationCommandError, String savedDataMessage,
+                                  String savedDataFailedMessage, String world, double x, double y,
+                                  double z, float yaw, float pitch) {
+        public CommandSettings() {
+            this(false, "", "", "", "", 0, 0, 0, 0, 0);
         }
     }
 }
