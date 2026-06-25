@@ -69,7 +69,7 @@ SpawnManagementPlus:
           cancel: false
           message: # Supports Placeholder API
             - ""
-            - "&cYou moved! Spawn is cancelled."
+            - "&cYou moved! Teleport cancelled."
             - ""
       insufficient_permission_error_message: "&cYou do not have permission to run this command."
       location: # Can be set by doing /setspawncmdlocation
