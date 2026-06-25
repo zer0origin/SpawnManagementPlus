@@ -2,6 +2,7 @@ package com.rayssmp.utilities.commands;
 
 import com.rayssmp.utilities.Config;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -30,6 +31,11 @@ public class Spawn implements CommandExecutor {
 
         if (!(sender instanceof Player player)) {
             System.out.println("You cannot execute this command!");
+            return true;
+        }
+
+        if (!(sender.hasPermission("SpawnManagementPlus.spawn") || !sender.isOp())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().spawnPermissionError()));
             return true;
         }
 

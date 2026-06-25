@@ -20,3 +20,8 @@ commands:
     usage: /spawn
     permission: SpawnManagementPlus.spawn
     aliases: [ spawn ]
+  setSpawn:
+    description: sets the spawn command to the current location.
+    usage: /setSpawn
+    permission: SpawnManagementPlus.setspawn
+    aliases: [ spawn ]

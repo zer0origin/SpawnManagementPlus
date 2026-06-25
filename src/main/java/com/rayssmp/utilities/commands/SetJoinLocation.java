@@ -26,7 +26,7 @@ public class SetJoinLocation implements CommandExecutor {
         }
 
         if (!(sender.hasPermission("SpawnManagementPlus.setjoinlocation") || !sender.isOp())) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().firstJoinLocationCommandError()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoinLocationPermissionError()));
             return true;
         }
 
@@ -39,9 +39,9 @@ public class SetJoinLocation implements CommandExecutor {
 
         try {
             config.update();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().savedDataMessage()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoinLocationSaved()));
         } catch (IOException e) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().savedDataFailedMessage()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoinLocationSavedFailed()));
             throw new RuntimeException(e);
         }
 

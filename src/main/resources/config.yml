@@ -53,10 +53,11 @@ SpawnManagementPlus:
   commands:
     setjoinlocation:
       insufficient_permission_error_message: "&cYou don't have permission to run this command."
-      saved_data_message: "&cLocation was saved successfully"
+      saved_data_message: "Location was saved successfully"
       saved_data_failed_message: "&cLocation save failed!"
     spawn:
       enabled: false
+      insufficient_permission_error_message: "&cYou don't have permission to run this command."
       location: # Can be set by doing /setspawncmdlocation
         world: world # if using multiple worlds, YOU MUST have a world loader.
         x: 0
@@ -64,3 +65,7 @@ SpawnManagementPlus:
         z: 0
         yaw: 0
         pitch: 0
+    setSpawn:
+      insufficient_permission_error_message: "&cYou don't have permission to run this command."
+      saved_data_message: "Location was saved successfully"
+      saved_data_failed_message: "&cLocation save failed!"

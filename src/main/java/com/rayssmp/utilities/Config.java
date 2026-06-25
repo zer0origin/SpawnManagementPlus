@@ -48,6 +48,7 @@ public class Config {
 
         setServerJoinValues(cfg, this.serverJoinSettings);
         setWorldJoinValues(cfg, this.worldJoinSettings);
+        setCommandSettings(cfg, this.commandSettings);
 
         cfg.save(configFileLocation);
         settingsHaveBeenUpdated = false;
@@ -72,7 +73,9 @@ public class Config {
         var soundPitch = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.sound.pitch", 0);
         var exclude = cfg.getStringList("SpawnManagementPlus.on_server_join.exclude");
 
-        return new ServerJoin(enabled, onlyOnFirstTime, world, soundEnabled, soundType, soundVolume, soundPitch, useWorldDefault, locationX, locationY, locationZ, locationYaw, locationPitch, messageEnabled, messageFirstTimeOnly, messageContents, exclude);
+        return new ServerJoin(enabled, onlyOnFirstTime, world, soundEnabled, soundType, soundVolume, soundPitch,
+                useWorldDefault, locationX, locationY, locationZ, locationYaw, locationPitch, messageEnabled,
+                messageFirstTimeOnly, messageContents, exclude);
     }
 
     private void setServerJoinValues(FileConfiguration cfg, ServerJoin serverJoin) {
@@ -107,7 +110,8 @@ public class Config {
         boolean messageEnabled = cfg.getBoolean("SpawnManagementPlus.on_world_join.action.message.enabled", false);
         List<String> messageContents = cfg.getStringList("SpawnManagementPlus.on_world_join.action.message.content");
 
-        return new WorldJoin(enabled, exclude, soundEnabled, soundType, soundVolume, soundPitch, locationYaw, locationPitch, messageEnabled, messageContents);
+        return new WorldJoin(enabled, exclude, soundEnabled, soundType, soundVolume, soundPitch, locationYaw,
+                locationPitch, messageEnabled, messageContents);
     }
 
     private void setWorldJoinValues(FileConfiguration cfg, WorldJoin worldJoin) {
@@ -125,7 +129,8 @@ public class Config {
 
     private CommandSettings loadCommandSettingValues(FileConfiguration cfg) {
         var firstJoinLocationCommandError = cfg.getString("SpawnManagementPlus.on_server_join.commands.setjoinlocation.insufficient_permission_error_message", "&cjoinlocation failed");
-        var savedDataMessage = cfg.getString("SpawnManagementPlus.on_server_join.commands.setjoinlocation.saved_data_message", "&cLocation was saved successfully");
+        var spawnPermissionError = cfg.getString("SpawnManagementPlus.on_server_join.commands.setjoinlocation.insufficient_permission_error_message", "&cYou don't have permission to run this command.");
+        var savedDataMessage = cfg.getString("SpawnManagementPlus.commands.spawn.insufficient_permission_error_message", "&cLocation was saved successfully");
         var savedDataFailedMessage = cfg.getString("SpawnManagementPlus.on_server_join.commands.setjoinlocation.saved_data_failed_message", "&cLocation save failed!");
         var world = cfg.getString("SpawnManagementPlus.commands.spawn.location.world", "world");
         var x = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.x", 0);
@@ -134,14 +139,23 @@ public class Config {
         var yaw = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.yaw", 0);
         var pitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.pitch", 0);
         var enabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.enabled", false);
+        var setSpawnPermissionError = cfg.getString("SpawnManagementPlus.commands.setSpawn.insufficient_permission_error_message", "&cYou don't have permission to run this command.");
+        var setSpawnSaved = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_message", "Location was saved successfully");
+        var setSpawnFailed = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_failed_message", "&cLocation save failed!");
 
-        return new CommandSettings(enabled, firstJoinLocationCommandError, savedDataMessage, savedDataFailedMessage, world, x, y, z, yaw, pitch);
+        return new CommandSettings(enabled, savedDataMessage, savedDataFailedMessage, world, x, y, z, yaw, pitch,
+                spawnPermissionError, firstJoinLocationCommandError, setSpawnPermissionError, setSpawnSaved,
+                setSpawnFailed);
     }
 
     private void setCommandSettings(FileConfiguration cfg, CommandSettings commandSettings) {
-        cfg.set("SpawnManagementPlus.commands.setjoinlocation.insufficient_permission_error_message", commandSettings.firstJoinLocationCommandError);
-        cfg.set("SpawnManagementPlus.commands.setjoinlocation.saved_data_message", commandSettings.savedDataMessage);
-        cfg.set("SpawnManagementPlus.commands.setjoinlocation.saved_data_failed_message", commandSettings.savedDataFailedMessage);
+        cfg.set("SpawnManagementPlus.commands.setjoinlocation.insufficient_permission_error_message", commandSettings.setJoinLocationPermissionError);
+        cfg.set("SpawnManagementPlus.commands.spawn.insufficient_permission_error_message", commandSettings.spawnPermissionError);
+        cfg.set("SpawnManagementPlus.commands.setjoinlocation.saved_data_message", commandSettings.setJoinLocationSaved);
+        cfg.set("SpawnManagementPlus.commands.setSpawn.insufficient_permission_error_message", commandSettings.setSpawnPermissionError);
+        cfg.set("SpawnManagementPlus.commands.setSpawn.saved_data_message", commandSettings.setSpawnSaved);
+        cfg.set("SpawnManagementPlus.commands.setSpawn.saved_data_failed_message", commandSettings.setSpawnFailed);
+        cfg.set("SpawnManagementPlus.commands.setjoinlocation.saved_data_failed_message", commandSettings.setJoinLocationSavedFailed);
         cfg.set("SpawnManagementPlus.commands.spawn.location.world", commandSettings.world);
         cfg.set("SpawnManagementPlus.commands.spawn.location.x", commandSettings.x);
         cfg.set("SpawnManagementPlus.commands.spawn.location.y", commandSettings.y);
@@ -195,11 +209,11 @@ public class Config {
         }
     }
 
-    public record CommandSettings(boolean enabled, String firstJoinLocationCommandError, String savedDataMessage,
-                                  String savedDataFailedMessage, String world, double x, double y,
-                                  double z, float yaw, float pitch) {
+    public record CommandSettings(boolean enabled, String setJoinLocationSaved, String setJoinLocationSavedFailed, String world,
+                                  double x, double y, double z, float yaw, float pitch, String spawnPermissionError, String setJoinLocationPermissionError,
+                                  String setSpawnPermissionError, String setSpawnSaved, String setSpawnFailed) {
         public CommandSettings() {
-            this(false, "", "", "", "", 0, 0, 0, 0, 0);
+            this(false, "", "", "", 0, 0, 0, 0, 0, "", "", "", "", "");
         }
     }
 }
