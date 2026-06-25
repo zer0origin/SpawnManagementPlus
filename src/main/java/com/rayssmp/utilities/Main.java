@@ -41,11 +41,15 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         this.getLogger().log(Level.INFO, "Starting...");
         Bukkit.getPluginManager().registerEvents(new PlayerOnJoinHandler(this, config), this);
+
         this.getCommand("setjoinlocation").setExecutor(new SetJoinLocation(config));
         this.getCommand("reloadspawnmanagementplus").setExecutor(new Reload(config));
-        this.getCommand("spawn").setExecutor(new Spawn(this, config));
         this.getCommand("setspawn").setExecutor(new SetSpawn(config));
         this.getLogger().log(Level.INFO, "Enabled!");
+
+        var spawn = new Spawn(this, config);
+        Bukkit.getPluginManager().registerEvents(spawn, this);
+        this.getCommand("spawn").setExecutor(spawn);
     }
 
     @Override

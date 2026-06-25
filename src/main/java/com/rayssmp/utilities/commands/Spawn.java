@@ -2,7 +2,6 @@ package com.rayssmp.utilities.commands;
 
 import com.rayssmp.utilities.Config;
 import com.rayssmp.utilities.util.MinecraftUtils;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -17,6 +16,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -60,27 +60,44 @@ public class Spawn implements CommandExecutor, Listener {
             });
         }
 
-        AtomicInteger second = new AtomicInteger(0);
+        AtomicInteger second = new AtomicInteger(config.getCommandSettings().cooldownTimerSeconds() + 1);
         var task = Bukkit.getScheduler().runTaskTimer(this.main, () -> {
-            if (second.incrementAndGet() < config.getCommandSettings().cooldownTimerSeconds()){
+            if (second.decrementAndGet() > 0) {
                 //TODO: Send in between message. OPTIONAL SETTING REQUIRED, OPTIONAL PLACEHOLDER REQUIRED, VIA BOTH PLACEHOLDER API AND NON-PLACEHOLDER API.
+
+                if (config.getCommandSettings().intervalEnabled()) {
+                    var prefix = second.get() == 1 ? "econd" : "econds";
+                    var parsedStrings = commandSettings.intervalMessage().stream()
+                            .map(s -> s.replaceAll("%smp_teleport_seconds%", second.get() + " s" + prefix))
+                            .map(s -> s.replaceAll("%smp_teleport_seconds_capital%", second.get() + " S" + prefix))
+                            .toList();
+
+                    MinecraftUtils.parseAndSendMessageContents(player, parsedStrings);
+                    return;
+                }
                 return;
             }
 
+            MinecraftUtils.parseAndSendMessageContents(player, commandSettings.onTeleport());
             player.teleport(location);
-        }, 0,20);
-        intervalTask.put(player.getUniqueId(), task);
+            intervalTask.get(player.getUniqueId()).cancel();
+        }, 0, 20);
 
+        intervalTask.put(player.getUniqueId(), task);
         return true;
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (!intervalTask.containsKey(event.getPlayer().getUniqueId()) || !config.getCommandSettings().cooldownTimerCancelOnMove()){
+        if (!intervalTask.containsKey(event.getPlayer().getUniqueId()) && !config.getCommandSettings().cooldownTimerCancelOnMove()) {
             return;
         }
 
-        MinecraftUtils.parseAndSendMessageContents(event.getPlayer(), config.getCommandSettings().coolDownTimerCancelOnMoveMessage());
-        intervalTask.get(event.getPlayer().getUniqueId()).cancel();
+        var from = event.getFrom();
+        var to = event.getTo();
+        if (from.getBlockX() != to.getBlockX() || from.getBlockY() != to.getBlockY() || from.getBlockZ() != to.getBlockZ()) {
+            MinecraftUtils.parseAndSendMessageContents(event.getPlayer(), config.getCommandSettings().coolDownTimerCancelOnMoveMessage());
+            intervalTask.get(event.getPlayer().getUniqueId()).cancel();
+        }
     }
 }

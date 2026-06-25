@@ -140,15 +140,19 @@ public class Config {
         var pitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.pitch", 0);
         var enabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.enabled", false);
         var setSpawnPermissionError = cfg.getString("SpawnManagementPlus.commands.setSpawn.insufficient_permission_error_message", "&cYou don't have permission to run this command.");
-        var setSpawnSaved = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_message", "Location was saved successfully");
+        var setSpawnSaved = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_message", "&cLocation was saved successfully");
         var setSpawnFailed = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_failed_message", "&cLocation save failed!");
         var cooldownTimerSeconds = cfg.getInt("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", -1);
         var cooldownTimerCancelOnMove = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.cancel_on_move", false);
-        var coolDownTimerCancelOnMoveMessage = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.messages");
+        var coolDownTimerCancelOnMoveMessage = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message");
+        var intervalEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.enabled", false);
+        var intervalMessage = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message");
+        var onTeleport = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport");
 
         return new CommandSettings(enabled, savedDataMessage, savedDataFailedMessage, world, x, y, z, yaw, pitch,
                 spawnPermissionError, firstJoinLocationCommandError, setSpawnPermissionError, setSpawnSaved,
-                setSpawnFailed, cooldownTimerSeconds, coolDownTimerCancelOnMoveMessage, cooldownTimerCancelOnMove);
+                setSpawnFailed, cooldownTimerSeconds, coolDownTimerCancelOnMoveMessage, cooldownTimerCancelOnMove,
+                intervalEnabled, intervalMessage, onTeleport);
     }
 
     private void setCommandSettings(FileConfiguration cfg, CommandSettings commandSettings) {
@@ -167,8 +171,11 @@ public class Config {
         cfg.set("SpawnManagementPlus.commands.spawn.location.pitch", commandSettings.pitch);
         cfg.set("SpawnManagementPlus.commands.spawn.enabled", commandSettings.enabled);
         cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", commandSettings.cooldownTimerSeconds);
-        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.cancel_on_move", commandSettings.cooldownTimerCancelOnMove);
-        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.messages", commandSettings.coolDownTimerCancelOnMoveMessage);
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.cancel", commandSettings.cooldownTimerCancelOnMove);
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message", commandSettings.coolDownTimerCancelOnMoveMessage);
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.enabled", commandSettings.intervalEnabled);
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message", commandSettings.intervalMessage);
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport", commandSettings.onTeleport);
     }
 
     public ServerJoin getServerJoinSettings() {
@@ -221,9 +228,10 @@ public class Config {
                                   String setJoinLocationPermissionError,
                                   String setSpawnPermissionError, String setSpawnSaved, String setSpawnFailed,
                                   int cooldownTimerSeconds, List<String> coolDownTimerCancelOnMoveMessage,
-                                  boolean cooldownTimerCancelOnMove) {
+                                  boolean cooldownTimerCancelOnMove, boolean intervalEnabled,
+                                  List<String> intervalMessage, List<String> onTeleport) {
         public CommandSettings() {
-            this(false, "", "", "", 0, 0, 0, 0, 0, "", "", "", "", "", 0, null, false);
+            this(false, "", "", "", 0, 0, 0, 0, 0, "", "", "", "", "", 0, null, false, false, null, null);
         }
     }
 }
