@@ -14,6 +14,7 @@ public class Config {
     private ServerJoin serverJoinSettings = new ServerJoin();
     private WorldJoin worldJoinSettings = new WorldJoin();
     private CommandSettings commandSettings = new CommandSettings();
+    private RespawnSettings respawnSettings = new RespawnSettings();
     private boolean settingsHaveBeenUpdated = false;
 
     public void load() throws IOException {
@@ -36,6 +37,7 @@ public class Config {
             serverJoinSettings = loadServerJoinValues(cfg);
             worldJoinSettings = loadWorldJoinValues(cfg);
             commandSettings = loadCommandSettingValues(cfg);
+            respawnSettings = loadRespawnSettingsValues(cfg);
         } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
@@ -48,7 +50,8 @@ public class Config {
 
         setServerJoinValues(cfg, this.serverJoinSettings);
         setWorldJoinValues(cfg, this.worldJoinSettings);
-        setCommandSettings(cfg, this.commandSettings);
+        setCommandValues(cfg, this.commandSettings);
+        setRespawnValues(cfg, this.respawnSettings);
 
         cfg.save(configFileLocation);
         settingsHaveBeenUpdated = false;
@@ -155,7 +158,7 @@ public class Config {
                 intervalEnabled, intervalMessage, onTeleport);
     }
 
-    private void setCommandSettings(FileConfiguration cfg, CommandSettings commandSettings) {
+    private void setCommandValues(FileConfiguration cfg, CommandSettings commandSettings) {
         cfg.set("SpawnManagementPlus.commands.setjoinlocation.insufficient_permission_error_message", commandSettings.setJoinLocationPermissionError);
         cfg.set("SpawnManagementPlus.commands.spawn.insufficient_permission_error_message", commandSettings.spawnPermissionError);
         cfg.set("SpawnManagementPlus.commands.setjoinlocation.saved_data_message", commandSettings.setJoinLocationSaved);
@@ -176,6 +179,38 @@ public class Config {
         cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.enabled", commandSettings.intervalEnabled);
         cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message", commandSettings.intervalMessage);
         cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport", commandSettings.onTeleport);
+    }
+
+    private RespawnSettings loadRespawnSettingsValues(FileConfiguration cfg) {
+        var enabled = cfg.getBoolean("SpawnManagementPlus.on_respawn.enabled", false);
+        var preferBedLocation = cfg.getBoolean("SpawnManagementPlus.on_respawn.prefer_bed_location", false);
+        var preferAnchorLocation = cfg.getBoolean("SpawnManagementPlus.on_respawn.prefer_anchor_location", false);
+        var world = cfg.getString("SpawnManagementPlus.on_respawn.location.world", "");
+        var x = cfg.getDouble("SpawnManagementPlus.on_respawn.location.x", 0);
+        var y = cfg.getDouble("SpawnManagementPlus.on_respawn.location.y", 0);
+        var z = cfg.getDouble("SpawnManagementPlus.on_respawn.location.z", 0);
+        var yaw = (float) cfg.getDouble("SpawnManagementPlus.on_respawn.location.yaw", 0);
+        var pitch = (float) cfg.getDouble("SpawnManagementPlus.on_respawn.location.pitch", 0);
+        var messages = cfg.getStringList("SpawnManagementPlus.on_respawn.location.message");
+        var skipRespawnScreen = cfg.getBoolean("SpawnManagementPlus.on_respawn.skip_respawn_screen");
+        var spreadItemsOnDeath = cfg.getBoolean("SpawnManagementPlus.on_respawn.spread_items_on_death");
+
+        return new RespawnSettings(enabled, skipRespawnScreen, spreadItemsOnDeath, preferBedLocation, preferAnchorLocation, world, x, y, z, yaw, pitch, messages);
+    }
+
+    private void setRespawnValues(FileConfiguration cfg, RespawnSettings respawnSettings) {
+        cfg.set("SpawnManagementPlus.on_respawn.enabled", respawnSettings.enabled);
+        cfg.set("SpawnManagementPlus.on_respawn.prefer_bed_location", respawnSettings.preferBedLocation);
+        cfg.set("SpawnManagementPlus.on_respawn.prefer_anchor_location", respawnSettings.preferAnchorLocation);
+        cfg.set("SpawnManagementPlus.on_respawn.location.world", respawnSettings.world);
+        cfg.set("SpawnManagementPlus.on_respawn.location.x", respawnSettings.x);
+        cfg.set("SpawnManagementPlus.on_respawn.location.y", respawnSettings.y);
+        cfg.set("SpawnManagementPlus.on_respawn.location.z", respawnSettings.z);
+        cfg.set("SpawnManagementPlus.on_respawn.location.yaw", respawnSettings.yaw);
+        cfg.set("SpawnManagementPlus.on_respawn.location.pitch", respawnSettings.pitch);
+        cfg.set("SpawnManagementPlus.on_respawn.location.message", respawnSettings.messageContent);
+        cfg.set("SpawnManagementPlus.on_respawn.skip_respawn_screen", respawnSettings.skipRespawnScreen);
+        cfg.set("SpawnManagementPlus.on_respawn.spread_items_on_death", respawnSettings.spreadItemsOnDeath);
     }
 
     public ServerJoin getServerJoinSettings() {
@@ -200,9 +235,17 @@ public class Config {
         return commandSettings;
     }
 
-    public void setCommandSettings(CommandSettings commandSettings) {
+    public void setCommandValues(CommandSettings commandSettings) {
         this.commandSettings = commandSettings;
         settingsHaveBeenUpdated = true;
+    }
+
+    public RespawnSettings getRespawnSettings() {
+        return respawnSettings;
+    }
+
+    public void setRespawnSettings(RespawnSettings respawnSettings) {
+        this.respawnSettings = respawnSettings;
     }
 
     public record ServerJoin(boolean enabled, boolean onlyOnFirstTime, String world, boolean soundEnabled,
@@ -232,6 +275,15 @@ public class Config {
                                   List<String> intervalMessage, List<String> onTeleport) {
         public CommandSettings() {
             this(false, "", "", "", 0, 0, 0, 0, 0, "", "", "", "", "", 0, null, false, false, null, null);
+        }
+    }
+
+    public record RespawnSettings(boolean enabled, boolean skipRespawnScreen, boolean spreadItemsOnDeath,
+                                  boolean preferBedLocation, boolean preferAnchorLocation, String world, double x,
+                                  double y,
+                                  double z, float yaw, float pitch, List<String> messageContent) {
+        public RespawnSettings() {
+            this(false, false, false, false, false, "", 0, 0, 0, 0, 0, null);
         }
     }
 }

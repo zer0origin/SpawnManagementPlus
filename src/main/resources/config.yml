@@ -39,7 +39,7 @@ SpawnManagementPlus:
         type: minecraft:block.note_block.pling #A list of sounds can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
         volume: 1
         pitch: 1
-      location:
+      location: #TODO: location command
         yaw: 0
         pitch: 0
       message:
@@ -49,7 +49,21 @@ SpawnManagementPlus:
           - "&d&lWelcome to Survival %player_name%!"
           - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
           - ""
-
+  on_respawn:
+    enabled: false
+    skip_respawn_screen: false
+    spread_items_on_death: true # Only works when skip_respawn_screen is set to true.
+    prefer_bed_location: false # Should this location override bed respawns?
+    prefer_anchor_location: false # Should this location override anchor respawns?
+    location: #TODO: location command
+      world: world # if using multiple worlds, YOU MUST have a world loader.
+      x: 0
+      y: 0
+      z: 0
+      yaw: 0
+      pitch: 0
+      message: # Supports Placeholder API. You can use [] to disable messages.
+        []
   commands:
     setjoinlocation:
       insufficient_permission_error_message: "&cYou do not have permission to run this command."
@@ -63,11 +77,11 @@ SpawnManagementPlus:
           - "&aTeleporting..."
         on_interval: # Should there be a countdown?
           enabled: false
-          message: # Supports Placeholder API - %smp_teleport_seconds% will not capitalise the s but smp_teleport_seconds_capital will.
+          message: # Supports Placeholder API. You can use [] to disable messages. - %smp_teleport_seconds% will not capitalise the s but smp_teleport_seconds_capital will.
             - "&aTeleporting in %smp_teleport_seconds%!"
         on_move:
           cancel: false
-          message: # Supports Placeholder API
+          message: # Supports Placeholder API. You can use [] to disable messages.
             - ""
             - "&cYou moved! Teleport cancelled."
             - ""
