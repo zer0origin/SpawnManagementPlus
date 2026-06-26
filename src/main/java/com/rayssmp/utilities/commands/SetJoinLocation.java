@@ -1,6 +1,7 @@
 package com.rayssmp.utilities.commands;
 
-import com.rayssmp.utilities.Config;
+import com.rayssmp.utilities.config.Config;
+import com.rayssmp.utilities.config.ServerJoin;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -26,22 +27,22 @@ public class SetJoinLocation implements CommandExecutor {
         }
 
         if (!(sender.hasPermission("SpawnManagementPlus.setjoinlocation") || !sender.isOp())) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoinLocationPermissionError()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoin().insufficientPermissionErrorMessage()));
             return true;
         }
 
         Location locationToSet = player.getLocation();
-        Config.ServerJoin original = config.getServerJoinSettings();
-        config.setServerJoinSettings(new Config.ServerJoin(original.enabled(), original.onlyOnFirstTime(), player.getWorld().getName(),
+        ServerJoin original = config.getServerJoinSettings();
+        config.setServerJoinSettings(new ServerJoin(original.enabled(), original.onlyOnFirstTime(), player.getWorld().getName(),
                 original.soundEnabled(), original.soundType(), original.soundVolume(), original.soundPitch(),
                 original.useWorldDefault(), locationToSet.x(), locationToSet.y(), locationToSet.z(), player.getYaw(),
-                player.getPitch(), original.messageEnabled(), original.messageFirstTimeOnly(), original.messageContents(), original.exclude()));
+                player.getPitch(), original.messageType(), original.messageContents(), original.exclude()));
 
         try {
             config.update();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoinLocationSaved()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoin().savedDataMessage()));
         } catch (IOException e) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoinLocationSavedFailed()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoin().savedDataFailedMessage()));
             throw new RuntimeException(e);
         }
 

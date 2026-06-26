@@ -4,6 +4,7 @@ import com.rayssmp.utilities.commands.Reload;
 import com.rayssmp.utilities.commands.SetJoinLocation;
 import com.rayssmp.utilities.commands.SetSpawn;
 import com.rayssmp.utilities.commands.Spawn;
+import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.events.PlayerOnJoinHandler;
 import com.rayssmp.utilities.events.PlayerRespawnEvent;
 import org.bukkit.Bukkit;

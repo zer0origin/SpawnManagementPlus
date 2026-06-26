@@ -19,13 +19,12 @@ SpawnManagementPlus:
         z: 0
         yaw: 0
         pitch: 0
-      message:
-        enabled: false
-        content: # Supports Placeholder API
-          - ""
-          - "&d&lWelcome to Survival %player_name%!"
-          - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
-          - ""
+      message_type: CHAT # Supports either CHAT or ACTION_BAR
+      message: # Supports Placeholder API. You can use [] to disable messages.
+        - ""
+        - "&d&lWelcome to Survival %player_name%!"
+        - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
+        - ""
 
   # When a player changes world, should they spawn at world spawn?
   on_world_join:
@@ -42,13 +41,12 @@ SpawnManagementPlus:
       location: #TODO: location command
         yaw: 0
         pitch: 0
-      message:
-        enabled: false
-        content: # Supports Placeholder API
-          - ""
-          - "&d&lWelcome to Survival %player_name%!"
-          - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
-          - ""
+      message_type: CHAT # Supports either CHAT or ACTION_BAR
+      message: # Supports Placeholder API. You can use [] to disable messages.
+        - ""
+        - "&d&lWelcome to Survival %player_name%!"
+        - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
+        - ""
   on_respawn:
     enabled: false
     skip_respawn_screen: false
@@ -62,8 +60,9 @@ SpawnManagementPlus:
       z: 0
       yaw: 0
       pitch: 0
+      message_type: CHAT # Supports either CHAT or ACTION_BAR
       message: # Supports Placeholder API. You can use [] to disable messages.
-        []
+        [ ]
   commands:
     setjoinlocation:
       insufficient_permission_error_message: "&cYou do not have permission to run this command."
@@ -71,20 +70,6 @@ SpawnManagementPlus:
       saved_data_failed_message: "&cLocation save failed!"
     spawn:
       enabled: false
-      cooldown_timer:
-        seconds: -1 # -1 to disable.
-        on_teleport: # Supports Placeholder API
-          - "&aTeleporting..."
-        on_interval: # Should there be a countdown?
-          enabled: false
-          message: # Supports Placeholder API. You can use [] to disable messages. - %smp_teleport_seconds% will not capitalise the s but smp_teleport_seconds_capital will.
-            - "&aTeleporting in %smp_teleport_seconds%!"
-        on_move:
-          cancel: false
-          message: # Supports Placeholder API. You can use [] to disable messages.
-            - ""
-            - "&cYou moved! Teleport cancelled."
-            - ""
       insufficient_permission_error_message: "&cYou do not have permission to run this command."
       location: # Can be set by doing /setspawncmdlocation
         world: world # if using multiple worlds, YOU MUST have a world loader.
@@ -93,6 +78,38 @@ SpawnManagementPlus:
         z: 0
         yaw: 0
         pitch: 0
+      cooldown_timer:
+        seconds: -1 # -1 to disable.
+        on_teleport: # Supports Placeholder API
+          sound:
+            enabled: false
+            type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
+            volume: 1.0
+            pitch: 1.0
+          message_type: CHAT # Supports either CHAT or ACTION_BAR
+          message:
+            - "&aTeleporting..."
+        on_interval: # Should there be a countdown?
+          sound:
+            enabled: false
+            type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
+            volume: 1.0
+            pitch: 1.0
+          message_type: CHAT # Supports either CHAT or ACTION_BAR
+          message: # Supports Placeholder API. You can use [] to disable messages. - %smp_teleport_seconds% will not capitalise the s but smp_teleport_seconds_capital will.
+            - "&aTeleporting in %smp_teleport_seconds%!"
+        on_move:
+          cancel: false
+          sound:
+            enabled: false
+            type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
+            volume: 1.0
+            pitch: 1.0
+          message_type: CHAT # Supports either CHAT or ACTION_BAR
+          message: # Supports Placeholder API. You can use [] to disable messages.
+            - ""
+            - "&cYou moved! Teleport cancelled."
+            - ""
     setSpawn:
       insufficient_permission_error_message: "&cYou do not have permission to run this command."
       saved_data_message: "&aLocation was saved successfully"

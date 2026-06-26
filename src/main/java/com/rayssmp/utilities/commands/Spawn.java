@@ -1,6 +1,6 @@
 package com.rayssmp.utilities.commands;
 
-import com.rayssmp.utilities.Config;
+import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.util.MinecraftUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,7 +35,7 @@ public class Spawn implements CommandExecutor, Listener {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        if (!config.getCommandSettings().enabled()) {
+        if (!config.getCommandSettings().spawn().enabled()) {
             return true;
         }
 
@@ -45,42 +45,47 @@ public class Spawn implements CommandExecutor, Listener {
         }
 
         if (!(sender.hasPermission("SpawnManagementPlus.spawn") || !sender.isOp())) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().spawnPermissionError()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().spawn().insufficientPermissionErrorMessage()));
             return true;
         }
 
-        var commandSettings = config.getCommandSettings();
-        World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(commandSettings.world()), "Failed to find world!");
-        Location location = new Location(spawnWorld, commandSettings.x(), commandSettings.y(), commandSettings.z(),
-                commandSettings.yaw(), commandSettings.pitch());
+        var spawnSettings = config.getCommandSettings().spawn();
+        World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(spawnSettings.world()), "Failed to find world!");
+        Location location = new Location(spawnWorld, spawnSettings.x(), spawnSettings.y(), spawnSettings.z(),
+                spawnSettings.yaw(), spawnSettings.pitch());
 
-        if (config.getCommandSettings().cooldownTimerSeconds() < 0) {
+        if (spawnSettings.seconds() < 0) {
             Bukkit.getScheduler().runTask(this.main, () -> {
                 player.teleport(location);
             });
         }
 
-        AtomicInteger second = new AtomicInteger(config.getCommandSettings().cooldownTimerSeconds() + 1);
+        AtomicInteger second = new AtomicInteger(spawnSettings.seconds() + 1);
         var task = Bukkit.getScheduler().runTaskTimer(this.main, () -> {
             if (second.decrementAndGet() > 0) {
-                //TODO: Send in between message. OPTIONAL SETTING REQUIRED, OPTIONAL PLACEHOLDER REQUIRED, VIA BOTH PLACEHOLDER API AND NON-PLACEHOLDER API.
+                var prefix = second.get() == 1 ? "econd" : "econds";
+                var parsedStrings = spawnSettings.onInterval().messages().stream()
+                        .map(s -> s.replaceAll("%smp_teleport_seconds%", second.get() + " s" + prefix))
+                        .map(s -> s.replaceAll("%smp_teleport_seconds_capital%", second.get() + " S" + prefix))
+                        .toList();
 
-                if (config.getCommandSettings().intervalEnabled()) {
-                    var prefix = second.get() == 1 ? "econd" : "econds";
-                    var parsedStrings = commandSettings.intervalMessage().stream()
-                            .map(s -> s.replaceAll("%smp_teleport_seconds%", second.get() + " s" + prefix))
-                            .map(s -> s.replaceAll("%smp_teleport_seconds_capital%", second.get() + " S" + prefix))
-                            .toList();
+                MinecraftUtils.parseAndSendMessageContents(player, parsedStrings, spawnSettings.onInterval().messageType());
 
-                    MinecraftUtils.parseAndSendMessageContents(player, parsedStrings);
-                    return;
+                if (spawnSettings.onInterval().soundEnabled()) {
+                    player.playSound(player.getLocation(), spawnSettings.onInterval().soundType(), spawnSettings.onInterval().soundVolume(), spawnSettings.onInterval().soundPitch());
                 }
+
                 return;
             }
 
-            MinecraftUtils.parseAndSendMessageContents(player, commandSettings.onTeleport());
+            MinecraftUtils.parseAndSendMessageContents(player, spawnSettings.onTeleport().messages(), spawnSettings.onTeleport().messageType());
             player.teleport(location);
             intervalTask.get(player.getUniqueId()).cancel();
+
+            if (spawnSettings.onTeleport().soundEnabled()) {
+                player.playSound(player.getLocation(), spawnSettings.onTeleport().soundType(), spawnSettings.onTeleport().soundVolume(), spawnSettings.onTeleport().soundPitch());
+            }
+
         }, 0, 20);
 
         intervalTask.put(player.getUniqueId(), task);
@@ -89,15 +94,22 @@ public class Spawn implements CommandExecutor, Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (!intervalTask.containsKey(event.getPlayer().getUniqueId()) && !config.getCommandSettings().cooldownTimerCancelOnMove()) {
+        var player = event.getPlayer();
+        var spawnSettings = config.getCommandSettings().spawn();
+        if (!intervalTask.containsKey(player.getUniqueId()) || !spawnSettings.onMove().enabled()) {
             return;
         }
 
         var from = event.getFrom();
         var to = event.getTo();
         if (from.getBlockX() != to.getBlockX() || from.getBlockY() != to.getBlockY() || from.getBlockZ() != to.getBlockZ()) {
-            MinecraftUtils.parseAndSendMessageContents(event.getPlayer(), config.getCommandSettings().coolDownTimerCancelOnMoveMessage());
-            intervalTask.remove(event.getPlayer().getUniqueId()).cancel();
+            MinecraftUtils.parseAndSendMessageContents(player, spawnSettings.onMove().messages(), spawnSettings.onMove().messageType());
+
+            if (spawnSettings.onMove().soundEnabled()) {
+                player.playSound(player.getLocation(), spawnSettings.onMove().soundType(), spawnSettings.onMove().soundVolume(), spawnSettings.onMove().soundPitch());
+            }
+
+            intervalTask.remove(player.getUniqueId()).cancel();
         }
     }
 }

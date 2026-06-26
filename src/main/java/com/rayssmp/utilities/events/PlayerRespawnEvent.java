@@ -1,6 +1,6 @@
 package com.rayssmp.utilities.events;
 
-import com.rayssmp.utilities.Config;
+import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.util.MinecraftUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -43,7 +43,7 @@ public class PlayerRespawnEvent implements Listener {
         Location location = new Location(world, respawnSettings.x(), respawnSettings.y(), respawnSettings.z(), respawnSettings.yaw(), respawnSettings.pitch());
         event.setRespawnLocation(location);
 
-        MinecraftUtils.parseAndSendMessageContents(event.getPlayer(), respawnSettings.messageContent());
+        MinecraftUtils.parseAndSendMessageContents(event.getPlayer(), respawnSettings.messageContent(), respawnSettings.messageType());
     }
 
     @EventHandler(ignoreCancelled = true)

@@ -1,6 +1,6 @@
 package com.rayssmp.utilities.commands;
 
-import com.rayssmp.utilities.Config;
+import com.rayssmp.utilities.config.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

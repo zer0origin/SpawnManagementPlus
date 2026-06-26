@@ -1,10 +1,8 @@
 package com.rayssmp.utilities.events;
 
-import com.rayssmp.utilities.Config;
+import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.util.MinecraftUtils;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -14,7 +12,6 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -63,9 +60,7 @@ public class PlayerOnJoinHandler implements Listener {
         var serverJoinSettings = config.getServerJoinSettings();
         World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(serverJoinSettings.world()), "Failed to find world!");
 
-        if (serverJoinSettings.messageEnabled()) {
-            MinecraftUtils.parseAndSendMessageContents(player, serverJoinSettings.messageContents());
-        }
+        MinecraftUtils.parseAndSendMessageContents(player, serverJoinSettings.messageContents(), serverJoinSettings.messageType());
 
         if (serverJoinSettings.useWorldDefault()) {
             Location defaultSpawnLocation = spawnWorld.getSpawnLocation();
@@ -97,9 +92,7 @@ public class PlayerOnJoinHandler implements Listener {
             return;
         }
 
-        if (worldJoinSettings.messageEnabled()) {
-            MinecraftUtils.parseAndSendMessageContents(player, worldJoinSettings.messageContents());
-        }
+        MinecraftUtils.parseAndSendMessageContents(player, worldJoinSettings.messageContents(),  worldJoinSettings.messageType());
 
         Location spawnLocation = player.getWorld().getSpawnLocation();
         spawnLocation.setYaw(worldJoinSettings.yaw());

@@ -1,8 +1,9 @@
 package com.rayssmp.utilities.commands;
 
-import com.rayssmp.utilities.Config;
+import com.rayssmp.utilities.config.command.Command;
+import com.rayssmp.utilities.config.Config;
+import com.rayssmp.utilities.config.command.spawn.Spawn;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,33 +19,34 @@ public class SetSpawn implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if (!(sender instanceof Player player)) {
             System.out.println("You cannot execute this command!");
             return true;
         }
 
         if (!(sender.hasPermission("SpawnManagementPlus.setspawn") || !sender.isOp())) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setSpawnPermissionError()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setSpawn().insufficientPermissionErrorMessage()));
             return true;
         }
 
         var commandSettings = config.getCommandSettings();
+        var spawnSettings = config.getCommandSettings().spawn();
         var location = player.getLocation();
 
-        config.setCommandValues(new Config.CommandSettings(commandSettings.enabled(), commandSettings.setJoinLocationSaved(),
-                commandSettings.setJoinLocationSavedFailed(), location.getWorld().getName(), location.x(), location.y(),
-                location.z(), location.getYaw(), location.getPitch(), commandSettings.spawnPermissionError(),
-                commandSettings.setJoinLocationPermissionError(), commandSettings.setSpawnPermissionError(),
-                commandSettings.setSpawnSaved(), commandSettings.setSpawnFailed(), commandSettings.cooldownTimerSeconds(),
-                commandSettings.coolDownTimerCancelOnMoveMessage(), commandSettings.cooldownTimerCancelOnMove(),
-                commandSettings.intervalEnabled(), commandSettings.intervalMessage(), commandSettings.onTeleport()));
+        config.setCommandValues(new Command(commandSettings.setJoin(),
+                commandSettings.setSpawn(),
+                Spawn.SpawnFactory(spawnSettings.enabled(), spawnSettings.seconds(), spawnSettings.onTeleport().messageType(),
+                        location.getWorld().getName(), location.x(), location.y(), location.z(), location.getYaw(), location.getPitch(),
+                        spawnSettings.onTeleport().messageType(), spawnSettings.onTeleport().messages(), spawnSettings.onTeleport().soundEnabled(), spawnSettings.onTeleport().soundType(), spawnSettings.onTeleport().soundVolume(), spawnSettings.onTeleport().soundPitch(),
+                        spawnSettings.onInterval().messageType(), spawnSettings.onInterval().messages(), spawnSettings.onInterval().soundEnabled(), spawnSettings.onInterval().soundType(), spawnSettings.onInterval().soundVolume(), spawnSettings.onInterval().soundPitch(),
+                        spawnSettings.onMove().enabled(), spawnSettings.onMove().messageType(), spawnSettings.onMove().soundEnabled(), spawnSettings.onMove().soundType(), spawnSettings.onMove().soundVolume(), spawnSettings.onMove().soundPitch(), spawnSettings.onMove().messages())));
 
         try {
             config.update();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setSpawnSaved()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setSpawn().savedDataMessage()));
         } catch (IOException e) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setSpawnFailed()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setSpawn().savedDataFailedMessage()));
             throw new RuntimeException(e);
         }
 
