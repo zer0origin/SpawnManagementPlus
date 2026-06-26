@@ -5,6 +5,7 @@ import com.rayssmp.utilities.commands.SetJoinLocation;
 import com.rayssmp.utilities.commands.SetSpawn;
 import com.rayssmp.utilities.commands.Spawn;
 import com.rayssmp.utilities.events.PlayerOnJoinHandler;
+import com.rayssmp.utilities.events.PlayerRespawnEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,6 +42,7 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         this.getLogger().log(Level.INFO, "Starting...");
         Bukkit.getPluginManager().registerEvents(new PlayerOnJoinHandler(this, config), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerRespawnEvent(this, config), this);
 
         this.getCommand("setjoinlocation").setExecutor(new SetJoinLocation(config));
         this.getCommand("reloadspawnmanagementplus").setExecutor(new Reload(config));
