@@ -32,7 +32,7 @@ public class SetSpawn implements CommandExecutor {
         var commandSettings = config.getCommandSettings();
         var location = player.getLocation();
 
-        config.setCommandSettings(new Config.CommandSettings(commandSettings.enabled(), commandSettings.setJoinLocationSaved(),
+        config.setCommandValues(new Config.CommandSettings(commandSettings.enabled(), commandSettings.setJoinLocationSaved(),
                 commandSettings.setJoinLocationSavedFailed(), location.getWorld().getName(), location.x(), location.y(),
                 location.z(), location.getYaw(), location.getPitch(), commandSettings.spawnPermissionError(),
                 commandSettings.setJoinLocationPermissionError(), commandSettings.setSpawnPermissionError(),
