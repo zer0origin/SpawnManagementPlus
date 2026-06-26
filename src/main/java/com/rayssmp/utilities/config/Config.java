@@ -224,8 +224,9 @@ public class Config {
         var messages = cfg.getStringList("SpawnManagementPlus.on_respawn.location.message");
         var skipRespawnScreen = cfg.getBoolean("SpawnManagementPlus.on_respawn.skip_respawn_screen");
         var spreadItemsOnDeath = cfg.getBoolean("SpawnManagementPlus.on_respawn.spread_items_on_death");
+        var forceRespawnButKeepDefaultMessage = cfg.getBoolean("SpawnManagementPlus.on_respawn.force_respawn_but_keep_default_message");
 
-        return new Respawn(enabled, skipRespawnScreen, spreadItemsOnDeath, preferBedLocation, preferAnchorLocation, world, x, y, z, yaw, pitch, messageType, messages);
+        return new Respawn(enabled, skipRespawnScreen, forceRespawnButKeepDefaultMessage, spreadItemsOnDeath, preferBedLocation, preferAnchorLocation, world, x, y, z, yaw, pitch, messageType, messages);
     }
 
     private void setRespawnValues(FileConfiguration cfg, Respawn respawn) {
@@ -242,6 +243,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_respawn.location.message_type", respawn.messageType());
         cfg.set("SpawnManagementPlus.on_respawn.skip_respawn_screen", respawn.skipRespawnScreen());
         cfg.set("SpawnManagementPlus.on_respawn.spread_items_on_death", respawn.spreadItemsOnDeath());
+        cfg.set("SpawnManagementPlus.on_respawn.force_respawn_but_keep_default_message", respawn.forceRespawnButKeepDefaultMessage());
     }
 
     public ServerJoin getServerJoinSettings() {

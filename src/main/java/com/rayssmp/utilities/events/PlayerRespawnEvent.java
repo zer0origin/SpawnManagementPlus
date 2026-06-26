@@ -55,6 +55,16 @@ public class PlayerRespawnEvent implements Listener {
             return;
         }
 
+        if(respawnSettings.forceRespawnButKeepDefaultMessage()){
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+                if (player.isOnline()) {
+                    player.spigot().respawn();
+                }
+            }, 1);
+
+            return;
+        }
+
         event.setCancelled(true);
         dropInventory(event.getPlayer());
         player.spigot().respawn();

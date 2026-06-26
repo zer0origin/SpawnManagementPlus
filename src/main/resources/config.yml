@@ -50,7 +50,8 @@ SpawnManagementPlus:
   on_respawn:
     enabled: false
     skip_respawn_screen: false
-    spread_items_on_death: true # Only works when skip_respawn_screen is set to true.
+    force_respawn_but_keep_default_message: false # Will force the player to respawn, without faking player death.
+    spread_items_on_death: true # Only works when skip_respawn_screen is set to true and force_respawn_but_keep_default_message is false.
     prefer_bed_location: false # Should this location override bed respawns?
     prefer_anchor_location: false # Should this location override anchor respawns?
     location: #TODO: location command
