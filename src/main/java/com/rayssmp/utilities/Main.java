@@ -3,10 +3,13 @@ package com.rayssmp.utilities;
 import com.rayssmp.utilities.commands.Reload;
 import com.rayssmp.utilities.commands.SetJoinLocation;
 import com.rayssmp.utilities.commands.SetSpawn;
-import com.rayssmp.utilities.commands.Spawn;
+import com.rayssmp.utilities.commands.Smp;
+import com.rayssmp.utilities.commands.spawn.SecondPlaceholder;
+import com.rayssmp.utilities.commands.spawn.SpawnCommand;
 import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.events.PlayerOnJoinHandler;
 import com.rayssmp.utilities.events.PlayerRespawnEvent;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -45,14 +48,21 @@ public final class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerOnJoinHandler(this, config), this);
         Bukkit.getPluginManager().registerEvents(new PlayerRespawnEvent(this, config), this);
 
+        var smp = new Smp(config);
+        this.getCommand("smp").setExecutor(smp);
+        this.getCommand("smp").setTabCompleter(smp);
         this.getCommand("setjoinlocation").setExecutor(new SetJoinLocation(config));
         this.getCommand("reloadspawnmanagementplus").setExecutor(new Reload(config));
         this.getCommand("setspawn").setExecutor(new SetSpawn(config));
         this.getLogger().log(Level.INFO, "Enabled!");
 
-        var spawn = new Spawn(this, config);
+        var spawn = new SpawnCommand(this, config);
         Bukkit.getPluginManager().registerEvents(spawn, this);
         this.getCommand("spawn").setExecutor(spawn);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+            new SecondPlaceholder().register();
+        }
     }
 
     @Override
