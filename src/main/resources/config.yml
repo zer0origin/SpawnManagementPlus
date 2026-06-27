@@ -116,3 +116,7 @@ SpawnManagementPlus:
       insufficient_permission_error_message: "&cYou do not have permission to run this command."
       saved_data_message: "&aLocation was saved successfully"
       saved_data_failed_message: "&cLocation save failed!"
+    smp:
+      insufficient_permission_error_message: "&cYou do not have permission to run this command."
+      saved_data_message: "&aLocation was saved successfully"
+      saved_data_failed_message: "&cLocation save failed!"

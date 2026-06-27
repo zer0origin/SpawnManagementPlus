@@ -3,6 +3,7 @@ package com.rayssmp.utilities.config;
 import com.rayssmp.utilities.config.command.CommandConfig;
 import com.rayssmp.utilities.config.command.SetJoin;
 import com.rayssmp.utilities.config.command.SetSpawn;
+import com.rayssmp.utilities.config.command.Smp;
 import com.rayssmp.utilities.config.command.spawn.SpawnConfig;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -132,7 +133,7 @@ public class Config {
     private CommandConfig loadCommandSettingValues(FileConfiguration cfg) {
         var insufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.insufficient_permission_error_message");
         var savedDataMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.saved_data_message");
-        var savedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.savedDataFailedMessage");
+        var savedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.saved_data_failed_message");
         SetJoin setJoin = new SetJoin(insufficientPermissionErrorMessage, savedDataMessage, savedDataFailedMessage);
 
         var setSpawnInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.setSpawn.insufficient_permission_error_message");
@@ -178,7 +179,12 @@ public class Config {
                 onIntervalSoundEnabled, onIntervalSoundType, onIntervalSoundVolume, onIntervalSoundPitch, onMoveCancel,
                 onMoveMessageType, onMoveSoundEnabled, onMoveSoundType, onMoveSoundVolume, onMoveSoundPitch, onMoveMessages);
 
-        return new CommandConfig(setJoin, setSpawn, spawnConfig);
+        var smpInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.smp.insufficient_permission_error_message");
+        var smpSavedDataMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_message");
+        var smpSavedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_failed_message");
+        Smp smp = new Smp(smpInsufficientPermissionErrorMessage, smpSavedDataMessage, smpSavedDataFailedMessage);
+
+        return new CommandConfig(setJoin, setSpawn, spawnConfig, smp);
     }
 
     private void setCommandValues(FileConfiguration cfg, CommandConfig commandConfig) {

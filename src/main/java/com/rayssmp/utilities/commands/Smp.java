@@ -1,7 +1,6 @@
 package com.rayssmp.utilities.commands;
 
 import com.rayssmp.utilities.config.Config;
-import com.rayssmp.utilities.config.command.SetJoin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -48,9 +47,8 @@ public class Smp implements CommandExecutor, TabCompleter {
                 case "join":
                     new SetJoinLocation(config).onCommand(sender, command, label, args);
                     break;
-                case "world":
-                    break;
                 case "respawn":
+                    new SetRespawnLocation(config).onCommand(sender, command, label, args);
                     break;
                 default:
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cInvalid arguments"));
