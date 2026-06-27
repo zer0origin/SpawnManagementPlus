@@ -1,9 +1,9 @@
 package com.rayssmp.utilities.config;
 
-import com.rayssmp.utilities.config.command.Command;
+import com.rayssmp.utilities.config.command.CommandConfig;
 import com.rayssmp.utilities.config.command.SetJoin;
 import com.rayssmp.utilities.config.command.SetSpawn;
-import com.rayssmp.utilities.config.command.spawn.Spawn;
+import com.rayssmp.utilities.config.command.spawn.SpawnConfig;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,10 +15,10 @@ import java.util.Objects;
 public class Config {
     private final File configFileLocation = new File("plugins/SpawnManagementPlus", "config.yml");
     private FileConfiguration cfg = new YamlConfiguration();
-    private ServerJoin serverJoinSettings = new ServerJoin();
-    private WorldJoin worldJoinSettings = new WorldJoin();
-    private Command command = new Command();
-    private Respawn respawn = new Respawn();
+    private ServerJoinConfig serverJoinConfigSettings = new ServerJoinConfig();
+    private WorldJoinConfig worldJoinConfigSettings = new WorldJoinConfig();
+    private CommandConfig commandConfig = new CommandConfig();
+    private RespawnConfig respawnConfig = new RespawnConfig();
     private boolean settingsHaveBeenUpdated = false;
 
     public void load() throws IOException {
@@ -38,10 +38,10 @@ public class Config {
         try {
             cfg = new YamlConfiguration();
             cfg.load(configFileLocation);
-            serverJoinSettings = loadServerJoinValues(cfg);
-            worldJoinSettings = loadWorldJoinValues(cfg);
-            command = loadCommandSettingValues(cfg);
-            respawn = loadRespawnSettingsValues(cfg);
+            serverJoinConfigSettings = loadServerJoinValues(cfg);
+            worldJoinConfigSettings = loadWorldJoinValues(cfg);
+            commandConfig = loadCommandSettingValues(cfg);
+            respawnConfig = loadRespawnSettingsValues(cfg);
         } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
@@ -52,16 +52,16 @@ public class Config {
             return;
         }
 
-        setServerJoinValues(cfg, this.serverJoinSettings);
-        setWorldJoinValues(cfg, this.worldJoinSettings);
-        setCommandValues(cfg, this.command);
-        setRespawnValues(cfg, this.respawn);
+        setServerJoinValues(cfg, this.serverJoinConfigSettings);
+        setWorldJoinValues(cfg, this.worldJoinConfigSettings);
+        setCommandValues(cfg, this.commandConfig);
+        setRespawnValues(cfg, this.respawnConfig);
 
         cfg.save(configFileLocation);
         settingsHaveBeenUpdated = false;
     }
 
-    private ServerJoin loadServerJoinValues(FileConfiguration cfg) {
+    private ServerJoinConfig loadServerJoinValues(FileConfiguration cfg) {
         var enabled = cfg.getBoolean("SpawnManagementPlus.on_server_join.enabled", false);
         var onlyOnFirstTime = cfg.getBoolean("SpawnManagementPlus.on_server_join.only_on_first_time", false);
         var world = cfg.getString("SpawnManagementPlus.on_server_join.action.location.world", "");
@@ -79,29 +79,29 @@ public class Config {
         var soundPitch = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.sound.pitch", 0);
         var exclude = cfg.getStringList("SpawnManagementPlus.on_server_join.exclude");
 
-        return new ServerJoin(enabled, onlyOnFirstTime, world, soundEnabled, soundType, soundVolume, soundPitch, useWorldDefault, locationX, locationY, locationZ, locationYaw, locationPitch, messageType, messageContents, exclude);
+        return new ServerJoinConfig(enabled, onlyOnFirstTime, world, soundEnabled, soundType, soundVolume, soundPitch, useWorldDefault, locationX, locationY, locationZ, locationYaw, locationPitch, messageType, messageContents, exclude);
     }
 
-    private void setServerJoinValues(FileConfiguration cfg, ServerJoin serverJoin) {
-        cfg.set("SpawnManagementPlus.on_server_join.enabled", serverJoin.enabled());
-        cfg.set("SpawnManagementPlus.on_server_join.only_on_first_time", serverJoin.onlyOnFirstTime());
-        cfg.set("SpawnManagementPlus.on_server_join.action.location.world", serverJoin.world());
-        cfg.set("SpawnManagementPlus.on_server_join.action.location.use_world_default", serverJoin.useWorldDefault());
-        cfg.set("SpawnManagementPlus.on_server_join.action.location.x", serverJoin.x());
-        cfg.set("SpawnManagementPlus.on_server_join.action.location.y", serverJoin.y());
-        cfg.set("SpawnManagementPlus.on_server_join.action.location.z", serverJoin.z());
-        cfg.set("SpawnManagementPlus.on_server_join.action.location.yaw", serverJoin.yaw());
-        cfg.set("SpawnManagementPlus.on_server_join.action.location.pitch", serverJoin.pitch());
-        cfg.set("SpawnManagementPlus.on_server_join.action.message", serverJoin.messageContents());
-        cfg.set("SpawnManagementPlus.on_server_join.action.message_type", serverJoin.messageType());
-        cfg.set("SpawnManagementPlus.on_server_join.action.sound.enabled", serverJoin.soundEnabled());
-        cfg.set("SpawnManagementPlus.on_server_join.action.sound.type", serverJoin.soundType());
-        cfg.set("SpawnManagementPlus.on_server_join.action.sound.volume", serverJoin.soundVolume());
-        cfg.set("SpawnManagementPlus.on_server_join.action.sound.pitch", serverJoin.soundPitch());
-        cfg.set("SpawnManagementPlus.on_server_join.exclude", serverJoin.exclude());
+    private void setServerJoinValues(FileConfiguration cfg, ServerJoinConfig serverJoinConfig) {
+        cfg.set("SpawnManagementPlus.on_server_join.enabled", serverJoinConfig.enabled());
+        cfg.set("SpawnManagementPlus.on_server_join.only_on_first_time", serverJoinConfig.onlyOnFirstTime());
+        cfg.set("SpawnManagementPlus.on_server_join.action.location.world", serverJoinConfig.world());
+        cfg.set("SpawnManagementPlus.on_server_join.action.location.use_world_default", serverJoinConfig.useWorldDefault());
+        cfg.set("SpawnManagementPlus.on_server_join.action.location.x", serverJoinConfig.x());
+        cfg.set("SpawnManagementPlus.on_server_join.action.location.y", serverJoinConfig.y());
+        cfg.set("SpawnManagementPlus.on_server_join.action.location.z", serverJoinConfig.z());
+        cfg.set("SpawnManagementPlus.on_server_join.action.location.yaw", serverJoinConfig.yaw());
+        cfg.set("SpawnManagementPlus.on_server_join.action.location.pitch", serverJoinConfig.pitch());
+        cfg.set("SpawnManagementPlus.on_server_join.action.message", serverJoinConfig.messageContents());
+        cfg.set("SpawnManagementPlus.on_server_join.action.message_type", serverJoinConfig.messageType());
+        cfg.set("SpawnManagementPlus.on_server_join.action.sound.enabled", serverJoinConfig.soundEnabled());
+        cfg.set("SpawnManagementPlus.on_server_join.action.sound.type", serverJoinConfig.soundType());
+        cfg.set("SpawnManagementPlus.on_server_join.action.sound.volume", serverJoinConfig.soundVolume());
+        cfg.set("SpawnManagementPlus.on_server_join.action.sound.pitch", serverJoinConfig.soundPitch());
+        cfg.set("SpawnManagementPlus.on_server_join.exclude", serverJoinConfig.exclude());
     }
 
-    private WorldJoin loadWorldJoinValues(FileConfiguration cfg) {
+    private WorldJoinConfig loadWorldJoinValues(FileConfiguration cfg) {
         var enabled = cfg.getBoolean("SpawnManagementPlus.on_world_join.enabled", false);
         var exclude = cfg.getStringList("SpawnManagementPlus.on_world_join.exclude");
         var soundEnabled = cfg.getBoolean("SpawnManagementPlus.on_world_join.action.sound.enabled", false);
@@ -113,23 +113,23 @@ public class Config {
         var messageType = cfg.getString("SpawnManagementPlus.on_world_join.action.message_type");
         var messageContents = cfg.getStringList("SpawnManagementPlus.on_world_join.action.message");
 
-        return new WorldJoin(enabled, exclude, soundEnabled, soundType, soundVolume, soundPitch, locationYaw, locationPitch, messageType, messageContents);
+        return new WorldJoinConfig(enabled, exclude, soundEnabled, soundType, soundVolume, soundPitch, locationYaw, locationPitch, messageType, messageContents);
     }
 
-    private void setWorldJoinValues(FileConfiguration cfg, WorldJoin worldJoin) {
-        cfg.set("SpawnManagementPlus.on_world_join.enabled", worldJoin.enabled());
-        cfg.set("SpawnManagementPlus.on_world_join.exclude", worldJoin.exclude());
-        cfg.set("SpawnManagementPlus.on_world_join.action.sound.enabled", worldJoin.soundEnabled());
-        cfg.set("SpawnManagementPlus.on_world_join.action.sound.type", worldJoin.soundType());
-        cfg.set("SpawnManagementPlus.on_world_join.action.sound.volume", worldJoin.soundVolume());
-        cfg.set("SpawnManagementPlus.on_world_join.action.sound.pitch", worldJoin.soundPitch());
-        cfg.set("SpawnManagementPlus.on_world_join.action.location.yaw", worldJoin.yaw());
-        cfg.set("SpawnManagementPlus.on_world_join.action.location.pitch", worldJoin.pitch());
-        cfg.set("SpawnManagementPlus.on_world_join.action.message_type", worldJoin.messageType());
-        cfg.set("SpawnManagementPlus.on_world_join.action.message", worldJoin.messageContents());
+    private void setWorldJoinValues(FileConfiguration cfg, WorldJoinConfig worldJoinConfig) {
+        cfg.set("SpawnManagementPlus.on_world_join.enabled", worldJoinConfig.enabled());
+        cfg.set("SpawnManagementPlus.on_world_join.exclude", worldJoinConfig.exclude());
+        cfg.set("SpawnManagementPlus.on_world_join.action.sound.enabled", worldJoinConfig.soundEnabled());
+        cfg.set("SpawnManagementPlus.on_world_join.action.sound.type", worldJoinConfig.soundType());
+        cfg.set("SpawnManagementPlus.on_world_join.action.sound.volume", worldJoinConfig.soundVolume());
+        cfg.set("SpawnManagementPlus.on_world_join.action.sound.pitch", worldJoinConfig.soundPitch());
+        cfg.set("SpawnManagementPlus.on_world_join.action.location.yaw", worldJoinConfig.yaw());
+        cfg.set("SpawnManagementPlus.on_world_join.action.location.pitch", worldJoinConfig.pitch());
+        cfg.set("SpawnManagementPlus.on_world_join.action.message_type", worldJoinConfig.messageType());
+        cfg.set("SpawnManagementPlus.on_world_join.action.message", worldJoinConfig.messageContents());
     }
 
-    private Command loadCommandSettingValues(FileConfiguration cfg) {
+    private CommandConfig loadCommandSettingValues(FileConfiguration cfg) {
         var insufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.insufficient_permission_error_message");
         var savedDataMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.saved_data_message");
         var savedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.savedDataFailedMessage");
@@ -140,58 +140,59 @@ public class Config {
         var setSpawnSavedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_failed_message");
         SetSpawn setSpawn = new SetSpawn(setSpawnInsufficientPermissionErrorMessage, setSpawnSavedDataMessage, setSpawnSavedDataFailedMessage);
 
-        boolean enabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.enabled");
-        int seconds = cfg.getInt("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds");
-        String onTeleportMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message_type");
+        boolean enabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.enabled", false);
+        int seconds = cfg.getInt("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", -1);
+        String onTeleportMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message_type", "CHAT");
         List<String> onTeleportMessages = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message");
-        String onIntervalMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message_type");
+        String onIntervalMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message_type", "CHAT");
         List<String> onIntervalMessages = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message");
-        boolean onMoveCancel = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.cancel");
-        String onMoveMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message_type");
+        boolean onMoveCancel = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.cancel", false);
+        String onMoveMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message_type", "CHAT");
         List<String> onMoveMessages = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message");
-        String spawnInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.spawn.insufficient_permission_error_message");
-        String world = cfg.getString("SpawnManagementPlus.commands.spawn.location.world");
-        double x = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.x");
-        double y = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.y");
-        double z = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.z");
-        float yaw = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.yaw");
-        float pitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.pitch");
+        String spawnInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.spawn.insufficient_permission_error_message", "");
+        String youAreAlreadyTeleporting = cfg.getString("SpawnManagementPlus.commands.spawn.you_are_already_teleporting", "");
+        String world = cfg.getString("SpawnManagementPlus.commands.spawn.location.world", "");
+        double x = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.x", 0);
+        double y = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.y", 0);
+        double z = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.z", 0);
+        float yaw = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.yaw", 0);
+        float pitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.pitch", 0);
 
-        boolean onTeleportSoundEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.enabled");
-        String onTeleportSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.type");
+        boolean onTeleportSoundEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.enabled", false);
+        String onTeleportSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.type", "");
         float onTeleportSoundVolume = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.volume", 1);
         float onTeleportSoundPitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.pitch", 1);
 
-        boolean onIntervalSoundEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.enabled");
-        String onIntervalSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.type");
+        boolean onIntervalSoundEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.enabled", false);
+        String onIntervalSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.type", "");
         float onIntervalSoundVolume = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.volume", 1);
         float onIntervalSoundPitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.pitch", 1);
 
-        boolean onMoveSoundEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.enabled");
-        String onMoveSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.type");
+        boolean onMoveSoundEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.enabled", false);
+        String onMoveSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.type", "");
         float onMoveSoundVolume = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.volume", 1);
         float onMoveSoundPitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.pitch", 1);
-        Spawn spawn = Spawn.SpawnFactory(enabled, seconds, spawnInsufficientPermissionErrorMessage, world, x, y, z, yaw, pitch,
+        SpawnConfig spawnConfig = SpawnConfig.SpawnFactory(enabled, seconds, spawnInsufficientPermissionErrorMessage, youAreAlreadyTeleporting, world, x, y, z, yaw, pitch,
                 onTeleportMessageType, onTeleportMessages, onTeleportSoundEnabled, onTeleportSoundType,
                 onTeleportSoundVolume, onTeleportSoundPitch, onIntervalMessageType, onIntervalMessages,
                 onIntervalSoundEnabled, onIntervalSoundType, onIntervalSoundVolume, onIntervalSoundPitch, onMoveCancel,
                 onMoveMessageType, onMoveSoundEnabled, onMoveSoundType, onMoveSoundVolume, onMoveSoundPitch, onMoveMessages);
 
-        return new Command(setJoin, setSpawn, spawn);
+        return new CommandConfig(setJoin, setSpawn, spawnConfig);
     }
 
-    private void setCommandValues(FileConfiguration cfg, Command command) {
-        var setJoinCommand = command.setJoin();
+    private void setCommandValues(FileConfiguration cfg, CommandConfig commandConfig) {
+        var setJoinCommand = commandConfig.setJoin();
         cfg.set("SpawnManagementPlus.commands.setjoinlocation.insufficient_permission_error_message", setJoinCommand.insufficientPermissionErrorMessage());
         cfg.set("SpawnManagementPlus.commands.setjoinlocation.saved_data_message", setJoinCommand.savedDataFailedMessage());
-        cfg.set("SpawnManagementPlus.commands.setjoinlocation.savedDataFailedMessage", setJoinCommand.savedDataFailedMessage());
+        cfg.set("SpawnManagementPlus.commands.setjoinlocation.saved_data_failed_message", setJoinCommand.savedDataFailedMessage());
 
-        var setSpawnCommand = command.setSpawn();
+        var setSpawnCommand = commandConfig.setSpawn();
         cfg.set("SpawnManagementPlus.commands.setSpawn.insufficient_permission_error_message", setSpawnCommand.insufficientPermissionErrorMessage());
         cfg.set("SpawnManagementPlus.commands.setSpawn.saved_data_message", setSpawnCommand.savedDataMessage());
         cfg.set("SpawnManagementPlus.commands.setSpawn.saved_data_failed_message", setSpawnCommand.savedDataFailedMessage());
 
-        var spawnCommand = command.spawn();
+        var spawnCommand = commandConfig.spawnConfig();
         cfg.set("SpawnManagementPlus.commands.spawn.enabled", spawnCommand.enabled());
         cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", spawnCommand.seconds());
         cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message_type", spawnCommand.onTeleport().messageType());
@@ -202,6 +203,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message_type", spawnCommand.onMove().messageType());
         cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message", spawnCommand.onMove().messages());
         cfg.set("SpawnManagementPlus.commands.spawn.insufficient_permission_error_message", spawnCommand.insufficientPermissionErrorMessage());
+        cfg.set("SpawnManagementPlus.commands.spawn.you_are_already_teleporting", spawnCommand.youAreAlreadyTeleporting());
         cfg.set("SpawnManagementPlus.commands.spawn.location.world", spawnCommand.world());
         cfg.set("SpawnManagementPlus.commands.spawn.location.x", spawnCommand.x());
         cfg.set("SpawnManagementPlus.commands.spawn.location.y", spawnCommand.y());
@@ -210,7 +212,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.commands.spawn.location.pitch", spawnCommand.pitch());
     }
 
-    private Respawn loadRespawnSettingsValues(FileConfiguration cfg) {
+    private RespawnConfig loadRespawnSettingsValues(FileConfiguration cfg) {
         var enabled = cfg.getBoolean("SpawnManagementPlus.on_respawn.enabled", false);
         var preferBedLocation = cfg.getBoolean("SpawnManagementPlus.on_respawn.prefer_bed_location", false);
         var preferAnchorLocation = cfg.getBoolean("SpawnManagementPlus.on_respawn.prefer_anchor_location", false);
@@ -222,62 +224,62 @@ public class Config {
         var pitch = (float) cfg.getDouble("SpawnManagementPlus.on_respawn.location.pitch", 0);
         var messageType = cfg.getString("SpawnManagementPlus.on_respawn.location.message_type", "");
         var messages = cfg.getStringList("SpawnManagementPlus.on_respawn.location.message");
-        var skipRespawnScreen = cfg.getBoolean("SpawnManagementPlus.on_respawn.skip_respawn_screen");
-        var spreadItemsOnDeath = cfg.getBoolean("SpawnManagementPlus.on_respawn.spread_items_on_death");
-        var forceRespawnButKeepDefaultMessage = cfg.getBoolean("SpawnManagementPlus.on_respawn.force_respawn_but_keep_default_message");
+        var skipRespawnScreen = cfg.getBoolean("SpawnManagementPlus.on_respawn.skip_respawn_screen", false);
+        var spreadItemsOnDeath = cfg.getBoolean("SpawnManagementPlus.on_respawn.spread_items_on_death", false);
+        var forceRespawnButKeepDefaultMessage = cfg.getBoolean("SpawnManagementPlus.on_respawn.force_respawn_but_keep_default_message", false);
 
-        return new Respawn(enabled, skipRespawnScreen, forceRespawnButKeepDefaultMessage, spreadItemsOnDeath, preferBedLocation, preferAnchorLocation, world, x, y, z, yaw, pitch, messageType, messages);
+        return new RespawnConfig(enabled, skipRespawnScreen, forceRespawnButKeepDefaultMessage, spreadItemsOnDeath, preferBedLocation, preferAnchorLocation, world, x, y, z, yaw, pitch, messageType, messages);
     }
 
-    private void setRespawnValues(FileConfiguration cfg, Respawn respawn) {
-        cfg.set("SpawnManagementPlus.on_respawn.enabled", respawn.enabled());
-        cfg.set("SpawnManagementPlus.on_respawn.prefer_bed_location", respawn.preferBedLocation());
-        cfg.set("SpawnManagementPlus.on_respawn.prefer_anchor_location", respawn.preferAnchorLocation());
-        cfg.set("SpawnManagementPlus.on_respawn.location.world", respawn.world());
-        cfg.set("SpawnManagementPlus.on_respawn.location.x", respawn.x());
-        cfg.set("SpawnManagementPlus.on_respawn.location.y", respawn.y());
-        cfg.set("SpawnManagementPlus.on_respawn.location.z", respawn.z());
-        cfg.set("SpawnManagementPlus.on_respawn.location.yaw", respawn.yaw());
-        cfg.set("SpawnManagementPlus.on_respawn.location.pitch", respawn.pitch());
-        cfg.set("SpawnManagementPlus.on_respawn.location.message", respawn.messageContent());
-        cfg.set("SpawnManagementPlus.on_respawn.location.message_type", respawn.messageType());
-        cfg.set("SpawnManagementPlus.on_respawn.skip_respawn_screen", respawn.skipRespawnScreen());
-        cfg.set("SpawnManagementPlus.on_respawn.spread_items_on_death", respawn.spreadItemsOnDeath());
-        cfg.set("SpawnManagementPlus.on_respawn.force_respawn_but_keep_default_message", respawn.forceRespawnButKeepDefaultMessage());
+    private void setRespawnValues(FileConfiguration cfg, RespawnConfig respawnConfig) {
+        cfg.set("SpawnManagementPlus.on_respawn.enabled", respawnConfig.enabled());
+        cfg.set("SpawnManagementPlus.on_respawn.prefer_bed_location", respawnConfig.preferBedLocation());
+        cfg.set("SpawnManagementPlus.on_respawn.prefer_anchor_location", respawnConfig.preferAnchorLocation());
+        cfg.set("SpawnManagementPlus.on_respawn.location.world", respawnConfig.world());
+        cfg.set("SpawnManagementPlus.on_respawn.location.x", respawnConfig.x());
+        cfg.set("SpawnManagementPlus.on_respawn.location.y", respawnConfig.y());
+        cfg.set("SpawnManagementPlus.on_respawn.location.z", respawnConfig.z());
+        cfg.set("SpawnManagementPlus.on_respawn.location.yaw", respawnConfig.yaw());
+        cfg.set("SpawnManagementPlus.on_respawn.location.pitch", respawnConfig.pitch());
+        cfg.set("SpawnManagementPlus.on_respawn.location.message", respawnConfig.messageContent());
+        cfg.set("SpawnManagementPlus.on_respawn.location.message_type", respawnConfig.messageType());
+        cfg.set("SpawnManagementPlus.on_respawn.skip_respawn_screen", respawnConfig.skipRespawnScreen());
+        cfg.set("SpawnManagementPlus.on_respawn.spread_items_on_death", respawnConfig.spreadItemsOnDeath());
+        cfg.set("SpawnManagementPlus.on_respawn.force_respawn_but_keep_default_message", respawnConfig.forceRespawnButKeepDefaultMessage());
     }
 
-    public ServerJoin getServerJoinSettings() {
-        return serverJoinSettings;
+    public ServerJoinConfig getServerJoinSettings() {
+        return serverJoinConfigSettings;
     }
 
-    public void setServerJoinSettings(ServerJoin serverJoinSettings) {
-        this.serverJoinSettings = serverJoinSettings;
+    public void setServerJoinSettings(ServerJoinConfig serverJoinConfigSettings) {
+        this.serverJoinConfigSettings = serverJoinConfigSettings;
         settingsHaveBeenUpdated = true;
     }
 
-    public WorldJoin getWorldJoinSettings() {
-        return worldJoinSettings;
+    public WorldJoinConfig getWorldJoinSettings() {
+        return worldJoinConfigSettings;
     }
 
-    public void setWorldJoinSettings(WorldJoin worldJoinSettings) {
-        this.worldJoinSettings = worldJoinSettings;
+    public void setWorldJoinSettings(WorldJoinConfig worldJoinConfigSettings) {
+        this.worldJoinConfigSettings = worldJoinConfigSettings;
         settingsHaveBeenUpdated = true;
     }
 
-    public Command getCommandSettings() {
-        return command;
+    public CommandConfig getCommandSettings() {
+        return commandConfig;
     }
 
-    public void setCommandValues(Command command) {
-        this.command = command;
+    public void setCommandValues(CommandConfig commandConfig) {
+        this.commandConfig = commandConfig;
         settingsHaveBeenUpdated = true;
     }
 
-    public Respawn getRespawnSettings() {
-        return respawn;
+    public RespawnConfig getRespawnSettings() {
+        return respawnConfig;
     }
 
-    public void setRespawnSettings(Respawn respawn) {
-        this.respawn = respawn;
+    public void setRespawnSettings(RespawnConfig respawnConfig) {
+        this.respawnConfig = respawnConfig;
     }
 }
