@@ -72,6 +72,7 @@ SpawnManagementPlus:
     spawn:
       enabled: false
       insufficient_permission_error_message: "&cYou do not have permission to run this command."
+      you_are_already_teleporting: "&cYou can not use this right now!"
       location: # Can be set by doing /setspawncmdlocation
         world: world # if using multiple worlds, YOU MUST have a world loader.
         x: 0

@@ -44,6 +44,11 @@ public class Spawn implements CommandExecutor, Listener {
             return true;
         }
 
+        if (RunnableSpawnTask.intervalTask.containsKey(player.getUniqueId())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().spawnConfig().youAreAlreadyTeleporting()));
+            return true;
+        }
+
         if (!(sender.hasPermission("SpawnManagementPlus.spawn") || !sender.isOp())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().spawn().insufficientPermissionErrorMessage()));
             return true;
