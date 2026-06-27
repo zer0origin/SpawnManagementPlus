@@ -1,7 +1,7 @@
 package com.rayssmp.utilities.commands;
 
 import com.rayssmp.utilities.config.Config;
-import com.rayssmp.utilities.config.ServerJoin;
+import com.rayssmp.utilities.config.ServerJoinConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -26,14 +26,14 @@ public class SetJoinLocation implements CommandExecutor {
             return true;
         }
 
-        if (!(sender.hasPermission("SpawnManagementPlus.setjoinlocation") || !sender.isOp())) {
+        if (!(sender.hasPermission(command.getPermission()) || !sender.isOp())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoin().insufficientPermissionErrorMessage()));
             return true;
         }
 
         Location locationToSet = player.getLocation();
-        ServerJoin original = config.getServerJoinSettings();
-        config.setServerJoinSettings(new ServerJoin(original.enabled(), original.onlyOnFirstTime(), player.getWorld().getName(),
+        ServerJoinConfig original = config.getServerJoinSettings();
+        config.setServerJoinSettings(new ServerJoinConfig(original.enabled(), original.onlyOnFirstTime(), player.getWorld().getName(),
                 original.soundEnabled(), original.soundType(), original.soundVolume(), original.soundPitch(),
                 original.useWorldDefault(), locationToSet.x(), locationToSet.y(), locationToSet.z(), player.getYaw(),
                 player.getPitch(), original.messageType(), original.messageContents(), original.exclude()));

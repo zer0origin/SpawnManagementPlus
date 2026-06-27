@@ -1,15 +1,19 @@
 package com.rayssmp.utilities.commands;
 
-import com.rayssmp.utilities.config.command.Command;
+import com.rayssmp.utilities.config.command.CommandConfig;
 import com.rayssmp.utilities.config.Config;
-import com.rayssmp.utilities.config.command.spawn.Spawn;
+import com.rayssmp.utilities.config.command.spawn.SpawnConfig;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.List;
 
 public class SetSpawn implements CommandExecutor {
     private final Config config;
@@ -25,18 +29,19 @@ public class SetSpawn implements CommandExecutor {
             return true;
         }
 
-        if (!(sender.hasPermission("SpawnManagementPlus.setspawn") || !sender.isOp())) {
+        if (!(sender.hasPermission(command.getPermission()) || !sender.isOp())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setSpawn().insufficientPermissionErrorMessage()));
             return true;
         }
 
         var commandSettings = config.getCommandSettings();
-        var spawnSettings = config.getCommandSettings().spawn();
+        var spawnSettings = config.getCommandSettings().spawnConfig();
         var location = player.getLocation();
 
-        config.setCommandValues(new Command(commandSettings.setJoin(),
+        config.setCommandValues(new CommandConfig(commandSettings.setJoin(),
                 commandSettings.setSpawn(),
-                Spawn.SpawnFactory(spawnSettings.enabled(), spawnSettings.seconds(), spawnSettings.onTeleport().messageType(),
+                SpawnConfig.SpawnFactory(spawnSettings.enabled(), spawnSettings.seconds(),
+                        spawnSettings.insufficientPermissionErrorMessage(), spawnSettings.youAreAlreadyTeleporting(),
                         location.getWorld().getName(), location.x(), location.y(), location.z(), location.getYaw(), location.getPitch(),
                         spawnSettings.onTeleport().messageType(), spawnSettings.onTeleport().messages(), spawnSettings.onTeleport().soundEnabled(), spawnSettings.onTeleport().soundType(), spawnSettings.onTeleport().soundVolume(), spawnSettings.onTeleport().soundPitch(),
                         spawnSettings.onInterval().messageType(), spawnSettings.onInterval().messages(), spawnSettings.onInterval().soundEnabled(), spawnSettings.onInterval().soundType(), spawnSettings.onInterval().soundVolume(), spawnSettings.onInterval().soundPitch(),

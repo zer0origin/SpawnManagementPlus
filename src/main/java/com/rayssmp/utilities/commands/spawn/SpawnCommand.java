@@ -1,4 +1,4 @@
-package com.rayssmp.utilities.commands;
+package com.rayssmp.utilities.commands.spawn;
 
 import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.util.MinecraftUtils;
@@ -23,21 +23,22 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Spawn implements CommandExecutor, Listener {
+public class SpawnCommand implements CommandExecutor, Listener {
     private final Config config;
     private final JavaPlugin main;
     private final Map<UUID, BukkitTask> intervalTask = new HashMap<>();
 
-    public Spawn(JavaPlugin main, Config config) {
+    public SpawnCommand(JavaPlugin main, Config config) {
         this.config = config;
         this.main = main;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        if (!config.getCommandSettings().spawn().enabled()) {
+        if (!config.getCommandSettings().spawnConfig().enabled()) {
             return true;
         }
+
 
         if (!(sender instanceof Player player)) {
             System.out.println("You cannot execute this command!");
@@ -50,11 +51,11 @@ public class Spawn implements CommandExecutor, Listener {
         }
 
         if (!(sender.hasPermission("SpawnManagementPlus.spawn") || !sender.isOp())) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().spawn().insufficientPermissionErrorMessage()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().spawnConfig().insufficientPermissionErrorMessage()));
             return true;
         }
 
-        var spawnSettings = config.getCommandSettings().spawn();
+        var spawnSettings = config.getCommandSettings().spawnConfig();
         World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(spawnSettings.world()), "Failed to find world!");
         Location location = new Location(spawnWorld, spawnSettings.x(), spawnSettings.y(), spawnSettings.z(),
                 spawnSettings.yaw(), spawnSettings.pitch());
@@ -65,42 +66,15 @@ public class Spawn implements CommandExecutor, Listener {
             });
         }
 
-        AtomicInteger second = new AtomicInteger(spawnSettings.seconds() + 1);
-        var task = Bukkit.getScheduler().runTaskTimer(this.main, () -> {
-            if (second.decrementAndGet() > 0) {
-                var prefix = second.get() == 1 ? "econd" : "econds";
-                var parsedStrings = spawnSettings.onInterval().messages().stream()
-                        .map(s -> s.replaceAll("%smp_teleport_seconds%", second.get() + " s" + prefix))
-                        .map(s -> s.replaceAll("%smp_teleport_seconds_capital%", second.get() + " S" + prefix))
-                        .toList();
-
-                MinecraftUtils.parseAndSendMessageContents(player, parsedStrings, spawnSettings.onInterval().messageType());
-
-                if (spawnSettings.onInterval().soundEnabled()) {
-                    player.playSound(player.getLocation(), spawnSettings.onInterval().soundType(), spawnSettings.onInterval().soundVolume(), spawnSettings.onInterval().soundPitch());
-                }
-
-                return;
-            }
-
-            MinecraftUtils.parseAndSendMessageContents(player, spawnSettings.onTeleport().messages(), spawnSettings.onTeleport().messageType());
-            intervalTask.get(player.getUniqueId()).cancel();
-            player.teleport(location);
-
-            if (spawnSettings.onTeleport().soundEnabled()) {
-                player.playSound(player.getLocation(), spawnSettings.onTeleport().soundType(), spawnSettings.onTeleport().soundVolume(), spawnSettings.onTeleport().soundPitch());
-            }
-
-        }, 0, 20);
-
-        intervalTask.put(player.getUniqueId(), task);
+        var task = Bukkit.getScheduler().runTaskTimer(this.main, new RunnableSpawnTask(this, config, player, location), 0, 20L);
+        RunnableSpawnTask.intervalTask.put(player.getUniqueId(), new RunnableSpawnTask.TaskData(task, spawnSettings.seconds()));
         return true;
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
         var player = event.getPlayer();
-        var spawnSettings = config.getCommandSettings().spawn();
+        var spawnSettings = config.getCommandSettings().spawnConfig();
         if (!intervalTask.containsKey(player.getUniqueId()) || !spawnSettings.onMove().enabled()) {
             return;
         }

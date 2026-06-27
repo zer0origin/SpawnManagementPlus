@@ -20,20 +20,20 @@ public class Reload implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if (!(sender instanceof Player player)) {
-            System.out.println("You cannot execute this command!");
+            System.out.println("You cannot execute this command!"); //TODO: message
             return true;
         }
 
-        if (!(sender.hasPermission("SpawnManagementPlus.reload") || !sender.isOp())) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "Wrong permissions"));
+        if (!(sender.hasPermission(command.getPermission()) || !sender.isOp())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "Wrong permissions")); //TODO: message
             return true;
         }
 
         try {
             config.load();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "Reloaded"));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "Reloaded")); //TODO: message
         } catch (IOException e) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "Failed to reload"));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "Failed to reload")); //TODO: message
             throw new RuntimeException(e);
         }
 
