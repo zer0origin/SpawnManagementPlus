@@ -36,19 +36,19 @@ public class Smp implements CommandExecutor, TabCompleter {
         }
 
         if (args[0].equalsIgnoreCase("reload")) {
-            new Reload(config).onCommand(sender, command, label, args);
+            new Reload(config).onCommand(player, args);
         }
 
         if (args[0].equalsIgnoreCase("location")) {
             switch (args[1].toLowerCase()) {
                 case "spawn":
-                    new SetSpawn(config).onCommand(sender, command, label, args);
+                    new SetSpawn(config).onCommand(player, args);
                     break;
                 case "join":
-                    new SetJoinLocation(config).onCommand(sender, command, label, args);
+                    new SetJoinLocation(config).onCommand(player, args);
                     break;
                 case "respawn":
-                    new SetRespawnLocation(config).onCommand(sender, command, label, args);
+                    new SetRespawnLocation(config).onCommand(player, args);
                     break;
                 default:
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cInvalid arguments"));
@@ -66,7 +66,7 @@ public class Smp implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("location")) {
             if (args.length == 2 || args[1].isEmpty()) {
-                return List.of("spawn", "join", "world", "respawn");
+                return List.of("spawn", "join", "respawn");
             }
         }
 

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-public class SetSpawn implements CommandExecutor {
+public class SetSpawn implements PlayerCommand {
     private final Config config;
 
     public SetSpawn(Config config) {
@@ -19,13 +19,9 @@ public class SetSpawn implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        if (!(sender instanceof Player player)) {
-            System.out.println("You cannot execute this command!");
-            return true;
-        }
+    public boolean onCommand(@NotNull Player player, @NotNull String @NotNull [] args) {
 
-        if (!(sender.hasPermission("SpawnManagementPlus.smp.set.spawn") || !sender.isOp())) {
+        if (!(player.hasPermission("SpawnManagementPlus.smp.set.spawn") || !player.isOp())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setSpawn().insufficientPermissionErrorMessage()));
             return true;
         }

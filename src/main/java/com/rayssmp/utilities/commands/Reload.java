@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-public class Reload implements CommandExecutor {
+public class Reload implements PlayerCommand {
     private final Config config;
 
     public Reload(Config config) {
@@ -18,13 +18,8 @@ public class Reload implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        if (!(sender instanceof Player player)) {
-            System.out.println("You cannot execute this command!"); //TODO: message
-            return true;
-        }
-
-        if (!(sender.hasPermission(command.getPermission()) || !sender.isOp())) {
+    public boolean onCommand(@NotNull Player player, @NotNull String @NotNull [] args) {
+        if (!(player.hasPermission("SpawnManagementPlus.reload") || !player.isOp())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "Wrong permissions")); //TODO: message
             return true;
         }

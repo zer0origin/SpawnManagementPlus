@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-public class SetRespawnLocation implements CommandExecutor {
+public class SetRespawnLocation implements PlayerCommand {
     private final Config config;
 
     public SetRespawnLocation(Config config) {
@@ -20,13 +20,8 @@ public class SetRespawnLocation implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        if (!(sender instanceof Player player)) {
-            System.out.println("You cannot execute this command!");
-            return true;
-        }
-
-        if (!(sender.hasPermission("SpawnManagementPlus.smp.set.respawm") || !sender.isOp())) {
+    public boolean onCommand(@NotNull Player player, @NotNull String @NotNull [] args) {
+        if (!(player.hasPermission("SpawnManagementPlus.smp.set.respawm") || !player.isOp())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().smp().insufficientPermissionErrorMessage()));
             return true;
         }

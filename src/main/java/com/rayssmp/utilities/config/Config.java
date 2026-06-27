@@ -73,7 +73,7 @@ public class Config {
         var locationYaw = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.location.yaw", 0);
         var locationPitch = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.location.pitch", 0);
         var messageContents = cfg.getStringList("SpawnManagementPlus.on_server_join.action.message");
-        var messageType = cfg.getString("SpawnManagementPlus.on_server_join.action.message_type");
+        var messageType = cfg.getString("SpawnManagementPlus.on_server_join.action.message_type", "CHAT");
         var soundEnabled = cfg.getBoolean("SpawnManagementPlus.on_server_join.action.sound.enabled", false);
         var soundType = cfg.getString("SpawnManagementPlus.on_server_join.action.sound.type", "Sound.GLASS");
         var soundVolume = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.sound.volume", 0);
@@ -111,7 +111,7 @@ public class Config {
         var soundPitch = (float) cfg.getDouble("SpawnManagementPlus.on_world_join.action.sound.pitch", 0);
         var locationYaw = (float) cfg.getDouble("SpawnManagementPlus.on_world_join.action.location.yaw", 0);
         var locationPitch = (float) cfg.getDouble("SpawnManagementPlus.on_world_join.action.location.pitch", 0);
-        var messageType = cfg.getString("SpawnManagementPlus.on_world_join.action.message_type");
+        var messageType = cfg.getString("SpawnManagementPlus.on_world_join.action.message_type", "CHAT");
         var messageContents = cfg.getStringList("SpawnManagementPlus.on_world_join.action.message");
 
         return new WorldJoinConfig(enabled, exclude, soundEnabled, soundType, soundVolume, soundPitch, locationYaw, locationPitch, messageType, messageContents);
@@ -131,14 +131,14 @@ public class Config {
     }
 
     private CommandConfig loadCommandSettingValues(FileConfiguration cfg) {
-        var insufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.insufficient_permission_error_message");
-        var savedDataMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.saved_data_message");
-        var savedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.saved_data_failed_message");
+        var insufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.insufficient_permission_error_message", "");
+        var savedDataMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.saved_data_message", "");
+        var savedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.saved_data_failed_message", "");
         SetJoin setJoin = new SetJoin(insufficientPermissionErrorMessage, savedDataMessage, savedDataFailedMessage);
 
-        var setSpawnInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.setSpawn.insufficient_permission_error_message");
-        var setSpawnSavedDataMessage = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_message");
-        var setSpawnSavedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_failed_message");
+        var setSpawnInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.setSpawn.insufficient_permission_error_message", "");
+        var setSpawnSavedDataMessage = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_message", "");
+        var setSpawnSavedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_failed_message", "");
         SetSpawn setSpawn = new SetSpawn(setSpawnInsufficientPermissionErrorMessage, setSpawnSavedDataMessage, setSpawnSavedDataFailedMessage);
 
         boolean enabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.enabled", false);
@@ -179,9 +179,9 @@ public class Config {
                 onIntervalSoundEnabled, onIntervalSoundType, onIntervalSoundVolume, onIntervalSoundPitch, onMoveCancel,
                 onMoveMessageType, onMoveSoundEnabled, onMoveSoundType, onMoveSoundVolume, onMoveSoundPitch, onMoveMessages);
 
-        var smpInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.smp.insufficient_permission_error_message");
-        var smpSavedDataMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_message");
-        var smpSavedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_failed_message");
+        var smpInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.smp.insufficient_permission_error_message", "");
+        var smpSavedDataMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_message", "");
+        var smpSavedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_failed_message", "");
         Smp smp = new Smp(smpInsufficientPermissionErrorMessage, smpSavedDataMessage, smpSavedDataFailedMessage);
 
         return new CommandConfig(setJoin, setSpawn, smp, spawnConfig);

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-public class SetJoinLocation implements CommandExecutor {
+public class SetJoinLocation implements PlayerCommand {
     private final Config config;
 
     public SetJoinLocation(Config config) {
@@ -20,13 +20,8 @@ public class SetJoinLocation implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        if (!(sender instanceof Player player)) {
-            System.out.println("You cannot execute this command!");
-            return true;
-        }
-
-        if (!(sender.hasPermission("SpawnManagementPlus.smp.set.join") || !sender.isOp())) {
+    public boolean onCommand(@NotNull Player player, @NotNull String @NotNull [] args) {
+        if (!(player.hasPermission("SpawnManagementPlus.smp.set.join") || !player.isOp())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoin().insufficientPermissionErrorMessage()));
             return true;
         }

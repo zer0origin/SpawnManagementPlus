@@ -51,9 +51,6 @@ public final class Main extends JavaPlugin {
         var smp = new Smp(config);
         this.getCommand("smp").setExecutor(smp);
         this.getCommand("smp").setTabCompleter(smp);
-        this.getCommand("setjoinlocation").setExecutor(new SetJoinLocation(config));
-        this.getCommand("reloadspawnmanagementplus").setExecutor(new Reload(config));
-        this.getCommand("setspawn").setExecutor(new SetSpawn(config));
         this.getLogger().log(Level.INFO, "Enabled!");
 
         var spawn = new SpawnCommand(this, config);
