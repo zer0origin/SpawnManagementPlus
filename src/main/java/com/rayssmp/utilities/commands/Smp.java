@@ -40,6 +40,11 @@ public class Smp implements CommandExecutor, TabCompleter {
         }
 
         if (args[0].equalsIgnoreCase("location")) {
+            if (args.length == 1) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cInvalid arguments"));
+                return true;
+            }
+
             switch (args[1].toLowerCase()) {
                 case "spawn":
                     new SetSpawn(config).onCommand(player, args);
