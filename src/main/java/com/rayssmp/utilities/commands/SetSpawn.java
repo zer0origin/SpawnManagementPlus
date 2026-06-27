@@ -4,16 +4,12 @@ import com.rayssmp.utilities.config.command.CommandConfig;
 import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.config.command.spawn.SpawnConfig;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.List;
 
 public class SetSpawn implements CommandExecutor {
     private final Config config;
@@ -29,7 +25,7 @@ public class SetSpawn implements CommandExecutor {
             return true;
         }
 
-        if (!(sender.hasPermission(command.getPermission()) || !sender.isOp())) {
+        if (!(sender.hasPermission("SpawnManagementPlus.smp.set.spawn") || !sender.isOp())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setSpawn().insufficientPermissionErrorMessage()));
             return true;
         }
@@ -40,12 +36,13 @@ public class SetSpawn implements CommandExecutor {
 
         config.setCommandValues(new CommandConfig(commandSettings.setJoin(),
                 commandSettings.setSpawn(),
-                SpawnConfig.SpawnFactory(spawnSettings.enabled(), spawnSettings.seconds(),
+                commandSettings.smp(), SpawnConfig.SpawnFactory(spawnSettings.enabled(), spawnSettings.seconds(),
                         spawnSettings.insufficientPermissionErrorMessage(), spawnSettings.youAreAlreadyTeleporting(),
                         location.getWorld().getName(), location.x(), location.y(), location.z(), location.getYaw(), location.getPitch(),
                         spawnSettings.onTeleport().messageType(), spawnSettings.onTeleport().messages(), spawnSettings.onTeleport().soundEnabled(), spawnSettings.onTeleport().soundType(), spawnSettings.onTeleport().soundVolume(), spawnSettings.onTeleport().soundPitch(),
                         spawnSettings.onInterval().messageType(), spawnSettings.onInterval().messages(), spawnSettings.onInterval().soundEnabled(), spawnSettings.onInterval().soundType(), spawnSettings.onInterval().soundVolume(), spawnSettings.onInterval().soundPitch(),
-                        spawnSettings.onMove().enabled(), spawnSettings.onMove().messageType(), spawnSettings.onMove().soundEnabled(), spawnSettings.onMove().soundType(), spawnSettings.onMove().soundVolume(), spawnSettings.onMove().soundPitch(), spawnSettings.onMove().messages())));
+                        spawnSettings.onMove().enabled(), spawnSettings.onMove().messageType(), spawnSettings.onMove().soundEnabled(), spawnSettings.onMove().soundType(), spawnSettings.onMove().soundVolume(), spawnSettings.onMove().soundPitch(), spawnSettings.onMove().messages())
+        ));
 
         try {
             config.update();

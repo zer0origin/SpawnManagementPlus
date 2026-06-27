@@ -184,7 +184,7 @@ public class Config {
         var smpSavedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_failed_message");
         Smp smp = new Smp(smpInsufficientPermissionErrorMessage, smpSavedDataMessage, smpSavedDataFailedMessage);
 
-        return new CommandConfig(setJoin, setSpawn, spawnConfig, smp);
+        return new CommandConfig(setJoin, setSpawn, smp, spawnConfig);
     }
 
     private void setCommandValues(FileConfiguration cfg, CommandConfig commandConfig) {

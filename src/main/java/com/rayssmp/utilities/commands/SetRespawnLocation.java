@@ -26,8 +26,8 @@ public class SetRespawnLocation implements CommandExecutor {
             return true;
         }
 
-        if (!(sender.hasPermission(command.getPermission()) || !sender.isOp())) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoin().insufficientPermissionErrorMessage()));
+        if (!(sender.hasPermission("SpawnManagementPlus.smp.set.respawm") || !sender.isOp())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().smp().insufficientPermissionErrorMessage()));
             return true;
         }
 
