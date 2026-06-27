@@ -6,24 +6,10 @@ api-version: '26.1.2'
 load: POSTWORLD
 softdepend: [ PlaceholderAPI ]
 commands:
-  setjoinlocation:
-    description: Set the SpawnManagementPlus.first_join.action.location in the configuration file and updates in-memory information.
-    usage: /setjoinlocation
-    permission: SpawnManagementPlus.smp.set.join
-  reloadspawnmanagementplus:
-    description: Reload config.
-    usage: /reloadspawnmanagementplus
-    permission: SpawnManagementPlus.reload
-    aliases: [ reloadsmp ]
   spawn:
     description: Teleport to spawn.
     usage: /spawn
     permission: SpawnManagementPlus.spawn
-    aliases: [ spawn ]
-  setSpawn:
-    description: sets the spawn command to the current location.
-    usage: /setSpawn
-    permission: SpawnManagementPlus.smp.set.spawn
     aliases: [ spawn ]
   smp:
     usage: /smp <command>
