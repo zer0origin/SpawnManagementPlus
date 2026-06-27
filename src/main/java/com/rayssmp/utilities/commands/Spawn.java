@@ -79,8 +79,8 @@ public class Spawn implements CommandExecutor, Listener {
             }
 
             MinecraftUtils.parseAndSendMessageContents(player, spawnSettings.onTeleport().messages(), spawnSettings.onTeleport().messageType());
-            player.teleport(location);
             intervalTask.get(player.getUniqueId()).cancel();
+            player.teleport(location);
 
             if (spawnSettings.onTeleport().soundEnabled()) {
                 player.playSound(player.getLocation(), spawnSettings.onTeleport().soundType(), spawnSettings.onTeleport().soundVolume(), spawnSettings.onTeleport().soundPitch());
