@@ -76,3 +76,7 @@ public final class Main extends JavaPlugin {
         this.getLogger().log(Level.INFO, "Shut Down!");
     }
 }
+
+/**
+ * Author: Zer0origin
+ */
