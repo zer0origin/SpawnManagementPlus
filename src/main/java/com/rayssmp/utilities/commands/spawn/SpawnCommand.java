@@ -21,12 +21,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SpawnCommand implements CommandExecutor, Listener {
     private final Config config;
     private final JavaPlugin main;
-    private final Map<UUID, BukkitTask> intervalTask = new HashMap<>();
 
     public SpawnCommand(JavaPlugin main, Config config) {
         this.config = config;
@@ -75,7 +75,7 @@ public class SpawnCommand implements CommandExecutor, Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         var player = event.getPlayer();
         var spawnSettings = config.getCommandSettings().spawnConfig();
-        if (!intervalTask.containsKey(player.getUniqueId()) || !spawnSettings.onMove().enabled()) {
+          if (!RunnableSpawnTask.intervalTask.containsKey(player.getUniqueId()) || !spawnSettings.onMove().enabled()) {
             return;
         }
 
@@ -88,7 +88,7 @@ public class SpawnCommand implements CommandExecutor, Listener {
                 player.playSound(player.getLocation(), spawnSettings.onMove().soundType(), spawnSettings.onMove().soundVolume(), spawnSettings.onMove().soundPitch());
             }
 
-            intervalTask.remove(player.getUniqueId()).cancel();
+            RunnableSpawnTask.intervalTask.remove(player.getUniqueId()).getTask().cancel();
         }
     }
 }

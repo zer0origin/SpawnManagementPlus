@@ -70,7 +70,7 @@ SpawnManagementPlus:
       saved_data_message: "&aLocation was saved successfully"
       saved_data_failed_message: "&cLocation save failed!"
     spawn:
-      enabled: false
+      enabled: true
       insufficient_permission_error_message: "&cYou do not have permission to run this command."
       you_are_already_teleporting: "&cYou can not use this right now!"
       location: # Can be set by doing /setspawncmdlocation
@@ -101,7 +101,7 @@ SpawnManagementPlus:
           message: # Supports Placeholder API. You can use [] to disable messages. - %smp_teleport_seconds% will not capitalise the s but smp_teleport_seconds_capital will.
             - "&aTeleporting in %smp_teleport_seconds%!"
         on_move:
-          cancel: false
+          cancel: true
           sound:
             enabled: false
             type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
