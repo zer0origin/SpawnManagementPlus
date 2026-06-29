@@ -56,13 +56,7 @@ public class PlayerRespawnHandler implements Listener {
             return;
         }
 
-        if (respawnSettings.useWorldDefaultSpawnLocation()) {
-            actionHandler.handleWithWorld(event.getPlayer(), respawnSettings.action(), event.getPlayer().getWorld(), player::teleport);
-        } else {
-            actionHandler.handle(event.getPlayer(), respawnSettings.action(), player::teleport);
-        }
-
-        if (respawnSettings.useFakeDeath()) {
+        if (respawnSettings.useGameDeath()) {
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 if (player.isOnline()) {
                     player.spigot().respawn();

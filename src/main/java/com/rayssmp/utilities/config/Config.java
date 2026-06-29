@@ -261,9 +261,9 @@ public class Config {
         var preferAnchorLocation = cfg.getBoolean("SpawnManagementPlus.on_respawn.prefer_anchor_location", false);
         var skipRespawnScreen = cfg.getBoolean("SpawnManagementPlus.on_respawn.skip_respawn_screen", false);
         var spreadItemsOnDeath = cfg.getBoolean("SpawnManagementPlus.on_respawn.spread_items_on_death", false);
-        var forceRespawnButKeepDefaultMessage = cfg.getBoolean("SpawnManagementPlus.on_respawn.use_fake_death", false);
+        var forceRespawnButKeepDefaultMessage = cfg.getBoolean("SpawnManagementPlus.on_respawn.use_game_death", false);
 
-        var useWorldDefaultSpawnLocation = cfg.getBoolean("SpawnManagementPlus.on_respawn.action.use_world_default_spawn_location", false);
+        var useWorldDefaultSpawnLocation = cfg.getBoolean("SpawnManagementPlus.on_respawn.use_world_default_spawn_location", false);
         var soundEnabled = cfg.getBoolean("SpawnManagementPlus.on_respawn.action.sound.enabled", false);
         var soundType = cfg.getString("SpawnManagementPlus.on_respawn.action.sound.type", "");
         var soundVolume = (float) cfg.getDouble("SpawnManagementPlus.on_respawn.action.sound.volume", 0);
@@ -290,7 +290,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_respawn.prefer_anchor_location", respawnConfig.preferAnchorLocation());
         cfg.set("SpawnManagementPlus.on_respawn.skip_respawn_screen", respawnConfig.skipRespawnScreen());
         cfg.set("SpawnManagementPlus.on_respawn.spread_items_on_death", respawnConfig.spreadItemsOnDeath());
-        cfg.set("SpawnManagementPlus.on_respawn.use_fake_death", respawnConfig.useFakeDeath());
+        cfg.set("SpawnManagementPlus.on_respawn.use_game_death", respawnConfig.useGameDeath());
         cfg.set("SpawnManagementPlus.on_respawn.action.sound.enabled", respawnConfig.action().sound().enabled());
         cfg.set("SpawnManagementPlus.on_respawn.action.sound.type", respawnConfig.action().sound().type());
         cfg.set("SpawnManagementPlus.on_respawn.action.sound.volume", respawnConfig.action().sound().volume());
@@ -303,7 +303,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_respawn.action.location.pitch", respawnConfig.action().worldLocation().pitch());
         cfg.set("SpawnManagementPlus.on_respawn.action.message_type", respawnConfig.action().messageType());
         cfg.set("SpawnManagementPlus.on_respawn.action.message", respawnConfig.action().messageContents());
-        cfg.set("SpawnManagementPlus.on_respawn.action.use_world_default_spawn_location", respawnConfig.useWorldDefaultSpawnLocation());
+        cfg.set("SpawnManagementPlus.on_respawn.use_world_default_spawn_location", respawnConfig.useWorldDefaultSpawnLocation());
     }
 
     public ServerJoinConfig getServerJoinSettings() {
