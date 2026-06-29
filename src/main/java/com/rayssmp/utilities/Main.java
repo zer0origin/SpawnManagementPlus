@@ -1,6 +1,6 @@
 package com.rayssmp.utilities;
 
-import com.rayssmp.utilities.commands.Smp;
+import com.rayssmp.utilities.commands.smp.Smp;
 import com.rayssmp.utilities.commands.spawn.SecondPlaceholder;
 import com.rayssmp.utilities.commands.spawn.SpawnCommand;
 import com.rayssmp.utilities.config.Config;

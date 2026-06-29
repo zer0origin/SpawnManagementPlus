@@ -1,5 +1,6 @@
-package com.rayssmp.utilities.commands;
+package com.rayssmp.utilities.commands.smp;
 
+import com.rayssmp.utilities.commands.Reload;
 import com.rayssmp.utilities.config.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -46,10 +47,10 @@ public class Smp implements CommandExecutor, TabCompleter {
             }
 
             switch (args[1].toLowerCase()) {
-                case "spawncmd":
+                case "spawn_cmd":
                     new SetSpawnCommandLocation(config).onCommand(player, args);
                     break;
-                case "join":
+                case "server_join":
                     new ServerJoinSpawnLocation(config).onCommand(player, args);
                     break;
                 case "respawn":
@@ -71,7 +72,7 @@ public class Smp implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("location")) {
             if (args.length == 2 || args[1].isEmpty()) {
-                return List.of("spawn", "spawncmd", "join", "respawn");
+                return List.of("server_join", "spawn_cmd", "join", "respawn");
             }
         }
 

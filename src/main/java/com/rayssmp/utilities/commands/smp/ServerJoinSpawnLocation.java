@@ -1,5 +1,6 @@
-package com.rayssmp.utilities.commands;
+package com.rayssmp.utilities.commands.smp;
 
+import com.rayssmp.utilities.commands.PlayerCommand;
 import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.config.ServerJoinConfig;
 import org.bukkit.ChatColor;
@@ -22,8 +23,8 @@ public class ServerJoinSpawnLocation implements PlayerCommand {
 
     @Override
     public boolean onCommand(@NotNull Player player, @NotNull String @NotNull [] args) {
-        if (!(player.hasPermission("SpawnManagementPlus.smp.set.join") || !player.isOp())) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoin().insufficientPermissionErrorMessage()));
+        if (!(player.hasPermission("SpawnManagementPlus.smp.set.server_join") || !player.isOp())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().smp().insufficientPermissionErrorMessage()));
             return true;
         }
 
@@ -36,9 +37,9 @@ public class ServerJoinSpawnLocation implements PlayerCommand {
 
         try {
             config.update();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoin().savedDataMessage()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().smp().savedDataMessage()));
         } catch (IOException e) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setJoin().savedDataFailedMessage()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().smp().savedDataFailedMessage()));
             throw new RuntimeException(e);
         }
 

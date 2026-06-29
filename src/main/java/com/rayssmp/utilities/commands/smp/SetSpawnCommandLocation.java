@@ -1,5 +1,6 @@
-package com.rayssmp.utilities.commands;
+package com.rayssmp.utilities.commands.smp;
 
+import com.rayssmp.utilities.commands.PlayerCommand;
 import com.rayssmp.utilities.config.command.CommandConfig;
 import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.config.command.spawn.SpawnConfig;
@@ -20,7 +21,7 @@ public class SetSpawnCommandLocation implements PlayerCommand {
     public boolean onCommand(@NotNull Player player, @NotNull String @NotNull [] args) {
 
         if (!(player.hasPermission("SpawnManagementPlus.smp.set.spawn") || !player.isOp())) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setSpawn().insufficientPermissionErrorMessage()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().smp().insufficientPermissionErrorMessage()));
             return true;
         }
 
@@ -28,11 +29,10 @@ public class SetSpawnCommandLocation implements PlayerCommand {
         var spawnSettings = config.getCommandSettings().spawnConfig();
         var location = player.getLocation();
 
-        config.setCommandValues(new CommandConfig(commandSettings.setJoin(),
-                commandSettings.setSpawn(),
-                commandSettings.smp(), SpawnConfig.SpawnFactory(spawnSettings.enabled(), spawnSettings.seconds(),
+        config.setCommandValues(new CommandConfig(commandSettings.smp(),
+                SpawnConfig.SpawnFactory(spawnSettings.enabled(), spawnSettings.seconds(),
                         spawnSettings.insufficientPermissionErrorMessage(), spawnSettings.youAreAlreadyTeleporting(),
-                        location.getWorld().getName(), location.x(), location.y(), location.z(), location.getYaw(), location.getPitch(),
+                        spawnSettings.useOnServerJoinLocation(), location.getWorld().getName(), location.x(), location.y(), location.z(), location.getYaw(), location.getPitch(),
                         spawnSettings.onTeleport().messageType(), spawnSettings.onTeleport().messages(), spawnSettings.onTeleport().soundEnabled(), spawnSettings.onTeleport().soundType(), spawnSettings.onTeleport().soundVolume(), spawnSettings.onTeleport().soundPitch(),
                         spawnSettings.onInterval().messageType(), spawnSettings.onInterval().messages(), spawnSettings.onInterval().soundEnabled(), spawnSettings.onInterval().soundType(), spawnSettings.onInterval().soundVolume(), spawnSettings.onInterval().soundPitch(),
                         spawnSettings.onMove().enabled(), spawnSettings.onMove().messageType(), spawnSettings.onMove().soundEnabled(), spawnSettings.onMove().soundType(), spawnSettings.onMove().soundVolume(), spawnSettings.onMove().soundPitch(), spawnSettings.onMove().messages())
@@ -40,9 +40,9 @@ public class SetSpawnCommandLocation implements PlayerCommand {
 
         try {
             config.update();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setSpawn().savedDataMessage()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().smp().savedDataMessage()));
         } catch (IOException e) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().setSpawn().savedDataFailedMessage()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getCommandSettings().smp().savedDataFailedMessage()));
             throw new RuntimeException(e);
         }
 
