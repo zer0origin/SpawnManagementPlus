@@ -48,8 +48,6 @@ public class OnJoinOrOnWorldChangeHandler implements Listener {
                 actionHandler.handle(player, onlyOnFirstTime.action(), player::teleport);
                 return;
             }
-
-            return;
         }
 
         actionHandler.handle(player, serverJoinSettings.action(), player::teleport);
