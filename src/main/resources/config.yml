@@ -35,7 +35,7 @@ SpawnManagementPlus:
     action:
       sound:
         enabled: false
-        type: minecraft:block.note_block.pling #A list of sounds can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+        type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
         volume: 1
         pitch: 1
       location: # Since it is only player rotation, there is no command for this.
