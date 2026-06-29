@@ -4,17 +4,15 @@ import com.rayssmp.utilities.config.command.CommandConfig;
 import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.config.command.spawn.SpawnConfig;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-public class SetSpawn implements PlayerCommand {
+public class SetSpawnCommandLocation implements PlayerCommand {
     private final Config config;
 
-    public SetSpawn(Config config) {
+    public SetSpawnCommandLocation(Config config) {
         this.config = config;
     }
 

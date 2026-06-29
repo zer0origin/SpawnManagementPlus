@@ -1,15 +1,11 @@
 package com.rayssmp.utilities;
 
-import com.rayssmp.utilities.commands.Reload;
-import com.rayssmp.utilities.commands.SetJoinLocation;
-import com.rayssmp.utilities.commands.SetSpawn;
 import com.rayssmp.utilities.commands.Smp;
 import com.rayssmp.utilities.commands.spawn.SecondPlaceholder;
 import com.rayssmp.utilities.commands.spawn.SpawnCommand;
 import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.events.PlayerOnJoinHandler;
 import com.rayssmp.utilities.events.PlayerRespawnEvent;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

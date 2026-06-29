@@ -46,11 +46,11 @@ public class Smp implements CommandExecutor, TabCompleter {
             }
 
             switch (args[1].toLowerCase()) {
-                case "spawn":
-                    new SetSpawn(config).onCommand(player, args);
+                case "spawncmd":
+                    new SetSpawnCommandLocation(config).onCommand(player, args);
                     break;
                 case "join":
-                    new SetJoinLocation(config).onCommand(player, args);
+                    new ServerJoinSpawnLocation(config).onCommand(player, args);
                     break;
                 case "respawn":
                     new SetRespawnLocation(config).onCommand(player, args);
@@ -71,7 +71,7 @@ public class Smp implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("location")) {
             if (args.length == 2 || args[1].isEmpty()) {
-                return List.of("spawn", "join", "respawn");
+                return List.of("spawn", "spawncmd", "join", "respawn");
             }
         }
 
