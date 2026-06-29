@@ -3,8 +3,8 @@ SpawnManagementPlus:
   on_server_join:
     enabled: false
     exclude: # Are there any worlds that should not do this?
-      - the_nether
-      - the_end
+      - world_nether
+      - world_end
     action: # What is it that you want the server to do to the user: Teleport, Play Sound, Send message?
       sound:
         enabled: false
