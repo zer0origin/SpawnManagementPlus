@@ -77,10 +77,17 @@ public class Config {
         var soundVolume = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.sound.volume", 0);
         var soundPitch = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.action.sound.pitch", 0);
         var exclude = cfg.getStringList("SpawnManagementPlus.on_server_join.exclude");
+        var serverJoinLocation = new WorldLocation(world, locationX, locationY, locationZ, locationYaw, locationPitch);
+        var serverJoinSound = new Sound(soundEnabled, soundType, soundVolume, soundPitch);
+        var serverJoinAction = new Action(serverJoinLocation, serverJoinSound, messageType, messageContents);
 
         //only on first time config
         var firstJoinEnabled = cfg.getBoolean("SpawnManagementPlus.on_server_join.only_on_first_time.enabled", false);
         var firstJoinUseOnServerJoinDefault = cfg.getBoolean("SpawnManagementPlus.on_server_join.only_on_first_time.use_on_server_join_default", false);
+        if (firstJoinUseOnServerJoinDefault){
+            return new ServerJoinConfig(enabled, exclude, serverJoinAction, new OnlyOnFirstTime(firstJoinEnabled, true, serverJoinAction));
+        }
+
         var firstJoinSoundEnabled = cfg.getBoolean("SpawnManagementPlus.on_server_join.only_on_first_time.action.sound.enabled", false);
         var firstJoinSoundType = cfg.getString("SpawnManagementPlus.on_server_join.only_on_first_time.action.sound.type", "");
         var firstJoinSoundVolume = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.only_on_first_time.action.sound.volume", 0);
@@ -92,7 +99,6 @@ public class Config {
         var firstJoinYaw = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.only_on_first_time.action.location.yaw", 0);
         var firstJoinPitch = (float) cfg.getDouble("SpawnManagementPlus.on_server_join.only_on_first_time.action.location.pitch", 0);
         var firstJoinMessageType = cfg.getString("SpawnManagementPlus.on_server_join.only_on_first_time.action.message_type", "");
-        ;
         var firstJoinMessageContents = cfg.getStringList("SpawnManagementPlus.on_server_join.only_on_first_time.action.message");
 
         WorldLocation firstTimeWorldLocation = new WorldLocation(firstJoinWorld, firstJoinX, firstJoinY, firstJoinZ, firstJoinYaw, firstJoinPitch);
@@ -100,7 +106,7 @@ public class Config {
         Action firstTimeAction = new Action(firstTimeWorldLocation, firstTimeSound, firstJoinMessageType, firstJoinMessageContents);
         OnlyOnFirstTime firstTimeConfig = new OnlyOnFirstTime(firstJoinEnabled, firstJoinUseOnServerJoinDefault, firstTimeAction);
 
-        return new ServerJoinConfig(enabled, exclude, firstTimeAction, firstTimeConfig);
+        return new ServerJoinConfig(enabled, exclude, serverJoinAction, firstTimeConfig);
     }
 
     private void setServerJoinValues(FileConfiguration cfg, ServerJoinConfig serverJoinConfig) {
@@ -255,8 +261,9 @@ public class Config {
         var preferAnchorLocation = cfg.getBoolean("SpawnManagementPlus.on_respawn.prefer_anchor_location", false);
         var skipRespawnScreen = cfg.getBoolean("SpawnManagementPlus.on_respawn.skip_respawn_screen", false);
         var spreadItemsOnDeath = cfg.getBoolean("SpawnManagementPlus.on_respawn.spread_items_on_death", false);
-        var forceRespawnButKeepDefaultMessage = cfg.getBoolean("SpawnManagementPlus.on_respawn.force_respawn_but_keep_default_message", false);
+        var forceRespawnButKeepDefaultMessage = cfg.getBoolean("SpawnManagementPlus.on_respawn.use_fake_death", false);
 
+        var useWorldDefaultSpawnLocation = cfg.getBoolean("SpawnManagementPlus.on_respawn.action.use_world_default_spawn_location", false);
         var soundEnabled = cfg.getBoolean("SpawnManagementPlus.on_respawn.action.sound.enabled", false);
         var soundType = cfg.getString("SpawnManagementPlus.on_respawn.action.sound.type", "");
         var soundVolume = (float) cfg.getDouble("SpawnManagementPlus.on_respawn.action.sound.volume", 0);
@@ -272,11 +279,9 @@ public class Config {
 
         var worldLocation = new WorldLocation(world, x, y, z, yaw, pitch);
         var sound = new Sound(soundEnabled, soundType, soundVolume, soundPitch);
-
-
         var action = new Action(worldLocation, sound, messageType, messageContents);
 
-        return new RespawnConfig(enabled, skipRespawnScreen, forceRespawnButKeepDefaultMessage, spreadItemsOnDeath, preferBedLocation, preferAnchorLocation, action);
+        return new RespawnConfig(enabled, skipRespawnScreen, forceRespawnButKeepDefaultMessage, spreadItemsOnDeath, preferBedLocation, preferAnchorLocation, useWorldDefaultSpawnLocation, action);
     }
 
     private void setRespawnValues(FileConfiguration cfg, RespawnConfig respawnConfig) {
@@ -285,7 +290,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_respawn.prefer_anchor_location", respawnConfig.preferAnchorLocation());
         cfg.set("SpawnManagementPlus.on_respawn.skip_respawn_screen", respawnConfig.skipRespawnScreen());
         cfg.set("SpawnManagementPlus.on_respawn.spread_items_on_death", respawnConfig.spreadItemsOnDeath());
-        cfg.set("SpawnManagementPlus.on_respawn.force_respawn_but_keep_default_message", respawnConfig.forceRespawnButKeepDefaultMessage());
+        cfg.set("SpawnManagementPlus.on_respawn.use_fake_death", respawnConfig.useFakeDeath());
         cfg.set("SpawnManagementPlus.on_respawn.action.sound.enabled", respawnConfig.action().sound().enabled());
         cfg.set("SpawnManagementPlus.on_respawn.action.sound.type", respawnConfig.action().sound().type());
         cfg.set("SpawnManagementPlus.on_respawn.action.sound.volume", respawnConfig.action().sound().volume());
@@ -298,6 +303,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_respawn.action.location.pitch", respawnConfig.action().worldLocation().pitch());
         cfg.set("SpawnManagementPlus.on_respawn.action.message_type", respawnConfig.action().messageType());
         cfg.set("SpawnManagementPlus.on_respawn.action.message", respawnConfig.action().messageContents());
+        cfg.set("SpawnManagementPlus.on_respawn.action.use_world_default_spawn_location", respawnConfig.useWorldDefaultSpawnLocation());
     }
 
     public ServerJoinConfig getServerJoinSettings() {

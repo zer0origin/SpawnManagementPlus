@@ -28,7 +28,7 @@ SpawnManagementPlus:
     # Should the server handle first joins differently?.
     only_on_first_time:
       enabled: false
-      use_on_server_join_default: true # Overwrite the below settings to use the on_server_join defaults.Ax
+      use_on_server_join_default: true # Overwrite the below settings to use the on_server_join defaults.
       action:
         sound:
           enabled: false
@@ -74,9 +74,10 @@ SpawnManagementPlus:
   # Perform this action when a player is respawning.
   on_respawn:
     enabled: false
+    use_world_default_spawn_location: false # Should the respawn location use the world default? Will override on_respawn.action.location
     skip_respawn_screen: false # Should they be forced to click 'respawn' in the death screen?
-    force_respawn_but_keep_default_message: true # Will force the player to respawn, without faking player death. e.g. don't actually kill the player, teleport player to spawn, heal, drop items, etc. True - will not 'fake' player death but will use an exploit to force the player to instantly hit respawn.
-    spread_items_on_death: true # Only works when skip_respawn_screen is set to true and force_respawn_but_keep_default_message is false as force_respawn_but_keep_default_message=true allows the game to handle death itself.
+    use_fake_death: true # Will force the player to respawn, without faking player death. e.g. don't actually kill the player, teleport player to spawn, heal, drop items, etc. True - will not 'fake' player death but will use an exploit to force the player to instantly hit respawn.
+    spread_items_on_death: true # Only works when skip_respawn_screen is set to true and use_fake_death is false as use_fake_death=true allows the game to handle death itself.
 
     # Should the player spawn at a bed/anchor location if it is available?
     prefer_bed_location: false
@@ -88,7 +89,7 @@ SpawnManagementPlus:
         type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
         volume: 1
         pitch: 1
-      location: # This can be set in game using the command "/smp location respawn"
+      location: # if you use_world_default_spawn_location=false then location will get overwritten.
         world: world # if using multiple worlds, YOU MUST have a world loader.
         x: 0
         y: 0
@@ -97,7 +98,7 @@ SpawnManagementPlus:
         pitch: 0
       message_type: CHAT # Supports either CHAT or ACTION_BAR
       message: # Supports Placeholder API. You can use [] to disable messages, e.g. message: []
-          [ ]
+        [ ]
   commands:
     spawn:
       enabled: false

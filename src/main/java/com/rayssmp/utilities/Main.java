@@ -4,9 +4,11 @@ import com.rayssmp.utilities.commands.smp.Smp;
 import com.rayssmp.utilities.commands.spawn.SecondPlaceholder;
 import com.rayssmp.utilities.commands.spawn.SpawnCommand;
 import com.rayssmp.utilities.config.Config;
+import com.rayssmp.utilities.events.GameConfigActionHandler;
 import com.rayssmp.utilities.events.OnJoinOrOnWorldChangeHandler;
-import com.rayssmp.utilities.events.PlayerRespawnEvent;
+import com.rayssmp.utilities.events.PlayerRespawnHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -41,8 +43,10 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getLogger().log(Level.INFO, "Starting...");
-        Bukkit.getPluginManager().registerEvents(new OnJoinOrOnWorldChangeHandler(this, config), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerRespawnEvent(this, config), this);
+
+        GameConfigActionHandler actionHandler = new GameConfigActionHandler(this);
+        Bukkit.getPluginManager().registerEvents(new OnJoinOrOnWorldChangeHandler(this, config, actionHandler), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerRespawnHandler(this, config, actionHandler), this);
 
         var smp = new Smp(config);
         this.getCommand("smp").setExecutor(smp);
