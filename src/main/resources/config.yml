@@ -4,8 +4,8 @@ SpawnManagementPlus:
     enabled: false
     only_on_first_time: false # Only perform the 'action' when the player joins for the first time.
     exclude: # Are there any worlds that should not do this?
-      - "world_nether"
-      - "world_end"
+      - the_nether
+      - the_end
     action: # What is it that you want the server to do to the user: Teleport, Play Sound, Send message?
       sound:
         enabled: false
@@ -30,8 +30,8 @@ SpawnManagementPlus:
   on_world_join:
     enabled: false
     exclude: # Are there any worlds that should not do this?
-      - "world_nether"
-      - "world_end"
+      - "the_nether"
+      - "the_end"
     action:
       sound:
         enabled: false
