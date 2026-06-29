@@ -2,17 +2,17 @@ SpawnManagementPlus:
   # Perform this action when a player is joining the server.
   on_server_join:
     enabled: false
-    only_on_first_time: false
+    only_on_first_time: false # Only perform the 'action' when the player joins for the first time.
     exclude: # Are there any worlds that should not do this?
       - "world_nether"
       - "world_end"
-    action:
+    action: # What is it that you want the server to do to the user: Teleport, Play Sound, Send message?
       sound:
         enabled: false
         type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
         volume: 1
         pitch: 1
-      location: # Can be set by doing /setjoinlocation
+      location: # This can be set in game using the command "/smp location server"
         world: world # if using multiple worlds, YOU MUST have a world loader.
         x: 0
         y: 0
@@ -20,7 +20,7 @@ SpawnManagementPlus:
         yaw: 0
         pitch: 0
       message_type: CHAT # Supports either CHAT or ACTION_BAR
-      message: # Supports Placeholder API. You can use [] to disable messages.
+      message: # Should the player receive a message? You can send multiple messages to the player. Supports Placeholder API. Supports Placeholder API. You can use [] to disable messages, e.g. message: []
         - ""
         - "&d&lWelcome to Survival %player_name%!"
         - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
@@ -38,23 +38,28 @@ SpawnManagementPlus:
         type: minecraft:block.note_block.pling #A list of sounds can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
         volume: 1
         pitch: 1
-      location: #TODO: location command
+      location: # Since it is only player rotation, there is no command for this.
         yaw: 0
         pitch: 0
       message_type: CHAT # Supports either CHAT or ACTION_BAR
-      message: # Supports Placeholder API. You can use [] to disable messages.
+      message: # Should the player receive a message? You can send multiple messages to the player. Supports Placeholder API. Supports Placeholder API. You can use [] to disable messages, e.g. message: []
         - ""
         - "&d&lWelcome to Survival %player_name%!"
         - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
         - ""
+
+  # Perform this action when a player is respawning.
   on_respawn:
     enabled: false
-    skip_respawn_screen: false
-    force_respawn_but_keep_default_message: false # Will force the player to respawn, without faking player death.
-    spread_items_on_death: true # Only works when skip_respawn_screen is set to true and force_respawn_but_keep_default_message is false.
-    prefer_bed_location: false # Should this location override bed respawns?
-    prefer_anchor_location: false # Should this location override anchor respawns?
-    location: #TODO: location command
+    skip_respawn_screen: false # Should they be forced to click 'respawn' in the death screen?
+    force_respawn_but_keep_default_message: true # Will force the player to respawn, without faking player death. e.g. don't actually kill the player, teleport player to spawn, heal, drop items, etc. True - will not 'fake' player death but will use an exploit to force the player to instantly hit respawn.
+    spread_items_on_death: true # Only works when skip_respawn_screen is set to true and force_respawn_but_keep_default_message is false as force_respawn_but_keep_default_message=true allows the game to handle death itself.
+
+    # Should the player spawn at a bed/anchor location if it is available?
+    prefer_bed_location: false
+    prefer_anchor_location: false
+
+    location: # This can be set in game using the command "/smp location respawn"
       world: world # if using multiple worlds, YOU MUST have a world loader.
       x: 0
       y: 0
@@ -62,60 +67,64 @@ SpawnManagementPlus:
       yaw: 0
       pitch: 0
       message_type: CHAT # Supports either CHAT or ACTION_BAR
-      message: # Supports Placeholder API. You can use [] to disable messages.
+      message: # Supports Placeholder API. You can use [] to disable messages, e.g. message: []
         [ ]
   commands:
-    setjoinlocation:
-      insufficient_permission_error_message: "&cYou do not have permission to run this command."
-      saved_data_message: "&aLocation was saved successfully"
-      saved_data_failed_message: "&cLocation save failed!"
     spawn:
-      enabled: true
+      enabled: false
       insufficient_permission_error_message: "&cYou do not have permission to run this command."
       you_are_already_teleporting: "&cYou can not use this right now!"
-      location: # Can be set by doing /setspawncmdlocation
+      use_on_server_join_location: true # Should the location in SpawnManagementPlus.on_server_join.action.location be used?
+      location: # Can be set by doing "/smp location set spawn_cmd" This location will not be used if you use_on_server_join_location=true
+        # Gets overwritten if you use_on_server_join_location=true
         world: world # if using multiple worlds, YOU MUST have a world loader.
         x: 0
         y: 0
         z: 0
         yaw: 0
         pitch: 0
+
+      # Should the spawn command, use a countdown? This is useful for pvp/pve environments where you don't want the player to prevent death by teleporting away.
       cooldown_timer:
-        seconds: -1 # -1 to disable.
-        on_teleport: # Supports Placeholder API
+        seconds: -1 # -1 to disable. How long should the timer be?
+
+        # What should happen while the timer is counting down?
+        on_interval:
+          sound:
+            enabled: false
+            type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
+            volume: 1.0
+            pitch: 1.0
+          message_type: ACTION_BAR # Supports either CHAT or ACTION_BAR
+          message: # Should the player receive a message? You can send multiple messages to the player. Supports Placeholder API. Supports Placeholder API. You can use [] to disable messages, e.g. message: []
+            - "&aTeleporting in %smp_second%!"
+
+        # What should happen when the player successfully teleports?
+        on_teleport:
           sound:
             enabled: false
             type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
             volume: 1.0
             pitch: 1.0
           message_type: CHAT # Supports either CHAT or ACTION_BAR
-          message:
+          message: # Should the player receive a message? You can send multiple messages to the player. Supports Placeholder API. Supports Placeholder API. You can use [] to disable messages, e.g. message: []
             - "&aTeleporting..."
-        on_interval: # Should there be a countdown?
-          sound:
-            enabled: false
-            type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
-            volume: 1.0
-            pitch: 1.0
-          message_type: CHAT # Supports either CHAT or ACTION_BAR
-          message: # Supports Placeholder API. You can use [] to disable messages. - %smp_teleport_seconds% will not capitalise the s but smp_teleport_seconds_capital will.
-            - "&aTeleporting in %smp_teleport_seconds%!"
+
+        # What should happen when the player moves while the timer is active?
         on_move:
-          cancel: true
+          cancel: true # Cancel the timer when the player moves?
           sound:
             enabled: false
             type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
             volume: 1.0
             pitch: 1.0
           message_type: CHAT # Supports either CHAT or ACTION_BAR
-          message: # Supports Placeholder API. You can use [] to disable messages.
+          message: # Should the player receive a message? You can send multiple messages to the player. Supports Placeholder API. Supports Placeholder API. You can use [] to disable messages, e.g. message: []
             - ""
             - "&cYou moved! Teleport cancelled."
             - ""
-    setSpawn:
-      insufficient_permission_error_message: "&cYou do not have permission to run this command."
-      saved_data_message: "&aLocation was saved successfully"
-      saved_data_failed_message: "&cLocation save failed!"
+
+    # Smp command error messages.
     smp:
       insufficient_permission_error_message: "&cYou do not have permission to run this command."
       saved_data_message: "&aLocation was saved successfully"

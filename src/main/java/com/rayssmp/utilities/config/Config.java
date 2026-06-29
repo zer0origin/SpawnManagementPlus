@@ -1,8 +1,6 @@
 package com.rayssmp.utilities.config;
 
 import com.rayssmp.utilities.config.command.CommandConfig;
-import com.rayssmp.utilities.config.command.SetJoin;
-import com.rayssmp.utilities.config.command.SetSpawn;
 import com.rayssmp.utilities.config.command.Smp;
 import com.rayssmp.utilities.config.command.spawn.SpawnConfig;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -131,16 +129,6 @@ public class Config {
     }
 
     private CommandConfig loadCommandSettingValues(FileConfiguration cfg) {
-        var insufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.insufficient_permission_error_message", "");
-        var savedDataMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.saved_data_message", "");
-        var savedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.setjoinlocation.saved_data_failed_message", "");
-        SetJoin setJoin = new SetJoin(insufficientPermissionErrorMessage, savedDataMessage, savedDataFailedMessage);
-
-        var setSpawnInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.setSpawn.insufficient_permission_error_message", "");
-        var setSpawnSavedDataMessage = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_message", "");
-        var setSpawnSavedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.setSpawn.saved_data_failed_message", "");
-        SetSpawn setSpawn = new SetSpawn(setSpawnInsufficientPermissionErrorMessage, setSpawnSavedDataMessage, setSpawnSavedDataFailedMessage);
-
         boolean enabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.enabled", false);
         int seconds = cfg.getInt("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", -1);
         String onTeleportMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message_type", "CHAT");
@@ -152,6 +140,8 @@ public class Config {
         List<String> onMoveMessages = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message");
         String spawnInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.spawn.insufficient_permission_error_message", "");
         String youAreAlreadyTeleporting = cfg.getString("SpawnManagementPlus.commands.spawn.you_are_already_teleporting", "");
+
+        boolean useServerJoinLocation = cfg.getBoolean("SpawnManagementPlus.commands.spawn.use_on_server_join_location", true);
         String world = cfg.getString("SpawnManagementPlus.commands.spawn.location.world", "");
         double x = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.x", 0);
         double y = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.y", 0);
@@ -173,31 +163,31 @@ public class Config {
         String onMoveSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.type", "");
         float onMoveSoundVolume = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.volume", 1);
         float onMoveSoundPitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.pitch", 1);
-        SpawnConfig spawnConfig = SpawnConfig.SpawnFactory(enabled, seconds, spawnInsufficientPermissionErrorMessage, youAreAlreadyTeleporting, world, x, y, z, yaw, pitch,
-                onTeleportMessageType, onTeleportMessages, onTeleportSoundEnabled, onTeleportSoundType,
-                onTeleportSoundVolume, onTeleportSoundPitch, onIntervalMessageType, onIntervalMessages,
-                onIntervalSoundEnabled, onIntervalSoundType, onIntervalSoundVolume, onIntervalSoundPitch, onMoveCancel,
-                onMoveMessageType, onMoveSoundEnabled, onMoveSoundType, onMoveSoundVolume, onMoveSoundPitch, onMoveMessages);
+
+        SpawnConfig spawnConfig;
+        if (!useServerJoinLocation) {
+            spawnConfig = SpawnConfig.SpawnFactory(enabled, seconds, spawnInsufficientPermissionErrorMessage, youAreAlreadyTeleporting, false, world, x, y, z, yaw, pitch,
+                    onTeleportMessageType, onTeleportMessages, onTeleportSoundEnabled, onTeleportSoundType,
+                    onTeleportSoundVolume, onTeleportSoundPitch, onIntervalMessageType, onIntervalMessages,
+                    onIntervalSoundEnabled, onIntervalSoundType, onIntervalSoundVolume, onIntervalSoundPitch, onMoveCancel,
+                    onMoveMessageType, onMoveSoundEnabled, onMoveSoundType, onMoveSoundVolume, onMoveSoundPitch, onMoveMessages);
+        } else {
+            spawnConfig = SpawnConfig.SpawnFactory(enabled, seconds, spawnInsufficientPermissionErrorMessage, youAreAlreadyTeleporting, true, serverJoinConfigSettings.world(), serverJoinConfigSettings.x(), serverJoinConfigSettings.y(), serverJoinConfigSettings.z(), serverJoinConfigSettings.yaw(), serverJoinConfigSettings.pitch(),
+                    onTeleportMessageType, onTeleportMessages, onTeleportSoundEnabled, onTeleportSoundType,
+                    onTeleportSoundVolume, onTeleportSoundPitch, onIntervalMessageType, onIntervalMessages,
+                    onIntervalSoundEnabled, onIntervalSoundType, onIntervalSoundVolume, onIntervalSoundPitch, onMoveCancel,
+                    onMoveMessageType, onMoveSoundEnabled, onMoveSoundType, onMoveSoundVolume, onMoveSoundPitch, onMoveMessages);
+        }
 
         var smpInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.smp.insufficient_permission_error_message", "");
         var smpSavedDataMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_message", "");
         var smpSavedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_failed_message", "");
         Smp smp = new Smp(smpInsufficientPermissionErrorMessage, smpSavedDataMessage, smpSavedDataFailedMessage);
 
-        return new CommandConfig(setJoin, setSpawn, smp, spawnConfig);
+        return new CommandConfig(smp, spawnConfig);
     }
 
     private void setCommandValues(FileConfiguration cfg, CommandConfig commandConfig) {
-        var setJoinCommand = commandConfig.setJoin();
-        cfg.set("SpawnManagementPlus.commands.setjoinlocation.insufficient_permission_error_message", setJoinCommand.insufficientPermissionErrorMessage());
-        cfg.set("SpawnManagementPlus.commands.setjoinlocation.saved_data_message", setJoinCommand.savedDataFailedMessage());
-        cfg.set("SpawnManagementPlus.commands.setjoinlocation.saved_data_failed_message", setJoinCommand.savedDataFailedMessage());
-
-        var setSpawnCommand = commandConfig.setSpawn();
-        cfg.set("SpawnManagementPlus.commands.setSpawn.insufficient_permission_error_message", setSpawnCommand.insufficientPermissionErrorMessage());
-        cfg.set("SpawnManagementPlus.commands.setSpawn.saved_data_message", setSpawnCommand.savedDataMessage());
-        cfg.set("SpawnManagementPlus.commands.setSpawn.saved_data_failed_message", setSpawnCommand.savedDataFailedMessage());
-
         var spawnCommand = commandConfig.spawnConfig();
         cfg.set("SpawnManagementPlus.commands.spawn.enabled", spawnCommand.enabled());
         cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", spawnCommand.seconds());

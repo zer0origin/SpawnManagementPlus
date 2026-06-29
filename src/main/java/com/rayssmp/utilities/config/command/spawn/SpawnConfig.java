@@ -5,15 +5,16 @@ import java.util.List;
 public record SpawnConfig(boolean enabled, int seconds,
                           String insufficientPermissionErrorMessage, String youAreAlreadyTeleporting, String world,
                           double x, double y, double z, float yaw,
-                          float pitch, onTeleport onTeleport, onMove onMove, onInterval onInterval
+                          float pitch, onTeleport onTeleport, onMove onMove, onInterval onInterval,
+                          boolean useOnServerJoinLocation
 
 ) {
     public SpawnConfig() {
-        this(false, 0, "", "", "", 0, 0, 0, 0, 0, new onTeleport(), new onMove(), new onInterval());
+        this(false, 0, "", "", "", 0, 0, 0, 0, 0, new onTeleport(), new onMove(), new onInterval(), false);
     }
 
     public static SpawnConfig SpawnFactory(boolean enabled, int seconds,
-                                           String insufficientPermissionErrorMessage, String youAreAlreadyTeleporting, String world, double x, double y, double z, float yaw,
+                                           String insufficientPermissionErrorMessage, String youAreAlreadyTeleporting, boolean useOnServerJoinLocation, String world, double x, double y, double z, float yaw,
                                            float pitch,
                                            String onTeleportMessageType, List<String> onTeleportMessages, boolean onTeleportSoundEnabled,
                                            String onTeleportSoundType, float onTeleportSoundVolume, float onTeleportSoundPitch,
@@ -25,6 +26,6 @@ public record SpawnConfig(boolean enabled, int seconds,
         return new SpawnConfig(enabled, seconds, insufficientPermissionErrorMessage, youAreAlreadyTeleporting, world, x, y, z, yaw, pitch,
                 new onTeleport(onTeleportMessageType, onTeleportMessages, onTeleportSoundEnabled, onTeleportSoundType, onTeleportSoundVolume, onTeleportSoundPitch),
                 new onMove(onMoveCancel, onMoveMessageType, onMoveMessages, onMoveSoundEnabled, onMoveSoundType, onMoveSoundVolume, onMoveSoundPitch),
-                new onInterval(onIntervalMessageType, onIntervalMessages, onIntervalSoundEnabled, onIntervalSoundType, onIntervalSoundVolume, onIntervalSoundPitch));
+                new onInterval(onIntervalMessageType, onIntervalMessages, onIntervalSoundEnabled, onIntervalSoundType, onIntervalSoundVolume, onIntervalSoundPitch), useOnServerJoinLocation);
     }
 }
