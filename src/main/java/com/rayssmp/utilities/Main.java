@@ -4,7 +4,7 @@ import com.rayssmp.utilities.commands.smp.Smp;
 import com.rayssmp.utilities.commands.spawn.SecondPlaceholder;
 import com.rayssmp.utilities.commands.spawn.SpawnCommand;
 import com.rayssmp.utilities.config.Config;
-import com.rayssmp.utilities.events.PlayerOnJoinHandler;
+import com.rayssmp.utilities.events.OnJoinOrOnWorldChangeHandler;
 import com.rayssmp.utilities.events.PlayerRespawnEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,7 +41,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getLogger().log(Level.INFO, "Starting...");
-        Bukkit.getPluginManager().registerEvents(new PlayerOnJoinHandler(this, config), this);
+        Bukkit.getPluginManager().registerEvents(new OnJoinOrOnWorldChangeHandler(this, config), this);
         Bukkit.getPluginManager().registerEvents(new PlayerRespawnEvent(this, config), this);
 
         var smp = new Smp(config);

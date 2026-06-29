@@ -1,8 +1,10 @@
 package com.rayssmp.utilities.commands.smp;
 
 import com.rayssmp.utilities.commands.PlayerCommand;
+import com.rayssmp.utilities.config.Action;
 import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.config.ServerJoinConfig;
+import com.rayssmp.utilities.config.WorldLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -29,11 +31,15 @@ public class ServerJoinSpawnLocation implements PlayerCommand {
         }
 
         Location locationToSet = player.getLocation();
+        var worldLocationConfig = new WorldLocation(locationToSet.getWorld().getName(), locationToSet.x(), locationToSet.y(),locationToSet.z(), player.getYaw(), player.getPitch());
         ServerJoinConfig original = config.getServerJoinSettings();
-        config.setServerJoinSettings(new ServerJoinConfig(original.enabled(), original.onlyOnFirstTime(), player.getWorld().getName(),
-                original.soundEnabled(), original.soundType(), original.soundVolume(), original.soundPitch(),
-                original.useWorldDefault(), locationToSet.x(), locationToSet.y(), locationToSet.z(), player.getYaw(),
-                player.getPitch(), original.messageType(), original.messageContents(), original.exclude()));
+
+        config.setServerJoinSettings(new ServerJoinConfig(
+                original.enabled(),
+                original.exclude(),
+                new Action(worldLocationConfig, original.action().sound(), original.action().messageType(), original.action().messageContents()),
+                original.onlyOnFirstTime()
+        ));
 
         try {
             config.update();

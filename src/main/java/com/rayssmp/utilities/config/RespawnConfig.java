@@ -1,12 +1,8 @@
 package com.rayssmp.utilities.config;
 
-import java.util.List;
-
 public record RespawnConfig(boolean enabled, boolean skipRespawnScreen, boolean forceRespawnButKeepDefaultMessage, boolean spreadItemsOnDeath,
-                            boolean preferBedLocation, boolean preferAnchorLocation, String world, double x,
-                            double y,
-                            double z, float yaw, float pitch, String messageType, List<String> messageContent) {
+                            boolean preferBedLocation, boolean preferAnchorLocation, Action action) {
     public RespawnConfig() {
-        this(false, false, false, false, false, false, "", 0, 0, 0, 0, 0, "", null);
+        this(false, false, false, false, false, false, new Action());
     }
 }

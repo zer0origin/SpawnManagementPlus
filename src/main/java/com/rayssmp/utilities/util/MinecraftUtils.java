@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class MinecraftUtils {
-    public static void parseAndSendMessageContents(Player player, List<String> strings, String messageType) {
+    public static void parseAndSendMessageContents(Player player, String messageType, List<String> strings) {
         strings.stream().map(s -> {
             try {
                 return PlaceholderAPI.setPlaceholders(player, s);

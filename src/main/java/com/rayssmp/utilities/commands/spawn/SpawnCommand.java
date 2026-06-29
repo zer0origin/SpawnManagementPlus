@@ -14,15 +14,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class SpawnCommand implements CommandExecutor, Listener {
     private final Config config;
@@ -56,9 +50,9 @@ public class SpawnCommand implements CommandExecutor, Listener {
         }
 
         var spawnSettings = config.getCommandSettings().spawnConfig();
-        World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(spawnSettings.world()), "Failed to find world!");
-        Location location = new Location(spawnWorld, spawnSettings.x(), spawnSettings.y(), spawnSettings.z(),
-                spawnSettings.yaw(), spawnSettings.pitch());
+        World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(spawnSettings.worldLocation().name()), "Failed to find world!");
+        Location location = new Location(spawnWorld, spawnSettings.worldLocation().x(), spawnSettings.worldLocation().y(), spawnSettings.worldLocation().z(),
+                spawnSettings.worldLocation().yaw(), spawnSettings.worldLocation().pitch());
 
         if (spawnSettings.seconds() < 0) {
             Bukkit.getScheduler().runTask(this.main, () -> {
@@ -82,7 +76,7 @@ public class SpawnCommand implements CommandExecutor, Listener {
         var from = event.getFrom();
         var to = event.getTo();
         if (from.getBlockX() != to.getBlockX() || from.getBlockY() != to.getBlockY() || from.getBlockZ() != to.getBlockZ()) {
-            MinecraftUtils.parseAndSendMessageContents(player, spawnSettings.onMove().messages(), spawnSettings.onMove().messageType());
+            MinecraftUtils.parseAndSendMessageContents(player, spawnSettings.onMove().messageType(), spawnSettings.onMove().messages());
 
             if (spawnSettings.onMove().soundEnabled()) {
                 player.playSound(player.getLocation(), spawnSettings.onMove().soundType(), spawnSettings.onMove().soundVolume(), spawnSettings.onMove().soundPitch());
