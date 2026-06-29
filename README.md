@@ -25,12 +25,13 @@
 
 ## Commands & Permissions
 
-| Command            | Description                                            | Permission |
-|:-------------------|:-------------------------------------------------------| :--- |
-| `/spawn`           | Teleports the player to the designated spawn location. | `SpawnManagementPlus.spawn` |
-| `/setspawn`        | Sets the location for the `/spawn` command.            | `SpawnManagementPlus.setspawn` |
-| `/setjoinlocation` | Sets the location for the `on_server_join` feature.    | `SpawnManagementPlus.setjoinlocation` |
-| `/reloadsmp`       | Reload the plugins config.   | `SpawnManagementPlus.reloadspawnmanagementplus` |
+| Command                         | Description                                         | Permission                                      |
+|:--------------------------------|:----------------------------------------------------|:------------------------------------------------|
+| `/smp` or `/SpawnManagementPlus` | The plugin management command.                      | `SpawnManagementPlus.smp`                       |
+| `/smp location spawn_cmd`       | Sets the location for the `/spawn` command.         | `SpawnManagementPlus.smp.set.spawn`                  |
+| `/smp location server_join`     | Sets the location for the `on_server_join` feature. | `SpawnManagementPlus.smp.set.server_join`           |
+| `/smp location respawn`         | Sets the location for the `on_respawn` feature.     | `SpawnManagementPlus.smp.set.respawm`           |
+| `/smp reload`                   | Reload the plugins config.                          | `SpawnManagementPlus.reload` |
 
 ---
 

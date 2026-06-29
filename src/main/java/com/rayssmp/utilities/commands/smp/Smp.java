@@ -72,7 +72,7 @@ public class Smp implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("location")) {
             if (args.length == 2 || args[1].isEmpty()) {
-                return List.of("server_join", "spawn_cmd", "join", "respawn");
+                return List.of("server_join", "spawn_cmd", "respawn");
             }
         }
 
