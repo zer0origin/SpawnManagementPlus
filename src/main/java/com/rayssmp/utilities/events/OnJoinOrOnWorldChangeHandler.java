@@ -1,18 +1,12 @@
 package com.rayssmp.utilities.events;
 
 import com.rayssmp.utilities.config.Config;
-import com.rayssmp.utilities.util.MinecraftUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Objects;
 
 /**
  * handle movement, countdowns, and ensuring players end up at the correct location.
@@ -25,51 +19,40 @@ import java.util.Objects;
 public class OnJoinOrOnWorldChangeHandler implements Listener {
     private final Config config;
     private final JavaPlugin main;
+    private final GameConfigActionHandler actionHandler;
 
-    public OnJoinOrOnWorldChangeHandler(JavaPlugin main, Config config) {
+    public OnJoinOrOnWorldChangeHandler(JavaPlugin main, Config config, GameConfigActionHandler actionHandler) {
         this.main = main;
         this.config = config;
+        this.actionHandler = actionHandler;
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         var serverJoinSettings = config.getServerJoinSettings();
+        var onlyOnFirstTime = config.getServerJoinSettings().onlyOnFirstTime();
+
+        if (!serverJoinSettings.enabled()) {
+            return;
+        }
 
         boolean isWorldExcluded = serverJoinSettings.exclude().stream().anyMatch(s -> s.toLowerCase().equals(player.getWorld().getKey().value()));
         if (isWorldExcluded) {
             return;
         }
 
-        if (serverJoinSettings.enabled()) {
-            event.joinMessage(null);
-            if (serverJoinSettings.onlyOnFirstTime().enabled()) {
-                if (!player.hasPlayedBefore()) {
-                    handleOnServerJoin(player);
-                    return;
-                }
-
+        event.joinMessage(null);
+        if (serverJoinSettings.onlyOnFirstTime().enabled()) {
+            if (!player.hasPlayedBefore()) {
+                actionHandler.handle(player, onlyOnFirstTime.action(), player::teleport);
                 return;
             }
 
-            handleOnServerJoin(player);
+            return;
         }
-    }
 
-    private void handleOnServerJoin(Player player) {
-        var serverJoinSettings = config.getServerJoinSettings();
-        World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(serverJoinSettings.action().worldLocation().name()), "Failed to find world!");
-
-        MinecraftUtils.parseAndSendMessageContents(player, serverJoinSettings.action().messageType(), serverJoinSettings.action().messageContents());
-
-        Location customSpawnLocation = new Location(spawnWorld, serverJoinSettings.action().worldLocation().x(), serverJoinSettings.action().worldLocation().y(), serverJoinSettings.action().worldLocation().z(), serverJoinSettings.action().worldLocation().yaw(), serverJoinSettings.action().worldLocation().pitch());
-        Bukkit.getScheduler().runTask(this.main, () -> {
-            player.teleport(customSpawnLocation);
-
-            if (serverJoinSettings.action().sound().enabled()) {
-                player.playSound(player.getLocation(), serverJoinSettings.action().sound().type(), serverJoinSettings.action().sound().volume(), serverJoinSettings.action().sound().pitch());
-            }
-        });
+        actionHandler.handle(player, serverJoinSettings.action(), player::teleport);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -86,18 +69,6 @@ public class OnJoinOrOnWorldChangeHandler implements Listener {
             return;
         }
 
-        MinecraftUtils.parseAndSendMessageContents(player, worldJoinSettings.action().messageType(), worldJoinSettings.action().messageContents());
-
-        Location spawnLocation = player.getWorld().getSpawnLocation();
-        spawnLocation.setYaw(worldJoinSettings.action().worldLocation().yaw());
-        spawnLocation.setPitch(worldJoinSettings.action().worldLocation().pitch());
-
-        Bukkit.getScheduler().runTask(this.main, () -> {
-            player.teleport(spawnLocation);
-
-            if (worldJoinSettings.action().sound().enabled()) {
-                player.playSound(player.getLocation(), worldJoinSettings.action().sound().type(), worldJoinSettings.action().sound().volume(), worldJoinSettings.action().sound().pitch());
-            }
-        });
+        actionHandler.handle(player, worldJoinSettings.action(), player::teleport);
     }
 }

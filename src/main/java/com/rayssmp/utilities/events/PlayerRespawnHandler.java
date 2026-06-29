@@ -1,31 +1,29 @@
 package com.rayssmp.utilities.events;
 
 import com.rayssmp.utilities.config.Config;
-import com.rayssmp.utilities.util.MinecraftUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
-import java.util.Objects;
-
-public class PlayerRespawnEvent implements Listener {
+public class PlayerRespawnHandler implements Listener {
     private final Config config;
     private final JavaPlugin plugin;
+    private final GameConfigActionHandler actionHandler;
 
-    public PlayerRespawnEvent(JavaPlugin plugin, Config config) {
+    public PlayerRespawnHandler(JavaPlugin plugin, Config config, GameConfigActionHandler actionHandler) {
         this.config = config;
         this.plugin = plugin;
+        this.actionHandler = actionHandler;
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onPlayerRespawn(org.bukkit.event.player.PlayerRespawnEvent event) {
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
         var respawnSettings = config.getRespawnSettings();
         if (!respawnSettings.enabled()) {
             return;
@@ -39,11 +37,14 @@ public class PlayerRespawnEvent implements Listener {
             return;
         }
 
-        World world = Objects.requireNonNull(Bukkit.getWorld(respawnSettings.action().worldLocation().name()), "Failed to find world!");
-        Location location = new Location(world, respawnSettings.action().worldLocation().x(), respawnSettings.action().worldLocation().y(), respawnSettings.action().worldLocation().z(), respawnSettings.action().worldLocation().yaw(), respawnSettings.action().worldLocation().pitch());
-        event.setRespawnLocation(location);
+        //TODO: Use actionHandler with/without use_world_default_location
 
-        MinecraftUtils.parseAndSendMessageContents(event.getPlayer(), respawnSettings.action().messageType(), respawnSettings.action().messageContents());
+        if (respawnSettings.useWorldDefaultSpawnLocation()) {
+            actionHandler.handleWithWorld(event.getPlayer(), respawnSettings.action(), event.getPlayer().getWorld(), event::setRespawnLocation);
+            return;
+        }
+
+        actionHandler.handle(event.getPlayer(), respawnSettings.action(), event::setRespawnLocation);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -55,7 +56,13 @@ public class PlayerRespawnEvent implements Listener {
             return;
         }
 
-        if(respawnSettings.forceRespawnButKeepDefaultMessage()){
+        if (respawnSettings.useWorldDefaultSpawnLocation()) {
+            actionHandler.handleWithWorld(event.getPlayer(), respawnSettings.action(), event.getPlayer().getWorld(), player::teleport);
+        } else {
+            actionHandler.handle(event.getPlayer(), respawnSettings.action(), player::teleport);
+        }
+
+        if (respawnSettings.useFakeDeath()) {
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 if (player.isOnline()) {
                     player.spigot().respawn();
@@ -96,6 +103,6 @@ public class PlayerRespawnEvent implements Listener {
             return;
         }
 
-        location.getWorld().dropItem(location, itemStack).setVelocity(new Vector(0,-1,0));
+        location.getWorld().dropItem(location, itemStack).setVelocity(new Vector(0, -1, 0));
     }
 }
