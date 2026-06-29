@@ -22,11 +22,11 @@ import java.util.Objects;
  * joinspawn.txt (Join logic)
  * firstspawnjoin.txt (New player logic)
  */
-public class PlayerOnJoinHandler implements Listener {
+public class OnJoinOrOnWorldChangeHandler implements Listener {
     private final Config config;
     private final JavaPlugin main;
 
-    public PlayerOnJoinHandler(JavaPlugin main, Config config) {
+    public OnJoinOrOnWorldChangeHandler(JavaPlugin main, Config config) {
         this.main = main;
         this.config = config;
     }
@@ -43,7 +43,7 @@ public class PlayerOnJoinHandler implements Listener {
 
         if (serverJoinSettings.enabled()) {
             event.joinMessage(null);
-            if (serverJoinSettings.onlyOnFirstTime()) {
+            if (serverJoinSettings.onlyOnFirstTime().enabled()) {
                 if (!player.hasPlayedBefore()) {
                     handleOnServerJoin(player);
                     return;
@@ -58,22 +58,16 @@ public class PlayerOnJoinHandler implements Listener {
 
     private void handleOnServerJoin(Player player) {
         var serverJoinSettings = config.getServerJoinSettings();
-        World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(serverJoinSettings.world()), "Failed to find world!");
+        World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(serverJoinSettings.action().worldLocation().name()), "Failed to find world!");
 
-        MinecraftUtils.parseAndSendMessageContents(player, serverJoinSettings.messageContents(), serverJoinSettings.messageType());
+        MinecraftUtils.parseAndSendMessageContents(player, serverJoinSettings.action().messageType(), serverJoinSettings.action().messageContents());
 
-        if (serverJoinSettings.useWorldDefault()) {
-            Location defaultSpawnLocation = spawnWorld.getSpawnLocation();
-            player.teleport(defaultSpawnLocation);
-            return;
-        }
-
-        Location customSpawnLocation = new Location(spawnWorld, serverJoinSettings.x(), serverJoinSettings.y(), serverJoinSettings.z(), serverJoinSettings.yaw(), serverJoinSettings.pitch());
+        Location customSpawnLocation = new Location(spawnWorld, serverJoinSettings.action().worldLocation().x(), serverJoinSettings.action().worldLocation().y(), serverJoinSettings.action().worldLocation().z(), serverJoinSettings.action().worldLocation().yaw(), serverJoinSettings.action().worldLocation().pitch());
         Bukkit.getScheduler().runTask(this.main, () -> {
             player.teleport(customSpawnLocation);
 
-            if (serverJoinSettings.soundEnabled()) {
-                player.playSound(player.getLocation(), serverJoinSettings.soundType(), serverJoinSettings.soundVolume(), serverJoinSettings.soundPitch());
+            if (serverJoinSettings.action().sound().enabled()) {
+                player.playSound(player.getLocation(), serverJoinSettings.action().sound().type(), serverJoinSettings.action().sound().volume(), serverJoinSettings.action().sound().pitch());
             }
         });
     }
@@ -92,17 +86,17 @@ public class PlayerOnJoinHandler implements Listener {
             return;
         }
 
-        MinecraftUtils.parseAndSendMessageContents(player, worldJoinSettings.messageContents(),  worldJoinSettings.messageType());
+        MinecraftUtils.parseAndSendMessageContents(player, worldJoinSettings.action().messageType(), worldJoinSettings.action().messageContents());
 
         Location spawnLocation = player.getWorld().getSpawnLocation();
-        spawnLocation.setYaw(worldJoinSettings.yaw());
-        spawnLocation.setPitch(worldJoinSettings.pitch());
+        spawnLocation.setYaw(worldJoinSettings.action().worldLocation().yaw());
+        spawnLocation.setPitch(worldJoinSettings.action().worldLocation().pitch());
 
         Bukkit.getScheduler().runTask(this.main, () -> {
             player.teleport(spawnLocation);
 
-            if (worldJoinSettings.soundEnabled()) {
-                player.playSound(player.getLocation(), worldJoinSettings.soundType(), worldJoinSettings.soundVolume(), worldJoinSettings.soundPitch());
+            if (worldJoinSettings.action().sound().enabled()) {
+                player.playSound(player.getLocation(), worldJoinSettings.action().sound().type(), worldJoinSettings.action().sound().volume(), worldJoinSettings.action().sound().pitch());
             }
         });
     }

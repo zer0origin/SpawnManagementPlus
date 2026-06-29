@@ -1,7 +1,6 @@
 package com.rayssmp.utilities.commands.spawn;
 
 import com.rayssmp.utilities.config.Config;
-import com.rayssmp.utilities.config.command.spawn.SpawnConfig;
 import com.rayssmp.utilities.util.MinecraftUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -44,7 +43,7 @@ public class RunnableSpawnTask implements Runnable {
                         .toList();
             }
 
-            MinecraftUtils.parseAndSendMessageContents(player, parsedStrings, spawnSettings.onInterval().messageType());
+            MinecraftUtils.parseAndSendMessageContents(player, spawnSettings.onInterval().messageType(), parsedStrings);
 
             if (spawnSettings.onInterval().soundEnabled()) {
                 player.playSound(player.getLocation(), spawnSettings.onInterval().soundType(), spawnSettings.onInterval().soundVolume(), spawnSettings.onInterval().soundPitch());
@@ -53,7 +52,7 @@ public class RunnableSpawnTask implements Runnable {
             return;
         }
 
-        MinecraftUtils.parseAndSendMessageContents(player, spawnSettings.onTeleport().messages(), spawnSettings.onTeleport().messageType());
+        MinecraftUtils.parseAndSendMessageContents(player, spawnSettings.onTeleport().messageType(), spawnSettings.onTeleport().messages());
         intervalTask.remove(player.getUniqueId()).getTask().cancel();
         player.teleport(location);
 

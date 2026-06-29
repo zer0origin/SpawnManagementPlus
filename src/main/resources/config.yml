@@ -2,7 +2,6 @@ SpawnManagementPlus:
   # Perform this action when a player is joining the server.
   on_server_join:
     enabled: false
-    only_on_first_time: false # Only perform the 'action' when the player joins for the first time.
     exclude: # Are there any worlds that should not do this?
       - the_nether
       - the_end
@@ -25,6 +24,30 @@ SpawnManagementPlus:
         - "&d&lWelcome to Survival %player_name%!"
         - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
         - ""
+
+    # Should the server handle first joins differently?.
+    only_on_first_time:
+      enabled: false
+      use_on_server_join_default: true # Overwrite the below settings to use the on_server_join defaults.Ax
+      action:
+        sound:
+          enabled: false
+          type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
+          volume: 1
+          pitch: 1
+        location:
+          world: world # if using multiple worlds, YOU MUST have a world loader.
+          x: 0
+          y: 0
+          z: 0
+          yaw: 0
+          pitch: 0
+        message_type: CHAT # Supports either CHAT or ACTION_BAR
+        message: # Should the player receive a message? You can send multiple messages to the player. Supports Placeholder API. Supports Placeholder API. You can use [] to disable messages, e.g. message: []
+          - ""
+          - "&d&lWelcome to Survival %player_name%!"
+          - "&bStarter Commands: ⁄ʜᴇʟᴘ ⁄ʀᴛᴘ ⁄ѕʜᴏᴘ ⁄ʜᴏᴍᴇѕ ⁄ᴀʜ"
+          - ""
 
   # When a player changes world, should they spawn at world spawn?
   on_world_join:
@@ -59,16 +82,22 @@ SpawnManagementPlus:
     prefer_bed_location: false
     prefer_anchor_location: false
 
-    location: # This can be set in game using the command "/smp location respawn"
-      world: world # if using multiple worlds, YOU MUST have a world loader.
-      x: 0
-      y: 0
-      z: 0
-      yaw: 0
-      pitch: 0
+    action:
+      sound:
+        enabled: false
+        type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
+        volume: 1
+        pitch: 1
+      location: # This can be set in game using the command "/smp location respawn"
+        world: world # if using multiple worlds, YOU MUST have a world loader.
+        x: 0
+        y: 0
+        z: 0
+        yaw: 0
+        pitch: 0
       message_type: CHAT # Supports either CHAT or ACTION_BAR
       message: # Supports Placeholder API. You can use [] to disable messages, e.g. message: []
-        [ ]
+          [ ]
   commands:
     spawn:
       enabled: false

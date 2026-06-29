@@ -1,8 +1,11 @@
 package com.rayssmp.utilities.commands.smp;
 
 import com.rayssmp.utilities.commands.PlayerCommand;
+import com.rayssmp.utilities.config.Action;
 import com.rayssmp.utilities.config.Config;
 import com.rayssmp.utilities.config.RespawnConfig;
+import com.rayssmp.utilities.config.WorldLocation;
+import com.rayssmp.utilities.config.command.Sound;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -26,10 +29,12 @@ public class SetRespawnLocation implements PlayerCommand {
 
         Location locationToSet = player.getLocation();
         var original = config.getRespawnSettings();
+
+        WorldLocation worldLocation = new WorldLocation(locationToSet.getWorld().getName(), locationToSet.getX(), locationToSet.getY(), locationToSet.getZ(), locationToSet.getYaw(), locationToSet.getPitch());
+        Action action = new Action(worldLocation, original.action().sound(), original.action().messageType(), original.action().messageContents());
         config.setRespawnSettings(new RespawnConfig(original.enabled(), original.skipRespawnScreen(),
                 original.forceRespawnButKeepDefaultMessage(), original.spreadItemsOnDeath(), original.preferBedLocation(),
-                original.preferAnchorLocation(), locationToSet.getWorld().getName(), locationToSet.getX(), locationToSet.getY(),
-                locationToSet.getZ(), locationToSet.getYaw(), locationToSet.getPitch(), original.messageType(), original.messageContent()));
+                original.preferAnchorLocation(), action));
 
         try {
             config.update();

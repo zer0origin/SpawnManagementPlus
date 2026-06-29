@@ -39,11 +39,11 @@ public class PlayerRespawnEvent implements Listener {
             return;
         }
 
-        World world = Objects.requireNonNull(Bukkit.getWorld(respawnSettings.world()), "Failed to find world!");
-        Location location = new Location(world, respawnSettings.x(), respawnSettings.y(), respawnSettings.z(), respawnSettings.yaw(), respawnSettings.pitch());
+        World world = Objects.requireNonNull(Bukkit.getWorld(respawnSettings.action().worldLocation().name()), "Failed to find world!");
+        Location location = new Location(world, respawnSettings.action().worldLocation().x(), respawnSettings.action().worldLocation().y(), respawnSettings.action().worldLocation().z(), respawnSettings.action().worldLocation().yaw(), respawnSettings.action().worldLocation().pitch());
         event.setRespawnLocation(location);
 
-        MinecraftUtils.parseAndSendMessageContents(event.getPlayer(), respawnSettings.messageContent(), respawnSettings.messageType());
+        MinecraftUtils.parseAndSendMessageContents(event.getPlayer(), respawnSettings.action().messageType(), respawnSettings.action().messageContents());
     }
 
     @EventHandler(ignoreCancelled = true)
