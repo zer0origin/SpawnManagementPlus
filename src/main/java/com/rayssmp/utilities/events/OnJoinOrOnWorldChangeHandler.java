@@ -37,7 +37,7 @@ public class OnJoinOrOnWorldChangeHandler implements Listener {
             return;
         }
 
-        boolean isWorldExcluded = serverJoinSettings.exclude().stream().anyMatch(s -> s.toLowerCase().equals(player.getWorld().getKey().value()));
+        boolean isWorldExcluded = serverJoinSettings.exclude().stream().anyMatch(s -> s.toLowerCase().equals(player.getWorld().getName()));
         if (isWorldExcluded) {
             return;
         }
@@ -64,7 +64,7 @@ public class OnJoinOrOnWorldChangeHandler implements Listener {
             return;
         }
 
-        boolean isWorldExcluded = worldJoinSettings.exclude().stream().anyMatch(s -> s.toLowerCase().equals(player.getWorld().getKey().value()));
+        boolean isWorldExcluded = worldJoinSettings.exclude().stream().anyMatch(s -> s.toLowerCase().equals(player.getWorld().getName()));
         if (isWorldExcluded) {
             return;
         }
