@@ -76,7 +76,7 @@ SpawnManagementPlus:
     enabled: false
     use_world_default_spawn_location: false # Should the respawn location use the world default? Will override on_respawn.action.location
     skip_respawn_screen: false # Should they be forced to click 'respawn' in the death screen?
-    use_fake_death: true # Will force the player to respawn, without faking player death. e.g. don't actually kill the player, teleport player to spawn, heal, drop items, etc. True - will not 'fake' player death but will use an exploit to force the player to instantly hit respawn.
+    use_game_death: true # Will force the player to respawn, without faking player death. e.g. don't actually kill the player, teleport player to spawn, heal, drop items, etc. if true, this will cause the death screen to flash for a second and will allow other plugins to handle death correctly.
     spread_items_on_death: true # Only works when skip_respawn_screen is set to true and use_fake_death is false as use_fake_death=true allows the game to handle death itself.
 
     # Should the player spawn at a bed/anchor location if it is available?
