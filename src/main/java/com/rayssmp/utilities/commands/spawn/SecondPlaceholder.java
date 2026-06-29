@@ -30,7 +30,7 @@ public class SecondPlaceholder extends PlaceholderExpansion {
             return "";
         }
 
-        if(params.equalsIgnoreCase("second")){
+        if(params.equalsIgnoreCase("second") || params.equalsIgnoreCase("seconds")){
             if(!RunnableSpawnTask.intervalTask.containsKey(player.getUniqueId())){
                 return "0";
             }
