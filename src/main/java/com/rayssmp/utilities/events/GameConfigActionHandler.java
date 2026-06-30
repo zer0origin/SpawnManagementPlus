@@ -39,10 +39,11 @@ public class GameConfigActionHandler {
         }
 
         if (action.runCommand().enabled()) {
+            var cmdStr = MinecraftUtils.tryPlaceholderParseOrReturn(player, action.runCommand().commandToRun());
             if (action.runCommand().user().equalsIgnoreCase("user")) {
-                player.performCommand(action.runCommand().commandToRun());
+                player.performCommand(cmdStr);
             } else {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), action.runCommand().commandToRun());
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmdStr);
             }
         }
 
