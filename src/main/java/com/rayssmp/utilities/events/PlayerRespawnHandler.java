@@ -44,7 +44,7 @@ public class PlayerRespawnHandler implements Listener {
             return;
         }
 
-        actionHandler.handle(event.getPlayer(), respawnSettings.action(), event::setRespawnLocation);
+        actionHandler.handleWithActionWorld(event.getPlayer(), respawnSettings.action(), event::setRespawnLocation);
     }
 
     @EventHandler(ignoreCancelled = true)

@@ -45,14 +45,14 @@ public class OnJoinOrOnWorldChangeHandler implements Listener {
         event.joinMessage(null);
         if (serverJoinSettings.onlyOnFirstTime().enabled()) {
             if (!player.hasPlayedBefore()) {
-                actionHandler.handle(player, onlyOnFirstTime.action(), player::teleport);
+                actionHandler.handleWithActionWorld(player, onlyOnFirstTime.action(), player::teleport);
                 return;
             }
 
             return;
         }
 
-        actionHandler.handle(player, serverJoinSettings.action(), player::teleport);
+        actionHandler.handleWithActionWorld(player, serverJoinSettings.action(), player::teleport);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -69,6 +69,6 @@ public class OnJoinOrOnWorldChangeHandler implements Listener {
             return;
         }
 
-        actionHandler.handle(player, worldJoinSettings.action(), player::teleport);
+        actionHandler.handleWithActionWorld(player, worldJoinSettings.action(), player::teleport);
     }
 }

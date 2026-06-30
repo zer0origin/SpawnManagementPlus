@@ -18,27 +18,34 @@ public class GameConfigActionHandler {
         this.main = main;
     }
 
-    public void handle(Player player, Action action, Consumer<Location> teleportHandle) {
-        MinecraftUtils.parseAndSendMessageContents(player, action.messageType(), action.messageContents());
-
+    public void handleWithActionWorld(Player player, Action action, Consumer<Location> teleportHandle) {
         World spawnWorld = Objects.requireNonNull(Bukkit.getWorld(action.worldLocation().name()), "Failed to find world!");
-        Location customSpawnLocation = new Location(spawnWorld, action.worldLocation().x(), action.worldLocation().y(), action.worldLocation().z(), action.worldLocation().yaw(), action.worldLocation().pitch());
-        player.teleport(customSpawnLocation);
-        teleportHandle.accept(customSpawnLocation);
+        Location location = new Location(spawnWorld, action.worldLocation().x(), action.worldLocation().y(), action.worldLocation().z(), action.worldLocation().yaw(), action.worldLocation().pitch());
 
-        if (action.sound().enabled()) {
-            player.playSound(customSpawnLocation, action.sound().type(), action.sound().volume(), action.sound().pitch());
-        }
+        handle(player, action, teleportHandle, location);
     }
 
     public void handleWithWorld(Player player, Action action, World world, Consumer<Location> teleportHandle) {
+        Location location = world.getSpawnLocation();
+
+        handle(player, action, teleportHandle, location);
+    }
+
+    private void handle(Player player, Action action, Consumer<Location> teleportHandle, Location location) {
         MinecraftUtils.parseAndSendMessageContents(player, action.messageType(), action.messageContents());
 
-        Location customSpawnLocation = world.getSpawnLocation();
-        teleportHandle.accept(customSpawnLocation);
-
         if (action.sound().enabled()) {
-            player.playSound(customSpawnLocation, action.sound().type(), action.sound().volume(), action.sound().pitch());
+            player.playSound(player, action.sound().type(), action.sound().volume(), action.sound().pitch());
         }
+
+        if (action.runCommand().enabled()) {
+            if (action.runCommand().user().equalsIgnoreCase("user")) {
+                player.performCommand(action.runCommand().commandToRun());
+            } else {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), action.runCommand().commandToRun());
+            }
+        }
+
+        teleportHandle.accept(location);
     }
 }
