@@ -31,7 +31,7 @@ public class ServerJoinSpawnLocation implements PlayerCommand {
         }
 
         Location locationToSet = player.getLocation();
-        var worldLocationConfig = new WorldLocation(locationToSet.getWorld().getName(), locationToSet.x(), locationToSet.y(),locationToSet.z(), player.getYaw(), player.getPitch());
+        var worldLocationConfig = new WorldLocation(true, locationToSet.getWorld().getName(), locationToSet.x(), locationToSet.y(),locationToSet.z(), player.getYaw(), player.getPitch());
         ServerJoinConfig original = config.getServerJoinSettings();
 
         config.setServerJoinSettings(new ServerJoinConfig(

@@ -33,7 +33,7 @@ public class SetSpawnCommandLocation implements PlayerCommand {
         config.setCommandValues(new CommandConfig(commandSettings.smp(),
                 SpawnConfig.SpawnFactory(spawnSettings.enabled(), spawnSettings.seconds(),
                         spawnSettings.insufficientPermissionErrorMessage(), spawnSettings.youAreAlreadyTeleporting(),
-                        spawnSettings.useOnServerJoinLocation(), new WorldLocation(location.getWorld().getName(), location.x(), location.y(), location.z(), location.getYaw(), location.getPitch()),
+                        spawnSettings.useOnServerJoinLocation(), new WorldLocation(true, location.getWorld().getName(), location.x(), location.y(), location.z(), location.getYaw(), location.getPitch()),
                         spawnSettings.onTeleport().messageType(), spawnSettings.onTeleport().messages(), spawnSettings.onTeleport().soundEnabled(), spawnSettings.onTeleport().soundType(), spawnSettings.onTeleport().soundVolume(), spawnSettings.onTeleport().soundPitch(),
                         spawnSettings.onInterval().messageType(), spawnSettings.onInterval().messages(), spawnSettings.onInterval().soundEnabled(), spawnSettings.onInterval().soundType(), spawnSettings.onInterval().soundVolume(), spawnSettings.onInterval().soundPitch(),
                         spawnSettings.onMove().enabled(), spawnSettings.onMove().messageType(), spawnSettings.onMove().soundEnabled(), spawnSettings.onMove().soundType(), spawnSettings.onMove().soundVolume(), spawnSettings.onMove().soundPitch(), spawnSettings.onMove().messages())

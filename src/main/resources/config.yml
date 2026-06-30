@@ -8,7 +8,7 @@ SpawnManagementPlus:
     action: # What is it that you want the server to do to the user: Teleport, Play Sound, Send message?
       run_command:
         enabled: false
-        run: "gui %player_name%" # example: gui %player_name% #Supports Placeholder API
+        run: "gamemode survival %player_name%" # gamemode survival %player_name%#Supports Placeholder API
         user: "PLAYER" # PLAYER or SERVER. Who should run the command?
       sound:
         enabled: false
@@ -37,7 +37,7 @@ SpawnManagementPlus:
       action:
       run_command:
         enabled: false
-        run: "gui %player_name%" # example: gui %player_name% #Supports Placeholder API
+        run: "gamemode survival %player_name%" # gamemode survival %player_name%#Supports Placeholder API
         user: "PLAYER" # PLAYER or SERVER. Who should run the command?
         sound:
           enabled: false
@@ -68,7 +68,7 @@ SpawnManagementPlus:
     action:
       run_command:
         enabled: false
-        run: "gui %player_name%" # example: gui %player_name% #Supports Placeholder API
+        run: "gamemode survival %player_name%" # gamemode survival %player_name%#Supports Placeholder API
         user: "PLAYER" # PLAYER or SERVER. Who should run the command?
       sound:
         enabled: false
@@ -101,7 +101,7 @@ SpawnManagementPlus:
     action:
       run_command:
         enabled: false
-        run: "gui %player_name%" # example: gui %player_name% #Supports Placeholder API
+        run: "gamemode survival %player_name%" # gamemode survival %player_name%#Supports Placeholder API
         user: "PLAYER" # PLAYER or SERVER. Who should run the command?
       sound:
         enabled: false

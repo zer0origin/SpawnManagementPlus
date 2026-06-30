@@ -138,7 +138,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_server_join.action.sound.volume", serverJoinConfig.action().sound().volume());
         cfg.set("SpawnManagementPlus.on_server_join.action.sound.pitch", serverJoinConfig.action().sound().pitch());
         cfg.set("SpawnManagementPlus.on_server_join.exclude", serverJoinConfig.exclude());
-        cfg.set("SpawnManagementPlus.on_server_join.action.run_command.run", serverJoinConfig.action().runCommand());
+        cfg.set("SpawnManagementPlus.on_server_join.action.run_command.run", serverJoinConfig.action().runCommand().commandToRun());
         cfg.set("SpawnManagementPlus.on_server_join.action.run_command.user", serverJoinConfig.action().runCommand().user());
         cfg.set("SpawnManagementPlus.on_server_join.action.run_command.enabled", serverJoinConfig.action().runCommand().enabled());
 
@@ -158,7 +158,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_server_join.only_on_first_time.action.location.pitch", serverJoinConfig.onlyOnFirstTime().action().worldLocation().pitch());
         cfg.set("SpawnManagementPlus.on_server_join.only_on_first_time.action.message_type", serverJoinConfig.onlyOnFirstTime().action().messageType());
         cfg.set("SpawnManagementPlus.on_server_join.only_on_first_time.action.message", serverJoinConfig.onlyOnFirstTime().action().messageContents());
-        cfg.set("SpawnManagementPlus.on_server_join.only_on_first_time.action.run_command.run", serverJoinConfig.onlyOnFirstTime().action().runCommand());
+        cfg.set("SpawnManagementPlus.on_server_join.only_on_first_time.action.run_command.run", serverJoinConfig.onlyOnFirstTime().action().runCommand().commandToRun());
         cfg.set("SpawnManagementPlus.on_server_join.only_on_first_time.action.run_command.user", serverJoinConfig.onlyOnFirstTime().action().runCommand().user());
         cfg.set("SpawnManagementPlus.on_server_join.only_on_first_time.action.run_command.enabled", serverJoinConfig.onlyOnFirstTime().action().runCommand().enabled());
     }
@@ -343,7 +343,6 @@ public class Config {
         cfg.set("SpawnManagementPlus.commands.spawn.location.yaw", spawnCommand.worldLocation().yaw());
         cfg.set("SpawnManagementPlus.commands.spawn.location.pitch", spawnCommand.worldLocation().pitch());
     }
-
 
     public ServerJoinConfig getServerJoinSettings() {
         return serverJoinConfigSettings;
