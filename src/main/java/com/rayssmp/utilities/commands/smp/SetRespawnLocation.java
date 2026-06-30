@@ -32,7 +32,7 @@ public class SetRespawnLocation implements PlayerCommand {
         WorldLocation worldLocation = new WorldLocation(locationToSet.getWorld().getName(), locationToSet.getX(), locationToSet.getY(), locationToSet.getZ(), locationToSet.getYaw(), locationToSet.getPitch());
         Action action = new Action(worldLocation, original.action().sound(), original.action().messageType(), original.action().messageContents());
         config.setRespawnSettings(new RespawnConfig(original.enabled(), original.skipRespawnScreen(),
-                original.useFakeDeath(), original.spreadItemsOnDeath(), original.preferBedLocation(),
+                original.useGameDeath(), original.spreadItemsOnDeath(), original.preferBedLocation(),
                 original.preferAnchorLocation(), original.useWorldDefaultSpawnLocation(), action));
 
         try {
