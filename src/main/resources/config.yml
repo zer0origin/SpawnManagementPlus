@@ -94,7 +94,8 @@ SpawnManagementPlus:
 
     action:
       run_command:
-        run: "" # example: gui %player_name% #Supports Placeholder API
+        enabled: false
+        run: "gui %player_name%" # example: gui %player_name% #Supports Placeholder API
         user: "PLAYER" # PLAYER or SERVER. Who should run the command?
       sound:
         enabled: false
