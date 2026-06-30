@@ -40,7 +40,7 @@ public class GameConfigActionHandler {
 
         if (action.runCommand().enabled()) {
             var cmdStr = MinecraftUtils.tryPlaceholderParseOrReturn(player, action.runCommand().commandToRun());
-            if (action.runCommand().user().equalsIgnoreCase("user")) {
+            if (action.runCommand().user().equalsIgnoreCase("player")) {
                 player.performCommand(cmdStr);
             } else {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmdStr);
