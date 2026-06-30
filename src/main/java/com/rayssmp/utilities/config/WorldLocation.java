@@ -1,7 +1,7 @@
 package com.rayssmp.utilities.config;
 
-public record WorldLocation(String name, double x, double y, double z, float yaw, float pitch) {
+public record WorldLocation(boolean enabled, String name, double x, double y, double z, float yaw, float pitch) {
     public WorldLocation() {
-        this("", 0, 0, 0, 0, 0);
+        this(false, "", 0, 0, 0, 0, 0);
     }
 }

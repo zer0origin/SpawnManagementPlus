@@ -29,7 +29,7 @@ public class SetRespawnLocation implements PlayerCommand {
         Location locationToSet = player.getLocation();
         var original = config.getRespawnSettings();
 
-        WorldLocation worldLocation = new WorldLocation(locationToSet.getWorld().getName(), locationToSet.getX(), locationToSet.getY(), locationToSet.getZ(), locationToSet.getYaw(), locationToSet.getPitch());
+        WorldLocation worldLocation = new WorldLocation(true, locationToSet.getWorld().getName(), locationToSet.getX(), locationToSet.getY(), locationToSet.getZ(), locationToSet.getYaw(), locationToSet.getPitch());
         Action action = new Action(worldLocation, original.action().sound(), original.action().runCommand(), original.action().messageType(), original.action().messageContents());
         config.setRespawnSettings(new RespawnConfig(original.enabled(), original.skipRespawnScreen(),
                 original.useGameDeath(), original.spreadItemsOnDeath(), original.preferBedLocation(),

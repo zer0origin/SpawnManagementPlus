@@ -16,6 +16,7 @@ SpawnManagementPlus:
         volume: 1
         pitch: 1
       location: # This can be set in game using the command "/smp location server"
+        enabled: false
         world: world # if using multiple worlds, YOU MUST have a world loader.
         x: 0
         y: 0
@@ -44,6 +45,7 @@ SpawnManagementPlus:
           volume: 1
           pitch: 1
         location:
+          enabled: false
           world: world # if using multiple worlds, YOU MUST have a world loader.
           x: 0
           y: 0
@@ -74,6 +76,7 @@ SpawnManagementPlus:
         volume: 1
         pitch: 1
       location: # Since it is only player rotation, there is no command for this.
+        enabled: false
         yaw: 0
         pitch: 0
       message_type: CHAT # Supports either CHAT or ACTION_BAR
@@ -106,6 +109,7 @@ SpawnManagementPlus:
         volume: 1
         pitch: 1
       location: # if you use_world_default_spawn_location=false then location will get overwritten.
+        enabled: false
         world: world # if using multiple worlds, YOU MUST have a world loader.
         x: 0
         y: 0

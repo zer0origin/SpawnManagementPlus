@@ -47,6 +47,8 @@ public class GameConfigActionHandler {
             }
         }
 
-        teleportHandle.accept(location);
+        if (action.worldLocation().enabled()) {
+            teleportHandle.accept(location);
+        }
     }
 }
