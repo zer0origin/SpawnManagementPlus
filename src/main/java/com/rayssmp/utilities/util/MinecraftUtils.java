@@ -10,15 +10,17 @@ import java.util.List;
 
 public class MinecraftUtils {
     public static void parseAndSendMessageContents(Player player, String messageType, List<String> strings) {
-        strings.stream().map(s -> {
-            try {
-                return PlaceholderAPI.setPlaceholders(player, s);
-            } catch (Throwable e) {
-                return s;
-            }
-        }).forEach(s -> {
+        strings.stream().map(s -> tryPlaceholderParseOrReturn(player, s)).forEach(s -> {
             player.spigot().sendMessage(ChatMessageType.valueOf(messageType),
                     TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', s)));
         });
+    }
+
+    public static String tryPlaceholderParseOrReturn(Player player, String s){
+        try {
+            return PlaceholderAPI.setPlaceholders(player, s);
+        } catch (Throwable e) {
+            return s;
+        }
     }
 }
