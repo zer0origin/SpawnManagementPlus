@@ -199,86 +199,6 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_world_join.action.run_command.user", worldJoinConfig.action().runCommand().user());
     }
 
-    private CommandConfig loadCommandSettingValues(FileConfiguration cfg) {
-        boolean enabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.enabled", false);
-        int seconds = cfg.getInt("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", -1);
-        String onTeleportMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message_type", "CHAT");
-        List<String> onTeleportMessages = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message");
-        String onIntervalMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message_type", "CHAT");
-        List<String> onIntervalMessages = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message");
-        boolean onMoveCancel = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.cancel", false);
-        String onMoveMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message_type", "CHAT");
-        List<String> onMoveMessages = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message");
-        String spawnInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.spawn.insufficient_permission_error_message", "");
-        String youAreAlreadyTeleporting = cfg.getString("SpawnManagementPlus.commands.spawn.you_are_already_teleporting", "");
-
-        boolean useServerJoinLocation = cfg.getBoolean("SpawnManagementPlus.commands.spawn.use_on_server_join_location", true);
-        String world = cfg.getString("SpawnManagementPlus.commands.spawn.location.world", "");
-        double x = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.x", 0);
-        double y = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.y", 0);
-        double z = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.z", 0);
-        float yaw = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.yaw", 0);
-        float pitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.pitch", 0);
-
-        boolean onTeleportSoundEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.enabled", false);
-        String onTeleportSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.type", "");
-        float onTeleportSoundVolume = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.volume", 1);
-        float onTeleportSoundPitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.pitch", 1);
-
-        boolean onIntervalSoundEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.enabled", false);
-        String onIntervalSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.type", "");
-        float onIntervalSoundVolume = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.volume", 1);
-        float onIntervalSoundPitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.pitch", 1);
-
-        boolean onMoveSoundEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.enabled", false);
-        String onMoveSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.type", "");
-        float onMoveSoundVolume = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.volume", 1);
-        float onMoveSoundPitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.pitch", 1);
-
-        SpawnConfig spawnConfig;
-        if (!useServerJoinLocation) {
-            spawnConfig = SpawnConfig.SpawnFactory(enabled, seconds, spawnInsufficientPermissionErrorMessage, youAreAlreadyTeleporting, false, new WorldLocation(world, x, y, z, yaw, pitch),
-                    onTeleportMessageType, onTeleportMessages, onTeleportSoundEnabled, onTeleportSoundType,
-                    onTeleportSoundVolume, onTeleportSoundPitch, onIntervalMessageType, onIntervalMessages,
-                    onIntervalSoundEnabled, onIntervalSoundType, onIntervalSoundVolume, onIntervalSoundPitch, onMoveCancel,
-                    onMoveMessageType, onMoveSoundEnabled, onMoveSoundType, onMoveSoundVolume, onMoveSoundPitch, onMoveMessages);
-        } else {
-            spawnConfig = SpawnConfig.SpawnFactory(enabled, seconds, spawnInsufficientPermissionErrorMessage, youAreAlreadyTeleporting, true, new WorldLocation(serverJoinConfigSettings.action().worldLocation().name(), serverJoinConfigSettings.action().worldLocation().x(), serverJoinConfigSettings.action().worldLocation().y(), serverJoinConfigSettings.action().worldLocation().z(), serverJoinConfigSettings.action().worldLocation().yaw(), serverJoinConfigSettings.action().worldLocation().pitch()),
-                    onTeleportMessageType, onTeleportMessages, onTeleportSoundEnabled, onTeleportSoundType,
-                    onTeleportSoundVolume, onTeleportSoundPitch, onIntervalMessageType, onIntervalMessages,
-                    onIntervalSoundEnabled, onIntervalSoundType, onIntervalSoundVolume, onIntervalSoundPitch, onMoveCancel,
-                    onMoveMessageType, onMoveSoundEnabled, onMoveSoundType, onMoveSoundVolume, onMoveSoundPitch, onMoveMessages);
-        }
-
-        var smpInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.smp.insufficient_permission_error_message", "");
-        var smpSavedDataMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_message", "");
-        var smpSavedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_failed_message", "");
-        Smp smp = new Smp(smpInsufficientPermissionErrorMessage, smpSavedDataMessage, smpSavedDataFailedMessage);
-
-        return new CommandConfig(smp, spawnConfig);
-    }
-
-    private void setCommandValues(FileConfiguration cfg, CommandConfig commandConfig) {
-        var spawnCommand = commandConfig.spawnConfig();
-        cfg.set("SpawnManagementPlus.commands.spawn.enabled", spawnCommand.enabled());
-        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", spawnCommand.seconds());
-        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message_type", spawnCommand.onTeleport().messageType());
-        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message", spawnCommand.onTeleport().messages());
-        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message_type", spawnCommand.onInterval().messageType());
-        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message", spawnCommand.onInterval().messages());
-        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.cancel", spawnCommand.onMove().enabled());
-        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message_type", spawnCommand.onMove().messageType());
-        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message", spawnCommand.onMove().messages());
-        cfg.set("SpawnManagementPlus.commands.spawn.insufficient_permission_error_message", spawnCommand.insufficientPermissionErrorMessage());
-        cfg.set("SpawnManagementPlus.commands.spawn.you_are_already_teleporting", spawnCommand.youAreAlreadyTeleporting());
-        cfg.set("SpawnManagementPlus.commands.spawn.location.world", spawnCommand.worldLocation().name());
-        cfg.set("SpawnManagementPlus.commands.spawn.location.x", spawnCommand.worldLocation().x());
-        cfg.set("SpawnManagementPlus.commands.spawn.location.y", spawnCommand.worldLocation().y());
-        cfg.set("SpawnManagementPlus.commands.spawn.location.z", spawnCommand.worldLocation().z());
-        cfg.set("SpawnManagementPlus.commands.spawn.location.yaw", spawnCommand.worldLocation().yaw());
-        cfg.set("SpawnManagementPlus.commands.spawn.location.pitch", spawnCommand.worldLocation().pitch());
-    }
-
     private RespawnConfig loadRespawnSettingsValues(FileConfiguration cfg) {
         var enabled = cfg.getBoolean("SpawnManagementPlus.on_respawn.enabled", false);
         var preferBedLocation = cfg.getBoolean("SpawnManagementPlus.on_respawn.prefer_bed_location", false);
@@ -337,6 +257,86 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_respawn.action.run_command.user", respawnConfig.action().runCommand().user());
         cfg.set("SpawnManagementPlus.on_respawn.action.run_command.enabled", respawnConfig.action().runCommand().enabled());
     }
+
+    private CommandConfig loadCommandSettingValues(FileConfiguration cfg) {
+        boolean enabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.enabled", false);
+        int seconds = cfg.getInt("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", -1);
+        String onTeleportMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message_type", "CHAT");
+        List<String> onTeleportMessages = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message");
+        String onIntervalMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message_type", "CHAT");
+        List<String> onIntervalMessages = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message");
+        boolean onMoveCancel = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.cancel", false);
+        String onMoveMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message_type", "CHAT");
+        List<String> onMoveMessages = cfg.getStringList("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message");
+        String spawnInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.spawn.insufficient_permission_error_message", "");
+        String youAreAlreadyTeleporting = cfg.getString("SpawnManagementPlus.commands.spawn.you_are_already_teleporting", "");
+
+        boolean useServerJoinLocation = cfg.getBoolean("SpawnManagementPlus.commands.spawn.use_on_server_join_location", true);
+        String world = cfg.getString("SpawnManagementPlus.commands.spawn.location.world", "");
+        double x = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.x", 0);
+        double y = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.y", 0);
+        double z = cfg.getDouble("SpawnManagementPlus.commands.spawn.location.z", 0);
+        float yaw = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.yaw", 0);
+        float pitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.location.pitch", 0);
+
+        boolean onTeleportSoundEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.enabled", false);
+        String onTeleportSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.type", "");
+        float onTeleportSoundVolume = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.volume", 1);
+        float onTeleportSoundPitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.sound.pitch", 1);
+
+        boolean onIntervalSoundEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.enabled", false);
+        String onIntervalSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.type", "");
+        float onIntervalSoundVolume = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.volume", 1);
+        float onIntervalSoundPitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.sound.pitch", 1);
+
+        boolean onMoveSoundEnabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.enabled", false);
+        String onMoveSoundType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.type", "");
+        float onMoveSoundVolume = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.volume", 1);
+        float onMoveSoundPitch = (float) cfg.getDouble("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.sound.pitch", 1);
+
+        SpawnConfig spawnConfig;
+        if (!useServerJoinLocation) {
+            spawnConfig = SpawnConfig.SpawnFactory(enabled, seconds, spawnInsufficientPermissionErrorMessage, youAreAlreadyTeleporting, false, new WorldLocation(world, x, y, z, yaw, pitch),
+                    onTeleportMessageType, onTeleportMessages, onTeleportSoundEnabled, onTeleportSoundType,
+                    onTeleportSoundVolume, onTeleportSoundPitch, onIntervalMessageType, onIntervalMessages,
+                    onIntervalSoundEnabled, onIntervalSoundType, onIntervalSoundVolume, onIntervalSoundPitch, onMoveCancel,
+                    onMoveMessageType, onMoveSoundEnabled, onMoveSoundType, onMoveSoundVolume, onMoveSoundPitch, onMoveMessages);
+        } else {
+            spawnConfig = SpawnConfig.SpawnFactory(enabled, seconds, spawnInsufficientPermissionErrorMessage, youAreAlreadyTeleporting, true, new WorldLocation(serverJoinConfigSettings.action().worldLocation().name(), serverJoinConfigSettings.action().worldLocation().x(), serverJoinConfigSettings.action().worldLocation().y(), serverJoinConfigSettings.action().worldLocation().z(), serverJoinConfigSettings.action().worldLocation().yaw(), serverJoinConfigSettings.action().worldLocation().pitch()),
+                    onTeleportMessageType, onTeleportMessages, onTeleportSoundEnabled, onTeleportSoundType,
+                    onTeleportSoundVolume, onTeleportSoundPitch, onIntervalMessageType, onIntervalMessages,
+                    onIntervalSoundEnabled, onIntervalSoundType, onIntervalSoundVolume, onIntervalSoundPitch, onMoveCancel,
+                    onMoveMessageType, onMoveSoundEnabled, onMoveSoundType, onMoveSoundVolume, onMoveSoundPitch, onMoveMessages);
+        }
+
+        var smpInsufficientPermissionErrorMessage = cfg.getString("SpawnManagementPlus.commands.smp.insufficient_permission_error_message", "");
+        var smpSavedDataMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_message", "");
+        var smpSavedDataFailedMessage = cfg.getString("SpawnManagementPlus.commands.smp.saved_data_failed_message", "");
+        Smp smp = new Smp(smpInsufficientPermissionErrorMessage, smpSavedDataMessage, smpSavedDataFailedMessage);
+
+        return new CommandConfig(smp, spawnConfig);
+    }
+    private void setCommandValues(FileConfiguration cfg, CommandConfig commandConfig) {
+        var spawnCommand = commandConfig.spawnConfig();
+        cfg.set("SpawnManagementPlus.commands.spawn.enabled", spawnCommand.enabled());
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", spawnCommand.seconds());
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message_type", spawnCommand.onTeleport().messageType());
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message", spawnCommand.onTeleport().messages());
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message_type", spawnCommand.onInterval().messageType());
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_interval.message", spawnCommand.onInterval().messages());
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.cancel", spawnCommand.onMove().enabled());
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message_type", spawnCommand.onMove().messageType());
+        cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.on_move.message", spawnCommand.onMove().messages());
+        cfg.set("SpawnManagementPlus.commands.spawn.insufficient_permission_error_message", spawnCommand.insufficientPermissionErrorMessage());
+        cfg.set("SpawnManagementPlus.commands.spawn.you_are_already_teleporting", spawnCommand.youAreAlreadyTeleporting());
+        cfg.set("SpawnManagementPlus.commands.spawn.location.world", spawnCommand.worldLocation().name());
+        cfg.set("SpawnManagementPlus.commands.spawn.location.x", spawnCommand.worldLocation().x());
+        cfg.set("SpawnManagementPlus.commands.spawn.location.y", spawnCommand.worldLocation().y());
+        cfg.set("SpawnManagementPlus.commands.spawn.location.z", spawnCommand.worldLocation().z());
+        cfg.set("SpawnManagementPlus.commands.spawn.location.yaw", spawnCommand.worldLocation().yaw());
+        cfg.set("SpawnManagementPlus.commands.spawn.location.pitch", spawnCommand.worldLocation().pitch());
+    }
+
 
     public ServerJoinConfig getServerJoinSettings() {
         return serverJoinConfigSettings;
