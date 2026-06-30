@@ -37,7 +37,7 @@ public class ServerJoinSpawnLocation implements PlayerCommand {
         config.setServerJoinSettings(new ServerJoinConfig(
                 original.enabled(),
                 original.exclude(),
-                new Action(worldLocationConfig, original.action().sound(), original.action().messageType(), original.action().messageContents()),
+                new Action(worldLocationConfig, original.action().sound(), original.action().runCommand(), original.action().messageType(), original.action().messageContents()),
                 original.onlyOnFirstTime()
         ));
 

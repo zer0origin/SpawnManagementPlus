@@ -13,10 +13,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class Smp implements CommandExecutor, TabCompleter {
+public class SmpCommand implements CommandExecutor, TabCompleter {
     private final Config config;
 
-    public Smp(Config config) {
+    public SmpCommand(Config config) {
         this.config = config;
     }
 

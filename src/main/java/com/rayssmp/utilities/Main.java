@@ -1,6 +1,6 @@
 package com.rayssmp.utilities;
 
-import com.rayssmp.utilities.commands.smp.Smp;
+import com.rayssmp.utilities.commands.smp.SmpCommand;
 import com.rayssmp.utilities.commands.spawn.SecondPlaceholder;
 import com.rayssmp.utilities.commands.spawn.SpawnCommand;
 import com.rayssmp.utilities.config.Config;
@@ -47,7 +47,7 @@ public final class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new OnJoinOrOnWorldChangeHandler(this, config, actionHandler), this);
         Bukkit.getPluginManager().registerEvents(new PlayerRespawnHandler(this, config, actionHandler), this);
 
-        var smp = new Smp(config);
+        var smp = new SmpCommand(config);
         this.getCommand("smp").setExecutor(smp);
         this.getCommand("smp").setTabCompleter(smp);
         this.getLogger().log(Level.INFO, "Enabled!");
