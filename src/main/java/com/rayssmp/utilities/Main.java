@@ -8,7 +8,6 @@ import com.rayssmp.utilities.events.GameConfigActionHandler;
 import com.rayssmp.utilities.events.OnJoinOrOnWorldChangeHandler;
 import com.rayssmp.utilities.events.PlayerRespawnHandler;
 import org.bukkit.Bukkit;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
