@@ -6,7 +6,7 @@
 
 ## Key Features
 
-*   **Custom Join Handling:** Force players to a specific location when they log in (optionally restricted to first-time joins only).
+*   **Custom Join Handling:** Force players to a specific location, or hear/see sounds and messages when they log in (optionally, perform actions on first-time joins).
 *   **World Transition Control:** Automatically teleport players to a world's specific spawn point when they switch worlds.
 *   **Advanced Respawn Logic:**
     *   Optionally bypass the "You Died" screen for immediate respawn.
@@ -59,7 +59,7 @@ Take control of the death cycle.
 A fully-featured teleportation system.
 *   **`cooldown_timer.seconds`**: The "Warm-up" period. Set to `-1` for instant teleport.
 *   **`on_move.cancel`**: If the player moves their feet during the countdown, the teleport is aborted.
-*   **`on_interval`**: This sends a message every second of the countdown. Use the `%smp_teleport_seconds%` placeholder here.
+*   **`on_interval`**: This sends a message every second of the countdown. Use the `%smp_second%` placeholder here.
 
 ---
 
