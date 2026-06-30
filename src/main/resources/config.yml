@@ -7,7 +7,8 @@ SpawnManagementPlus:
       - world_end
     action: # What is it that you want the server to do to the user: Teleport, Play Sound, Send message?
       run_command:
-        run: "" # example: gui %player_name% #Supports Placeholder API
+        enabled: false
+        run: "gui %player_name%" # example: gui %player_name% #Supports Placeholder API
         user: "PLAYER" # PLAYER or SERVER. Who should run the command?
       sound:
         enabled: false
@@ -33,9 +34,10 @@ SpawnManagementPlus:
       enabled: false
       use_on_server_join_default: true # Overwrite the below settings to use the on_server_join defaults.
       action:
-        run_command:
-          run: "" # example: gui %player_name% #Supports Placeholder API
-          user: "PLAYER" # PLAYER or SERVER. Who should run the command?
+      run_command:
+        enabled: false
+        run: "gui %player_name%" # example: gui %player_name% #Supports Placeholder API
+        user: "PLAYER" # PLAYER or SERVER. Who should run the command?
         sound:
           enabled: false
           type: minecraft:block.note_block.pling # You can find a list of sounds by running /playsound in game, and finding the name of the sound that you would like to play.
@@ -63,7 +65,8 @@ SpawnManagementPlus:
       - "the_end"
     action:
       run_command:
-        run: "" # example: gui %player_name% #Supports Placeholder API
+        enabled: false
+        run: "gui %player_name%" # example: gui %player_name% #Supports Placeholder API
         user: "PLAYER" # PLAYER or SERVER. Who should run the command?
       sound:
         enabled: false
