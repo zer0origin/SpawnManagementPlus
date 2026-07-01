@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class Config {
     private final File configFileLocation = new File("plugins/SpawnManagementPlus", "config.yml");
-    private FileConfiguration cfg = new YamlConfiguration();
+    private YamlConfiguration cfg = new YamlConfiguration();
     private ServerJoinConfig serverJoinConfigSettings = new ServerJoinConfig();
     private WorldJoinConfig worldJoinConfigSettings = new WorldJoinConfig();
     private CommandConfig commandConfig = new CommandConfig();
@@ -62,7 +62,7 @@ public class Config {
         settingsHaveBeenUpdated = false;
     }
 
-    private ServerJoinConfig loadServerJoinValues(FileConfiguration cfg) {
+    private ServerJoinConfig loadServerJoinValues(YamlConfiguration cfg) {
         var enabled = cfg.getBoolean("SpawnManagementPlus.on_server_join.enabled", false);
         var locationEnabled = cfg.getBoolean("SpawnManagementPlus.on_server_join.action.location.enabled", false);
         var world = cfg.getString("SpawnManagementPlus.on_server_join.action.location.world", "");
@@ -122,7 +122,7 @@ public class Config {
         return new ServerJoinConfig(enabled, exclude, serverJoinAction, firstTimeConfig);
     }
 
-    private void setServerJoinValues(FileConfiguration cfg, ServerJoinConfig serverJoinConfig) {
+    private void setServerJoinValues(YamlConfiguration cfg, ServerJoinConfig serverJoinConfig) {
         cfg.set("SpawnManagementPlus.on_server_join.enabled", serverJoinConfig.enabled());
         cfg.set("SpawnManagementPlus.on_server_join.action.location.enabled", serverJoinConfig.action().worldLocation().enabled());
         cfg.set("SpawnManagementPlus.on_server_join.action.location.world", serverJoinConfig.action().worldLocation().name());
@@ -163,7 +163,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_server_join.only_on_first_time.action.run_command.enabled", serverJoinConfig.onlyOnFirstTime().action().runCommand().enabled());
     }
 
-    private WorldJoinConfig loadWorldJoinValues(FileConfiguration cfg) {
+    private WorldJoinConfig loadWorldJoinValues(YamlConfiguration cfg) {
         var enabled = cfg.getBoolean("SpawnManagementPlus.on_world_join.enabled", false);
         var exclude = cfg.getStringList("SpawnManagementPlus.on_world_join.exclude");
         var soundEnabled = cfg.getBoolean("SpawnManagementPlus.on_world_join.action.sound.enabled", false);
@@ -187,7 +187,7 @@ public class Config {
         return new WorldJoinConfig(enabled, exclude, new Action(worldLocation, sound, command, messageType, messageContents));
     }
 
-    private void setWorldJoinValues(FileConfiguration cfg, WorldJoinConfig worldJoinConfig) {
+    private void setWorldJoinValues(YamlConfiguration cfg, WorldJoinConfig worldJoinConfig) {
         cfg.set("SpawnManagementPlus.on_world_join.enabled", worldJoinConfig.enabled());
         cfg.set("SpawnManagementPlus.on_world_join.exclude", worldJoinConfig.exclude());
         cfg.set("SpawnManagementPlus.on_world_join.action.sound.enabled", worldJoinConfig.action().sound().enabled());
@@ -204,7 +204,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_world_join.action.run_command.user", worldJoinConfig.action().runCommand().user());
     }
 
-    private RespawnConfig loadRespawnSettingsValues(FileConfiguration cfg) {
+    private RespawnConfig loadRespawnSettingsValues(YamlConfiguration cfg) {
         var enabled = cfg.getBoolean("SpawnManagementPlus.on_respawn.enabled", false);
         var preferBedLocation = cfg.getBoolean("SpawnManagementPlus.on_respawn.prefer_bed_location", false);
         var preferAnchorLocation = cfg.getBoolean("SpawnManagementPlus.on_respawn.prefer_anchor_location", false);
@@ -239,7 +239,7 @@ public class Config {
         return new RespawnConfig(enabled, skipRespawnScreen, forceRespawnButKeepDefaultMessage, spreadItemsOnDeath, preferBedLocation, preferAnchorLocation, useWorldDefaultSpawnLocation, action);
     }
 
-    private void setRespawnValues(FileConfiguration cfg, RespawnConfig respawnConfig) {
+    private void setRespawnValues(YamlConfiguration cfg, RespawnConfig respawnConfig) {
         cfg.set("SpawnManagementPlus.on_respawn.enabled", respawnConfig.enabled());
         cfg.set("SpawnManagementPlus.on_respawn.prefer_bed_location", respawnConfig.preferBedLocation());
         cfg.set("SpawnManagementPlus.on_respawn.prefer_anchor_location", respawnConfig.preferAnchorLocation());
@@ -265,7 +265,7 @@ public class Config {
         cfg.set("SpawnManagementPlus.on_respawn.action.run_command.enabled", respawnConfig.action().runCommand().enabled());
     }
 
-    private CommandConfig loadCommandSettingValues(FileConfiguration cfg) {
+    private CommandConfig loadCommandSettingValues(YamlConfiguration cfg) {
         boolean enabled = cfg.getBoolean("SpawnManagementPlus.commands.spawn.enabled", false);
         int seconds = cfg.getInt("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", -1);
         String onTeleportMessageType = cfg.getString("SpawnManagementPlus.commands.spawn.cooldown_timer.on_teleport.message_type", "CHAT");
@@ -323,7 +323,7 @@ public class Config {
 
         return new CommandConfig(smp, spawnConfig);
     }
-    private void setCommandValues(FileConfiguration cfg, CommandConfig commandConfig) {
+    private void setCommandValues(YamlConfiguration cfg, CommandConfig commandConfig) {
         var spawnCommand = commandConfig.spawnConfig();
         cfg.set("SpawnManagementPlus.commands.spawn.enabled", spawnCommand.enabled());
         cfg.set("SpawnManagementPlus.commands.spawn.cooldown_timer.seconds", spawnCommand.seconds());
